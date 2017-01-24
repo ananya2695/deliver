@@ -1,0 +1,26 @@
+<ion-view view-title="งานใหม่" ng-init="init()">
+  <ion-content>
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
+    </ion-refresher>
+
+        <div class="input-group input-group-sm">
+              <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" placeholder="Search for order..." ng-model="topsearch" aria-describedby="sizing-addon3">
+        </div>
+
+    <ion-list>
+      <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in orders | filter:topsearch"  ng-click = "btnGo(data)">
+        <img src={{data.user.profileImageURL}}>
+        <h2>{{data.user.displayName}}</h2>
+        <p style="margin-right: 20%">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
+        <p style="margin-right: 20%">{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
+        <p style="margin-right: 20%">{{data.shipping.tel}}</p>
+        <p class="icon ion-right ">{{data.totalamount}} ฿</p>
+        
+        <ion-option-button class="button-assertive" ng-click="rejectDeliver(data)">Reject</ion-option-button>
+        <ion-option-button class="button-positive" ng-click="acceptDeliver(data)">Accept</ion-option-button>
+      </ion-item>
+    </ion-list>
+
+    </ion-content>
+</ion-view>

@@ -1,0 +1,105 @@
+<!--<ion-view view-title="{{data.user.displayName}}">
+ 
+
+  <ion-content class="padding">
+    <img ng-src="{{data.user.profileImageURL}}" style="width: 64px; height: 64px">
+    <p>
+      {{data.user.displayName}}
+    </p>
+    <p>
+      {{data.shipping.address}} {{data.shipping.subdistrict}}
+    </p>
+    <p>
+      {{data.shipping.district}} {{data.shipping.province}}
+    </p>
+    <p>{{data.shipping.postcode}}</p>
+    <p><h2>ยอดรวมทั้งสิ้น : {{data.amount}} บาท</h2></p>
+  </ion-content>
+</ion-view>-->
+
+
+<ion-view view-title="Detail Orders">
+    <ion-content>
+        <div class="list">
+
+            <label class="item item-input">
+                <span class="input-label">เลขใบสั่งซื้อ : </span>
+                <input style="background-color: white" type="text" ng-model="data.docno" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">วันที่ : </span>
+                <input style="background-color: white" type="text" ng-value="data.docdate | date:'dd/MM/yyyy'" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ชื่อ : </span>
+                <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ที่อยู่ : </span>
+                <textarea style="background-color: white;padding-right: 1cm" type="textarea" ng-model="data.shipping.address" readonly></textarea>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">เบอร์โทร : </span>
+                <input style="background-color: white" type="text" ng-model="data.shipping.tel" readonly>
+            </label>
+
+
+            <div class='item item-avatar-left item-icon-right item-text-wrap' ng-repeat="item in data.items">
+                <img src={{item.product.images}}>
+                <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
+                <p style="margin-right: 20%">จำนวน {{item.qty}}</p>
+                <p style="margin-right: 20%">ราคารวม {{item.totalamount}} บาท</p>
+
+            </div>
+
+            <label class="item item-input">
+                <span class="input-label">ราคารวม : </span>
+                <input style="background-color: white" type="text" ng-value="data.amount+data.discount +' บาท'" readonly>
+            </label>
+
+
+            <label class="item item-input">
+                <span class="input-label" >ส่วนลด : </span>
+                <input style="background-color: white" type="text" ng-value="data.discount + ' ' + 'บาท'" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ราคาสุทธิ : </span>
+                <input style="background-color: white" type="text" ng-value="data.amount + ' ' + 'บาท'" readonly>
+            </label>
+
+
+        </div>
+        <!--<div class="list">
+            <div class='item'>
+                <label class="item item-input">
+                <span class="input-label">เลขใบสั่งซื้อ: </span>
+                <input type="text" ng-model="data.docno" >
+            </label>
+                <span>
+                <i>เลขใบสั่งซื้อ: {{data.docno}}</i>
+                <i style="padding-left: 4%">ราคารวม: {{data.amount}} บาท</i>
+            </span>
+                <div>
+                    <i>วันที่: {{data.docdate | date:"dd/MM/yyyy"}}</i>
+                </div>
+                <div>
+                    <i>ชื่อ: {{data.user.displayName}}</i>
+                </div>
+                <div>
+                    <i>ที่อยู่: {{data.shipping.address}} {{data.shipping.subdistrict}}</i>
+                </div>
+                <div>
+                    <i style="margin-left: 11%">     {{data.shipping.address}} {{data.shipping.subdistrict}} {{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</i>
+                </div>
+                <div>
+                    <i>เบอร์โทร: {{data.shipping.tel}}</i>
+                </div>
+            </div>-->
+    </ion-content>
+
+</ion-view>

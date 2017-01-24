@@ -1,6 +1,10 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService) {
+    $scope.userStore = AuthService.getUser();
+     if( $scope.userStore){
+           $state.go('tab.dash');
+     }
     $scope.credentials = {}
 
     $scope.doLogIn = function (credentials) {
@@ -225,7 +229,7 @@ angular.module('starter.controllers', [])
         var long = position.coords.longitude
         alert(lat + ':' + long);
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 17,
+          zoom: 20,
           center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
           mapTypeId: google.maps.MapTypeId.ROADMAP
         });

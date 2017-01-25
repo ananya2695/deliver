@@ -96,12 +96,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
   
-      .state('tab.setting', {
-        url: '/setting',
+      .state('tab.more', {
+        url: '/more',
         views: {
-          'tab-setting': {
-            templateUrl: 'templates/tab-setting.html',
-            controller: 'SettingCtrl'
+          'tab-more': {
+            templateUrl: 'templates/tab-more.html',
+            controller: 'MoreCtrl'
           }
         }
       });

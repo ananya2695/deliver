@@ -14,11 +14,19 @@ angular.module('starter.controllers', [])
       }
       AuthService.loginUser(login)
         .then(function (response) {
-          // alert('success');
-          $state.go('tab.new');
-        }, function (error) {
-          console.log(error);
-          alert('Invalid username or password');
+          console.log(response);
+          // alert('then');
+          if (response["message"]) {
+            alert(response["message"]);
+          }
+          else {
+            if (response.roles[0] === 'deliver') {
+              $state.go('tab.new');
+              alert('success');
+            } else {
+              alert('not deliver');
+            }
+          }
         });
       // console.log("doing sign up");
 
@@ -242,7 +250,7 @@ angular.module('starter.controllers', [])
           draggable: true,
           map: map
         });
-        
+
 
         for (var i = 0; i < locations.length; i++) {
           var marker = new google.maps.Marker({
@@ -258,7 +266,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('SettingCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
     $scope.doLogOut = function () {
       AuthService.signOut();
 

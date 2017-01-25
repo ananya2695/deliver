@@ -55,17 +55,21 @@ angular.module('starter.services', [])
       return $http.post('https://thamapp.herokuapp.com/api/auth/signup', user);
 
     };
-    this.loginUser = function (login) {
+    this.loginUser = function(login) {
 
-      var dfd = $q.defer();
+    var dfd = $q.defer();
 
-      $http.post('https://thamapp.herokuapp.com/api/auth/signin', login).success(function (database) {
-        window.localStorage.user = JSON.stringify(database);
-        dfd.resolve(database);
-      });
-      return dfd.promise;
+    $http.post('https://thamapp.herokuapp.com/api/auth/signin', login).success(function(database) {
+            window.localStorage.user = JSON.stringify(database);
+            dfd.resolve(database);
+        }).error(function(error) {
+            /* Act on the event */
+            dfd.resolve(error);
+            return dfd.promise;
+        });
+    return dfd.promise;
 
-    };
+};
     this.getUser = function () {
       return JSON.parse(window.localStorage.user || null);
     };

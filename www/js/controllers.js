@@ -21,8 +21,9 @@ angular.module('starter.controllers', [])
           }
           else {
             if (response.roles[0] === 'deliver') {
+              $scope.credentials = {}
               $state.go('tab.new');
-              alert('success');
+              // alert('success');
             } else {
               alert('not deliver');
             }
@@ -269,8 +270,9 @@ angular.module('starter.controllers', [])
   .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
     $scope.doLogOut = function () {
       AuthService.signOut();
-
       $state.go('authen');
+      
+
     };
 
   });

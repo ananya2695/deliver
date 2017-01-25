@@ -2,9 +2,9 @@ angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService) {
     $scope.userStore = AuthService.getUser();
-     if( $scope.userStore){
-           $state.go('tab.dash');
-     }
+    if ($scope.userStore) {
+      $state.go('tab.new');
+    }
     $scope.credentials = {}
 
     $scope.doLogIn = function (credentials) {
@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
       AuthService.loginUser(login)
         .then(function (response) {
           // alert('success');
-          $state.go('tab.dash');
+          $state.go('tab.new');
         }, function (error) {
           console.log(error);
           alert('Invalid username or password');
@@ -25,25 +25,11 @@ angular.module('starter.controllers', [])
     };
   })
 
-  // .controller('AuthenticationCtrl', function($scope ,$http, $state) {
-  //   console.log('ok');
-  //    $http.get('https://thamapp.herokuapp.com/authentication/signin')
-  //    .then(function(res){
-  //      console.log(res);
-  //      $scope.userAuthen = res.user;
-  //    }, function(error){
-  //      console.log(error);
-  //    })
-  //    $scope.Login = function(user){
-  //      $state.go('tab.dash');
-  //    }
-  // })
-
-  .controller('DashCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
+  .controller('NewCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
     $scope.btnGo = function (data) {
 
       console.log(data);
-      $state.go('tab.orderdetail', { data: JSON.stringify(data) });
+      $state.go('tab.newdetail', { data: JSON.stringify(data) });
     }
 
     var orderId = $stateParams.orderId;
@@ -137,11 +123,11 @@ angular.module('starter.controllers', [])
     }
   })
 
-  .controller('ChatsCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
+  .controller('MeCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
     $scope.btnGo = function (data) {
 
       console.log(data);
-      $state.go('tab.chat-detail', { data: JSON.stringify(data) });
+      $state.go('tab.me-detail', { data: JSON.stringify(data) });
     }
 
     $scope.completeDeliver = function (item) {
@@ -197,20 +183,15 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ChatDetailCtrl', function ($scope, $stateParams) {
+  .controller('MeDetailCtrl', function ($scope, $stateParams) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
   })
 
-  .controller('OrderDetailCtrl', function ($scope, $stateParams) {
+  .controller('NewDetailCtrl', function ($scope, $stateParams) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
   })
-
-
-  // .controller('AccountCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
-
-  // })
 
   .controller('MapCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
     console.log('ok');
@@ -229,24 +210,46 @@ angular.module('starter.controllers', [])
         var long = position.coords.longitude
         alert(lat + ':' + long);
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 20,
+          zoom: 18,
           center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
           mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
         //////ตำแหน่งที่ mark ปัจจุบัน///////////
         var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(lat, long),
+          position: map.getCenter(),
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 15,
+            fillColor: 'blue',
+            fillOpacity: 0.2,
+            strokeColor: 'blue',
+            strokeWeight: 0
+          },
+          draggable: true,
           map: map
         });
-        //var GeoMarker = new GeolocationMarker(map);
+        var marker = new google.maps.Marker({
+          position: map.getCenter(),
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 10,
+            fillColor: '#1c90f3',
+            fillOpacity: 0.5,
+            strokeColor: 'white',
+            strokeWeight: 1
+          },
+          draggable: true,
+          map: map
+        });
+        
 
-        // for (var i = 0; i < locations.length; i++) {
-        //   var marker = new google.maps.Marker({
-        //     position: new google.maps.LatLng(locations[i][0], locations[i][1]),
-        //     map: map
-        //   });
-        // }
+        for (var i = 0; i < locations.length; i++) {
+          var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+            map: map
+          });
+        }
 
         $scope.map = map;
       }, function (err) {

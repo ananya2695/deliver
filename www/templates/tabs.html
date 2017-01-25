@@ -7,15 +7,15 @@ navigation history that also transitions its views in and out.
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
   <!-- Dashboard Tab -->
-  <div ng-controller="DashCtrl"> 
-  <ion-tab title="งานใหม่" badge="orders.length"  icon-off="ion-ios-paper" icon-on="ion-ios-paper-outline" href="#/tab/dash">
-    <ion-nav-view name="tab-dash"></ion-nav-view>
+  <div ng-controller="NewCtrl"> 
+  <ion-tab title="งานใหม่" badge="orders.length"  icon-off="ion-ios-paper" icon-on="ion-ios-paper-outline" href="#/tab/new">
+    <ion-nav-view name="tab-new"></ion-nav-view>
   </ion-tab>
 </div>
-  <!-- Chat Tab -->
-  <div ng-controller="ChatsCtrl">
-  <ion-tab title="ของฉัน" badge="ordersApt.length"  icon-off="ion-ios-compose-outline" icon-on="ion-ios-compose" href="#/tab/chats">
-    <ion-nav-view name="tab-chats"></ion-nav-view>
+  <!-- Me Tab -->
+  <div ng-controller="MeCtrl">
+  <ion-tab title="ของฉัน" badge="ordersApt.length"  icon-off="ion-ios-compose-outline" icon-on="ion-ios-compose" href="#/tab/me">
+    <ion-nav-view name="tab-me"></ion-nav-view>
   </ion-tab>
   </div>
 

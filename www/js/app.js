@@ -46,43 +46,43 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         controller: 'LogInCtrl'
       })
 
-      .state('tab.dash', {
-        url: '/dash',
+      .state('tab.new', {
+        url: '/new',
         views: {
-          'tab-dash': {
-            templateUrl: 'templates/tab-dash.html',
-            controller: 'DashCtrl'
+          'tab-new': {
+            templateUrl: 'templates/tab-new.html',
+            controller: 'NewCtrl'
           }
         }
       })
 
-      .state('tab.orderdetail', {
-        url: '/orderdetail:{data}',
+      .state('tab.newdetail', {
+        url: '/newdetail:{data}',
         views: {
-          'tab-dash': {
-            templateUrl: 'templates/order-detail.html',
-            controller: 'OrderDetailCtrl'
+          'tab-new': {
+            templateUrl: 'templates/new-detail.html',
+            controller: 'NewDetailCtrl'
           }
         }
       })
 
 
-      .state('tab.chats', {
-        url: '/chats',
+      .state('tab.me', {
+        url: '/me',
         views: {
-          'tab-chats': {
-            templateUrl: 'templates/tab-chats.html',
-            controller: 'ChatsCtrl'
+          'tab-me': {
+            templateUrl: 'templates/tab-me.html',
+            controller: 'MeCtrl'
           }
         }
       })
 
-      .state('tab.chat-detail', {
-        url: '/chats/:{data}',
+      .state('tab.me-detail', {
+        url: '/me/:{data}',
         views: {
-          'tab-chats': {
-            templateUrl: 'templates/chat-detail.html',
-            controller: 'ChatDetailCtrl'
+          'tab-me': {
+            templateUrl: 'templates/me-detail.html',
+            controller: 'MeDetailCtrl'
           }
         }
       })

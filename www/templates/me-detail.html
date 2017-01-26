@@ -16,11 +16,11 @@
                 <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
             </label>
 
-            <label class="item item-input">
-                <span class="input-label">ที่อยู่ : </span>
-                <textarea style="background-color: white;padding-right: 1cm" type="textarea" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
-                    </textarea>
-            </label
+            <label class="item item-input item-text-wrap">
+                <span class="input-label ">ที่อยู่ : </span>
+                <label style="background-color: white;padding-right: 2cm;color:black" type="text" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
+                    </label>
+            </label>
 
             <label class="item item-input">
                 <span class="input-label">เบอร์โทร : </span>

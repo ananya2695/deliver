@@ -17,7 +17,8 @@ angular.module('starter.controllers', [])
           console.log(response);
           // alert('then');
           if (response["message"]) {
-            alert(response["message"]);
+            $scope.credentials = {}
+            alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
           }
           else {
             if (response.roles[0] === 'deliver') {
@@ -25,7 +26,7 @@ angular.module('starter.controllers', [])
               $state.go('tab.new');
               // alert('success');
             } else {
-              alert('not deliver');
+              alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
             }
           }
         });
@@ -68,7 +69,7 @@ angular.module('starter.controllers', [])
 
       AuthService.updateOrder(orderId, order)
         .then(function (response) {
-          alert('success');
+          // alert('success');
           $scope.init();
         }, function (error) {
           console.log(error);
@@ -95,7 +96,7 @@ angular.module('starter.controllers', [])
 
       AuthService.updateOrder(orderId, order)
         .then(function (response) {
-          alert('success');
+          // alert('success');
           $scope.init();
         }, function (error) {
           console.log(error);
@@ -219,7 +220,7 @@ angular.module('starter.controllers', [])
         var long = position.coords.longitude
         alert(lat + ':' + long);
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 18,
+          zoom: 15,
           center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
           mapTypeId: google.maps.MapTypeId.ROADMAP
         });

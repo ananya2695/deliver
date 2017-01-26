@@ -2,51 +2,55 @@
   <ion-content>
     <div class="list">
       <label class="item item-input">
-        <span class="input-label">เลขใบสั่งซื้อ : </span>
-        <input style="background-color: white" type="text" ng-model="data.docno" readonly>
-</label>
+                <span class="input-label">เลขใบสั่งซื้อ : </span>
+                <input style="background-color: white" type="text" ng-model="data.docno" readonly>
+            </label>
 
-<label class="item item-input">
-          <span class="input-label">วันที่ : </span>
-          <input style="background-color: white" type="text" ng-value="data.docdate | date:'dd/MM/yyyy'" readonly>
-</label>
+            <label class="item item-input">
+                <span class="input-label">วันที่ : </span>
+                <input style="background-color: white" type="text" ng-value="data.docdate | date:'dd/MM/yyyy'" readonly>
+            </label>
 
-<label class="item item-input">
-          <span class="input-label">ชื่อ : </span>
-          <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
-</label>
+            <label class="item item-input">
+                <span class="input-label">ชื่อ : </span>
+                <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
+            </label>
 
-<label class="item item-input">
-            <span class="input-label">ที่อยู่ : </span>
-            <textarea style="background-color: white;padding-right: 1cm" type="textarea" ng-model="data.shipping.address" readonly></textarea>
-</label>
+            <label class="item item-input">
+                <span class="input-label">ที่อยู่ : </span>
+                <textarea style="background-color: white;padding-right: 1cm" type="textarea" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
+                    </textarea>
+            </label
 
-<label class="item item-input">
-              <span class="input-label">เบอร์โทร : </span>
-              <input style="background-color: white" type="text" ng-model="data.shipping.tel" readonly>
-</label>
+            <label class="item item-input">
+                <span class="input-label">เบอร์โทร : </span>
+                <input style="background-color: white" type="text" ng-model="data.shipping.tel" readonly>
+            </label>
 
-<div class='item item-avatar-left item-icon-right item-text-wrap' ng-repeat="item in data.items">
-  <img src={{item.product.images}}>
-  <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
-  <p style="margin-right: 20%">จำนวน {{item.qty}}</p>
-<p style="margin-right: 20%">ราคารวม {{item.totalamount}} บาท</p>
-</div>
 
-<label class="item item-input">
-                  <span class="input-label">ราคารวม : </span>
-                  <input style="background-color: white" type="text" ng-value="data.amount+data.discount +' บาท'" readonly>
-</label>
+            <div class='item item-avatar-left item-icon-right item-text-wrap' ng-repeat="item in data.items">
+                <img src={{item.product.images}}>
+                <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
+                <p style="margin-right: 20%">จำนวน {{item.qty}}</p>
+                <p style="margin-right: 20%">ราคารวม {{data.amount}} บาท</p>
 
-<label class="item item-input">
-                    <span class="input-label" >ส่วนลด : </span>
-                    <input style="background-color: white" type="text" ng-value="data.discount + ' ' + 'บาท'" readonly>
-</label>
+            </div>
 
-<label class="item item-input">
-                      <span class="input-label">ราคาสุทธิ : </span>
-                      <input style="background-color: white" type="text" ng-value="data.amount + ' ' + 'บาท'" readonly>
-</label>
-</div>
-</ion-content>
+            <label class="item item-input">
+                <span class="input-label">ราคารวม : </span>
+                <input style="background-color: white" type="text" ng-value="data.amount+data.discount +' บาท'" readonly>
+            </label>
+
+
+            <label class="item item-input">
+                <span class="input-label" >ส่วนลด : </span>
+                <input style="background-color: white" type="text" ng-value="data.discountpromotion + ' ' + 'บาท'" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ราคาสุทธิ : </span>
+                <input style="background-color: white" type="text" ng-value="data.totalamount + ' ' + 'บาท'" readonly>
+            </label>
+    </div>
+  </ion-content>
 </ion-view>

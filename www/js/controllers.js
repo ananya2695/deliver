@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-  .controller('LogInCtrl', function ($scope, $state, AuthService) {
+  .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup) {
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
       $state.go('tab.new');
@@ -18,7 +18,16 @@ angular.module('starter.controllers', [])
           // alert('then');
           if (response["message"]) {
             $scope.credentials = {}
-            alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+            //alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+            var alertPopup = $ionicPopup.alert({
+              title: 'แจ้งเตือน',
+              template: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
+            });
+
+            alertPopup.then(function (res) {
+              console.log('Invalid username or password');
+            });
+
           }
           else {
             if (response.roles[0] === 'deliver') {
@@ -26,7 +35,15 @@ angular.module('starter.controllers', [])
               $state.go('tab.new');
               // alert('success');
             } else {
-              alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
+              //alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
+              var alertPopup = $ionicPopup.alert({
+                title: 'แจ้งเตือน',
+                template: 'คุณไม่มีสิทธิ์เข้าใช้งาน'
+              });
+
+              alertPopup.then(function (res) {
+                console.log('คุณไม่มีสิทธิ์เข้าใช้งาน');
+              });
             }
           }
         });

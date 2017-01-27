@@ -39,9 +39,13 @@
 
             <label class="item item-input">
                 <span class="input-label">ราคารวม : </span>
-                <input style="background-color: white" type="text" ng-value="data.amount+data.discount +' บาท'" readonly>
+                <input style="background-color: white" type="text" ng-value="data.amount +' บาท'" readonly>
             </label>
 
+            <label class="item item-input">
+                <span class="input-label">ค่าจัดส่ง : </span>
+                <input style="background-color: white" type="text" ng-value="data.deliveryamount +' บาท'" readonly>
+            </label>
 
             <label class="item item-input">
                 <span class="input-label" >ส่วนลด : </span>
@@ -52,8 +56,6 @@
                 <span class="input-label">ราคาสุทธิ : </span>
                 <input style="background-color: white" type="text" ng-value="data.totalamount + ' ' + 'บาท'" readonly>
             </label>
-
-
         </div>
     </ion-content>
 

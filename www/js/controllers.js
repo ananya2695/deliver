@@ -35,7 +35,7 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('NewCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
+  .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams) {
     $scope.btnGo = function (data) {
 
       console.log(data);
@@ -107,12 +107,17 @@ angular.module('starter.controllers', [])
     };
     $scope.doRefresh = function () {
       $scope.init();
+
       // Stop the ion-refresher from spinning
       $scope.$broadcast('scroll.refreshComplete');
 
     };
     $scope.readOrder = function () {
+      if ($rootScope.countOrder) {
+        $rootScope.countOrder = $rootScope.countOrder;
+      }
       $scope.orders = [];
+      $rootScope.countOrder = 0;
       AuthService.getOrder()
         .then(function (data) {
           var userStore = AuthService.getUser();
@@ -128,45 +133,77 @@ angular.module('starter.controllers', [])
             }
 
           })
+
+          $rootScope.countOrder = $scope.orders.length;
           console.log($scope.orders);
         });
     }
   })
 
-  .controller('MeCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
+  .controller('MeCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicPopup, $rootScope) {
     $scope.btnGo = function (data) {
 
       console.log(data);
       $state.go('tab.me-detail', { data: JSON.stringify(data) });
     }
 
+    // $scope.showConfirm = function () {
+    //   var confirmPopup = $ionicPopup.confirm({
+    //     title: '',
+    //     template: 'ต้องการอัพเดต'
+    //   });
+    //   confirmPopup.then(function (res) {
+    //     if (res) {
+    //       $scope.completeDeliver(res);
+    //     } else {
+    //       alert('Cancel');
+    //     }
+    //   });
+    // };
+
     $scope.completeDeliver = function (item) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'แจ้งเตือน',
+        template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่'
+      });
+      confirmPopup.then(function (res) {
+        if (res) {
+          var status = item.deliverystatus;
+          status = 'complete';
+          var listApt = {
+            status: 'complete',
+            datestatus: new Date()
+          }
+          item.historystatus.push(listApt);
+          var order = {
+            deliverystatus: status,
+            historystatus: item.historystatus
+          }
+          var orderId = item._id;
 
-      var status = item.deliverystatus;
-      status = 'complete';
-      var listApt = {
-        status: 'complete',
-        datestatus: new Date()
-      }
-      item.historystatus.push(listApt);
-      var order = {
-        deliverystatus: status,
-        historystatus: item.historystatus
-      }
-      var orderId = item._id;
+          AuthService.updateOrder(orderId, order)
+            .then(function (response) {
+              // alert('อัพเดต');
+              $scope.init();
+            }, function (error) {
+              console.log(error);
+              alert('dont success' + " " + error.data.message);
+            });
 
-      AuthService.updateOrder(orderId, order)
-        .then(function (response) {
-          alert('success');
+        } else {
+          // alert('Cancel');
           $scope.init();
-        }, function (error) {
-          console.log(error);
-          alert('dont success' + " " + error.data.message);
-        });
+        }
+      });
+
+
 
       // console.log(item);
     };
     $scope.init = function () {
+      if ($rootScope.countOrderApt) {
+        $rootScope.countOrderApt = $rootScope.countOrderApt;
+      }
       AuthService.getOrder()
         .then(function (data) {
           var userStore = AuthService.getUser();
@@ -180,6 +217,8 @@ angular.module('starter.controllers', [])
             }
 
           })
+          $rootScope.countOrderApt = $scope.ordersApt.length;
+
           console.log($scope.ordersApt);
         });
     }
@@ -189,8 +228,6 @@ angular.module('starter.controllers', [])
       $scope.$broadcast('scroll.refreshComplete');
 
     };
-
-
   })
 
   .controller('MeDetailCtrl', function ($scope, $stateParams) {
@@ -253,7 +290,6 @@ angular.module('starter.controllers', [])
           map: map
         });
 
-
         for (var i = 0; i < locations.length; i++) {
           var marker = new google.maps.Marker({
             position: new google.maps.LatLng(locations[i][0], locations[i][1]),
@@ -265,15 +301,11 @@ angular.module('starter.controllers', [])
       }, function (err) {
         // error
       });
-
   })
 
   .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
     $scope.doLogOut = function () {
       AuthService.signOut();
       $state.go('authen');
-      
-
     };
-
   });

@@ -20,6 +20,15 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
+
+      var push = new Ionic.Push({
+        "debug": true
+      });
+
+      push.register(function (token) {
+        console.log("My Device token:", token.token);
+        push.saveToken(token);  // persist the token in the Ionic Platform
+      });
     });
   })
 
@@ -95,7 +104,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-  
+
       .state('tab.more', {
         url: '/more',
         views: {

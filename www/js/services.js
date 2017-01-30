@@ -1,25 +1,25 @@
 angular.module('starter.services', [])
 
-.service('AuthService', ['$http', '$q', function ($http, $q) {
+  .service('AuthService', ['$http', '$q', function ($http, $q) {
 
     this.saveUser = function (user) {
       return $http.post('https://thamapp.herokuapp.com/api/auth/signup', user);
 
     };
-    this.loginUser = function(login) {
+    this.loginUser = function (login) {
 
-    var dfd = $q.defer();
+      var dfd = $q.defer();
 
-    $http.post('https://thamapp.herokuapp.com/api/auth/signin', login).success(function(database) {
-            window.localStorage.user = JSON.stringify(database);
-            dfd.resolve(database);
-        }).error(function(error) {
-            /* Act on the event */
-            dfd.resolve(error);
-            // return dfd.promise;
-        });
-    return dfd.promise;
-};
+      $http.post('https://thamapp.herokuapp.com/api/auth/signin', login).success(function (database) {
+        window.localStorage.user = JSON.stringify(database);
+        dfd.resolve(database);
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.resolve(error);
+        // return dfd.promise;
+      });
+      return dfd.promise;
+    };
     this.getUser = function () {
       return JSON.parse(window.localStorage.user || null);
     };
@@ -39,9 +39,20 @@ angular.module('starter.services', [])
       return dfd.promise;
     };
 
-    this.updateOrder = function (orderId,order) {
+    this.updateOrder = function (orderId, order) {
       console.log(orderId);
-       console.log(order);
-      return $http.put('https://thamapp.herokuapp.com/api/orders/'+orderId, order);
+      console.log(order);
+      return $http.put('https://thamapp.herokuapp.com/api/orders/' + orderId, order);
     }
+  }])
+
+  .service('ProductService', ['$http', '$q', function ($http, $q) {
+    this.getProduct = function () {
+      var dfd = $q.defer();
+      $http.get('https://thamapp.herokuapp.com/api/products').success(function (products) {
+        console.log(products);
+        dfd.resolve(products);
+      });
+      return dfd.promise;
+    };
   }])

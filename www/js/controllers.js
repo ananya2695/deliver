@@ -320,9 +320,54 @@ angular.module('starter.controllers', [])
       });
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicModal, ProductService, AuthService) {
+    $scope.products = [];
+    ProductService.getProduct()
+      .then(function (data) {
+        var productlist = data;
+        $scope.products = productlist;
+        console.log($scope.products);
+      });
+    $scope.init = function () {
+
+      $scope.order = 
+      { items: [] };
+      $scope.order.items = [{
+        qty: 1
+      }]
+
+
+    }
+    $scope.calculate = function (item,qty) {
+      qty = qty || 1;
+      $scope.amount = item.price * qty;
+    }
+    
+    $scope.addQty = function (product) {
+      product.qty = product.qty || 0;
+        product.qty += 1;
+        $scope.calculate(product, product.qty );
+      
+    }
+    $scope.removeQty = function (product) {
+      product.qty = product.qty || 0;      
+        product.qty -= 1;
+         $scope.calculate(product,product.qty);
+      
+    }
+
+    $ionicModal.fromTemplateUrl('templates/modal.html', {
+      scope: $scope
+    }).then(function (modal) {
+      $scope.modal = modal;
+    });
+
     $scope.doLogOut = function () {
       AuthService.signOut();
       $state.go('authen');
+    };
+
+    $scope.listbl = function () {
+      $state.go('listbl');
     };
   });

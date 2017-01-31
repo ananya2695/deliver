@@ -170,6 +170,8 @@ angular.module('starter.controllers', [])
           })
 
           $rootScope.countOrder = $scope.orders.length;
+          $rootScope.Order = $scope.orders;
+
           console.log($scope.orders);
         });
     }
@@ -236,6 +238,9 @@ angular.module('starter.controllers', [])
       // console.log(item);
     };
     $scope.init = function () {
+      $scope.readOrder();
+    }
+    $scope.readOrder = function () {
       if ($rootScope.countOrderApt) {
         $rootScope.countOrderApt = $rootScope.countOrderApt;
       }
@@ -253,6 +258,7 @@ angular.module('starter.controllers', [])
 
           })
           $rootScope.countOrderApt = $scope.ordersApt.length;
+          $rootScope.OrderApt = $scope.ordersApt;
 
           console.log($scope.ordersApt);
         });
@@ -338,7 +344,7 @@ angular.module('starter.controllers', [])
       });
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicModal, ProductService) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicModal, ProductService, $ionicPopup, $rootScope) {
     $scope.userStore = AuthService.getUser();
     console.log($scope.userStore);
     $scope.products = [];
@@ -406,7 +412,7 @@ angular.module('starter.controllers', [])
 
     }
     $scope.removeQty = function (item) {
-      if (item.qty > 0){
+      if (item.qty > 0) {
         item.qty = item.qty || 0;
         item.qty -= 1;
         $scope.calculate(item);
@@ -448,13 +454,31 @@ angular.module('starter.controllers', [])
       console.log($scope.order);
       ProductService.postOrder($scope.order)
         .then(function (response) {
-          alert('success');
           $scope.modal.hide();
+          $scope.init();
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
         });
     }
+    $scope.showConfirm = function () {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'สรุปรายการสั่งซื้อ',
+        template: 'รวมราคา :' + ' ' + $scope.order.amount + '<br/>'
+        + 'ส่วนลด :' + ' ' + $scope.order.discountpromotion + '<br/>'
+        + 'รวมสุทธิ :' + ' ' + $scope.order.totalamount,
+
+      });
+
+      confirmPopup.then(function (res) {
+        if (res) {
+          $scope.saveOrder();
+        } else {
+          // console.log('Not sure!');
+        }
+      });
+
+    };
 
     $ionicModal.fromTemplateUrl('templates/modal.html', {
       scope: $scope
@@ -485,6 +509,7 @@ angular.module('starter.controllers', [])
               }
             }
             console.log($scope.ordersComplete);
+            $rootScope.OrdersCpt = $scope.ordersComplete;
           })
         });
     }
@@ -495,4 +520,9 @@ angular.module('starter.controllers', [])
       $scope.$broadcast('scroll.refreshComplete');
 
     };
+    $scope.btnGo = function (data) {
+
+      console.log(data);
+      $state.go('tab.me-detail', { data: JSON.stringify(data) });
+    }
   });

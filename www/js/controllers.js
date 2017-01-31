@@ -3,7 +3,16 @@ angular.module('starter.controllers', [])
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup) {
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
-      $state.go('tab.new');
+      var push_usr = {
+        user_id: $scope.userStore._id,
+        user_name: $scope.userStore.username,
+        role: 'deliver',
+        device_token: JSON.parse(window.localStorage.token || null)
+      };
+      AuthService.saveUserPushNoti(push_usr)
+        .then(function (res) {
+          $state.go('tab.new');
+        });
     }
     $scope.credentials = {}
 
@@ -31,8 +40,17 @@ angular.module('starter.controllers', [])
           }
           else {
             if (response.roles[0] === 'deliver') {
-              $scope.credentials = {}
-              $state.go('tab.new');
+              var push_usr = {
+                user_id: response._id,
+                user_name: response.username,
+                role: 'deliver',
+                device_token: JSON.parse(window.localStorage.token || null)
+              };
+              AuthService.saveUserPushNoti(push_usr)
+                .then(function (res) {
+                  $scope.credentials = {}
+                  $state.go('tab.new');
+                });
               // alert('success');
             } else {
               //alert('คุณไม่มีสิทธิ์เข้าใช้งาน');

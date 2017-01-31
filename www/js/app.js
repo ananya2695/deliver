@@ -27,6 +27,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
       push.register(function (token) {
         console.log("My Device token:", token.token);
+        window.localStorage.token = JSON.stringify(token.token);
         push.saveToken(token);  // persist the token in the Ionic Platform
       });
     });

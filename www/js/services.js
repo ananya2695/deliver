@@ -20,6 +20,21 @@ angular.module('starter.services', [])
       });
       return dfd.promise;
     };
+
+    this.saveUserPushNoti = function(push_user){
+      var dfd = $q.defer();
+
+      $http.post('https://thamapp.herokuapp.com/api/pushnotiusers', push_user).success(function (database) {
+        dfd.resolve(database);
+      }).error(function (error) {
+        /* Act on the event */
+        console.log(error);
+        dfd.resolve(error);
+        // return dfd.promise;
+      });
+      return dfd.promise;
+    };
+    
     this.getUser = function () {
       return JSON.parse(window.localStorage.user || null);
     };

@@ -24,12 +24,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       var push = new Ionic.Push({
         "debug": true
       });
-
+      
       push.register(function (token) {
         console.log("My Device token:", token.token);
         window.localStorage.token = JSON.stringify(token.token);
         push.saveToken(token);  // persist the token in the Ionic Platform
       });
+
     });
   })
 
@@ -115,7 +116,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-      
+
       .state('listbl', {
         url: '/listbl',
         templateUrl: 'templates/listbl.html',

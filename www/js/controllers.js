@@ -338,40 +338,122 @@ angular.module('starter.controllers', [])
       });
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicModal, ProductService, AuthService) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicModal, ProductService) {
+    $scope.userStore = AuthService.getUser();
+    console.log($scope.userStore);
     $scope.products = [];
     ProductService.getProduct()
       .then(function (data) {
         var productlist = data;
-        $scope.products = productlist;
-        console.log($scope.products);
+        // $scope.products = productlist; 
+        // console.log($scope.products); 
+        productlist.forEach(function (pro) {
+          var product = {
+            product: pro,
+            qty: pro.qty,
+            amount: pro.amount
+          }
+          $scope.products.push(product);
+          console.log($scope.products);
+        });
       });
     $scope.init = function () {
 
-      $scope.order = 
-      { items: [] };
-      $scope.order.items = [{
-        qty: 1
-      }]
+      $scope.order =
+        { items: [] };
+      $scope.order.discountpromotion = 0;
+      $scope.order.totalamount = 0;
+      if ($scope.order.amount) {
+        $scope.order.amount = $scope.order.amount;
+      } else {
+        $scope.order.amount = 0;
+      }
+      $scope.loadData();
 
 
     }
-    $scope.calculate = function (item,qty) {
-      qty = qty || 1;
-      $scope.amount = item.price * qty;
+    $scope.calculate = function (item) {
+      item.qty = item.qty || 0;
+      item.amount = item.product.price * item.qty;
+      $scope.order.items = $scope.products;
+      $scope.sumary($scope.order.items);
     }
-    
-    $scope.addQty = function (product) {
-      product.qty = product.qty || 0;
-        product.qty += 1;
-        $scope.calculate(product, product.qty );
-      
+    $scope.sumary = function (order) {
+      $scope.order.totalamount = 0;
+      angular.forEach(order, function (prod) {
+        $scope.order.totalamount += prod.amount || 0;
+        console.log($scope.order.totalamount);
+      });
+      $scope.order.amount = $scope.order.totalamount + $scope.order.discountpromotion;
+
+      var items = $scope.order.items;
+      $scope.orders = { items: [] };
+      // console.log($scope.order); 
+      items.forEach(function (res) {
+        if (res.qty && res.qty !== undefined) {
+          $scope.orders.items.push(res);
+        }
+      });
+
+      $scope.order.items = [];
+      $scope.order.items = $scope.orders.items;
+      console.log($scope.order);
     }
-    $scope.removeQty = function (product) {
-      product.qty = product.qty || 0;      
-        product.qty -= 1;
-         $scope.calculate(product,product.qty);
-      
+    $scope.addQty = function (item) {
+      item.qty = item.qty || 0;
+      item.qty += 1;
+      $scope.calculate(item);
+
+    }
+    $scope.removeQty = function (item) {
+      if (item.qty > 0){
+        item.qty = item.qty || 0;
+        item.qty -= 1;
+        $scope.calculate(item);
+      }
+    }
+    $scope.saveOrder = function () {
+      if (!$scope.order._id && $scope.userStore.roles[0] === 'deliver') {
+        $scope.order = {
+          docdate: new Date(),
+          docno: (+ new Date()),
+
+          historystatus: [{
+            status: 'complete',
+            datestatus: new Date()
+          }],
+          items: $scope.order.items,
+          shipping: {
+            firstname: $scope.userStore.firstName,
+            lastname: $scope.userStore.lastName,
+            address: $scope.userStore.address.address,
+            postcode: $scope.userStore.address.postcode,
+            subdistrict: $scope.userStore.address.subdistrict,
+            province: $scope.userStore.address.province,
+            district: $scope.userStore.address.district,
+            tel: $scope.userStore.address.tel,
+            email: $scope.userStore.email
+          },
+          delivery: {
+            deliveryid: '0'
+          },
+          deliverystatus: 'complete',
+          namedeliver: $scope.userStore,
+          user: $scope.userStore,
+          discountpromotion: $scope.order.discountpromotion,
+          totalamount: $scope.order.totalamount,
+          amount: $scope.order.amount
+        }
+      }
+      console.log($scope.order);
+      ProductService.postOrder($scope.order)
+        .then(function (response) {
+          alert('success');
+          $scope.modal.hide();
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
     }
 
     $ionicModal.fromTemplateUrl('templates/modal.html', {
@@ -387,5 +469,30 @@ angular.module('starter.controllers', [])
 
     $scope.listbl = function () {
       $state.go('listbl');
+    };
+    $scope.loadData = function () {
+
+
+      AuthService.getOrder()
+        .then(function (data) {
+          var userStore = AuthService.getUser();
+          var orderlist = data;
+          $scope.ordersComplete = [];
+          angular.forEach(orderlist, function (user) {
+            if (user.namedeliver) {
+              if (user.user._id === user.namedeliver._id) {
+                $scope.ordersComplete.push(user);
+              }
+            }
+            console.log($scope.ordersComplete);
+          })
+        });
+    }
+    $scope.doRefresh = function () {
+      $scope.init();
+
+      // Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.refreshComplete');
+
     };
   });

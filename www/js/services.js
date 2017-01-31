@@ -61,13 +61,25 @@ angular.module('starter.services', [])
     }
   }])
 
-  .service('ProductService', ['$http', '$q', function ($http, $q) {
-    this.getProduct = function () {
-      var dfd = $q.defer();
-      $http.get('https://thamapp.herokuapp.com/api/products').success(function (products) {
-        console.log(products);
-        dfd.resolve(products);
-      });
-      return dfd.promise;
-    };
+  .service('ProductService', ['$http', '$q', function ($http, $q) { 
+    this.getProduct = function () { 
+      var dfd = $q.defer(); 
+      $http.get('https://thamapp.herokuapp.com/api/products').success(function (products) { 
+        console.log(products); 
+        dfd.resolve(products); 
+      }); 
+      return dfd.promise; 
+    }; 
+
+      this.postOrder = function (order) { 
+         var dfd = $q.defer(); 
+       $http.post('https://thamapp.herokuapp.com/api/orders', order).success(function (database) { 
+        dfd.resolve(database); 
+      }).error(function (error) { 
+        /* Act on the event */ 
+        dfd.resolve(error); 
+        // return dfd.promise; 
+      }); 
+      return dfd.promise; 
+    } 
   }])

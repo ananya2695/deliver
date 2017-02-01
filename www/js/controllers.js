@@ -508,7 +508,7 @@ angular.module('starter.controllers', [])
                 $scope.ordersComplete.push(user);
               }
             }
-            console.log($scope.ordersComplete);
+            // console.log($scope.ordersComplete);
             $rootScope.OrdersCpt = $scope.ordersComplete;
           })
         });

@@ -1,38 +1,81 @@
 <ion-view view-title="บิลลอย" ng-init="init()">
+    <ion-nav-buttons side="right">
+        <button class="button button-positive button-clear" ng-click="modal.show()">สร้างบิลลอย</button>
+    </ion-nav-buttons>
+
     <ion-content>
-        <div class="row">
-            <div class="col-md-4">
-                <button class="button button-block button-positive" ng-click="modal.show()">สร้างบิลลอย</button>
-            </div>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
+            <input type="text" class="form-control" placeholder="ค้นหา..." ng-model="topsearch" aria-describedby="sizing-addon3">
         </div>
-    </ion-content>
-    <script id="templates/modal.html" type="text/ng-template">
-      <ion-modal-view>
-        <ion-header-bar class="bar bar-header bar-positive">
-            <button class="button button-balanced">บันทึก</button>
-          <h1 class="title">เลือกสินค้า</h1>
-          <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
-        </ion-header-bar>
+        <ion-list>
+            <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in OrdersCpt | filter:topsearch" ng-click="btnGo(data)">
+                <img src={{data.user.profileImageURL}}>
+                <h2>{{data.user.displayName}}</h2>
+                <p style="margin-right: 20%">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
+                <p style="margin-right: 20%">{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
+                <p style="margin-right: 20%">{{data.shipping.tel}}</p>
+                <p class="icon ion-right amount">{{data.totalamount | number:0}} ฿</p>
+                
+                <ion-option-button class="button-assertive" ng-click="rejectDeliver(data)">ปฏิเสธ</ion-option-button>
+                <ion-option-button class="button-positive" ng-click="acceptDeliver(data)">ยอมรับ</ion-option-button>
+            </ion-item>
+        </ion-list>
+</ion-content>
+
+<script id="templates/modal.html" type="text/ng-template"> 
+      <ion-modal-view> 
+        <ion-header-bar class="bar bar-header bar-positive"> 
+          <button class="button button-clear button-primary" ng-click="modal.hide()">ยกเลิก</button>
+          <h1 class="title">เลือกสินค้า</h1> 
+            <button class="button button-clear" ng-click="showConfirm()">บันทึก</button> 
+        </ion-header-bar> 
+
         <ion-content class="padding">
             <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
-      <input type="text" class="form-control" placeholder="Search for order..." ng-model="topsearch" aria-describedby="sizing-addon3">
-    </div>
-          <div class="list card" ng-repeat="product in products | filter:topsearch">
-              <div class="item item-image">
-                  <img src="{{product.images}}">
-              </div>
-             <div class="item item-body">
-                 <h2>ชื่อสินค้า : {{product.name}}</h2>
-                 <h2>ราคา : {{product.price}}</h2>
-                  <h2>ราคารวม : {{amount}}</h2>
-                     <i class="icon ion-plus-circled" ng-click="addQty(product)"></i>
-                     <label ng-bind="product.qty"></label>
-                     <i class="icon ion-minus-circled" ng-click="removeQty(product)"></i>
-                 
-             </div>
-          </div>
-        </ion-content>
-      </ion-modal-view>
+                <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
+                <input type="text" class="form-control" placeholder="ค้นหาสินค้า..." ng-model="topsearch" aria-describedby="sizing-addon3">
+                </div>
+                
+        <div class="row">
+            <div class="col" class="list card">
+                <div class="list" ng-repeat="product in products | filter:topsearch">
+                    <a class="item item-thumbnail-left">
+                        <img src="{{product.product.images}}">
+                        <div class="row">
+                            <div class="col-80">
+                                <h2>ชื่อสินค้า : {{product.product.name}}</h2>
+                                <h2>ราคา/ชิ้น : {{product.product.price}}</h2>
+                                <h2>ราคารวม : {{product.amount || 0}}</h2>
+                            </div>
+
+            <div class="col-20"> 
+                <div class="row"> 
+                    <div class="col" align="center"> 
+                        <i class="icon ion-plus-circled" style="font-size:30px; color:mediumseagreen" ng-click="addQty(product)"></i> 
+                    </div> 
+                </div> 
+
+                <div class="row" align="center"> 
+                    <div class="col"> 
+                        <p style="font-size:20px; font-weight:bold" ng-bind="product.qty || 0"></p> 
+                    </div> 
+                </div> 
+
+                <div class="row"> 
+                    <div class="col" align="center"> 
+                        <i class="icon ion-minus-circled" style="font-size:30px; color:orangered" ng-click="removeQty(product)"></i> 
+                    </div> 
+                </div>
+                
+            </div> 
+        </div>
+    </a>
+</div>
+</div> 
+</div> 
+        </ion-content> 
+      </ion-modal-view> 
     </script>
 </ion-view>

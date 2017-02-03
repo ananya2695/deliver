@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
-  
+
   .service('AuthService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.saveUser = function (user) {
       return $http.post(apiURL + '/auth/signup', user);
 
@@ -21,7 +21,7 @@ angular.module('starter.services', [])
       return dfd.promise;
     };
 
-    this.saveUserPushNoti = function(push_user){
+    this.saveUserPushNoti = function (push_user) {
       var dfd = $q.defer();
 
       $http.post(apiURL + '/pushnotiusers', push_user).success(function (database) {
@@ -34,7 +34,7 @@ angular.module('starter.services', [])
       });
       return dfd.promise;
     };
-    
+
     this.getUser = function () {
       return JSON.parse(window.localStorage.user || null);
     };
@@ -62,26 +62,27 @@ angular.module('starter.services', [])
   }])
 
 
-  .service('ProductService', ['$http', '$q', function ($http, $q) { 
-    this.getProduct = function () { 
-      var dfd = $q.defer(); 
-      $http.get('https://thamapp.herokuapp.com/api/products').success(function (products) { 
-        console.log(products); 
-        dfd.resolve(products); 
-      }); 
-      return dfd.promise; 
-    }; 
+  .service('ProductService', ['$http', '$q', function ($http, $q) {
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
+    this.getProduct = function () {
+      var dfd = $q.defer();
+      $http.get(apiURL + '/products').success(function (products) {
+        console.log(products);
+        dfd.resolve(products);
+      });
+      return dfd.promise;
+    };
 
-      this.postOrder = function (order) { 
-         var dfd = $q.defer(); 
-       $http.post('https://thamapp.herokuapp.com/api/orders', order).success(function (database) { 
-        dfd.resolve(database); 
-      }).error(function (error) { 
-        /* Act on the event */ 
-        dfd.resolve(error); 
+    this.postOrder = function (order) {
+      var dfd = $q.defer();
+      $http.post(apiURL + '/orders', order).success(function (database) {
+        dfd.resolve(database);
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.resolve(error);
         // return dfd.promise; 
-      }); 
-      return dfd.promise; 
-    } 
+      });
+      return dfd.promise;
+    }
 
   }])

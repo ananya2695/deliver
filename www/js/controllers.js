@@ -1,23 +1,23 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        if (notification._raw.additionalData.foreground) {
-          //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     if (notification._raw.additionalData.foreground) {
+    //       //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -542,6 +542,10 @@ angular.module('starter.controllers', [])
       console.log($scope.order);
       ProductService.postOrder($scope.order)
         .then(function (response) {
+          $scope.products.forEach(function(prod){
+            prod.qty = 0;
+            prod.amount =0;
+          });
           $scope.modal.hide();
           $scope.init();
         }, function (error) {

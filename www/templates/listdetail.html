@@ -1,0 +1,65 @@
+<ion-view view-title="ประวัติส่วนตัว" ng-init="init()">
+    <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+
+        <div class="list card">
+            <div class="item item-body">
+                <div align="center">
+                    <img class="imgdetail" src="{{userStore.profileImageURL}}">
+                    <!--<img class="imgdetail" src="http://www.w3schools.com/css/lights600x400.jpg">-->
+                </div>
+                <h2 align="center">{{userStore.displayName}}</h2>
+                <p align="center">{{userStore.address.tel}}</p>
+                <div class="row">
+                    <div class="col-33">
+                        <label>เลขที่ : </label>
+                    </div>
+                    <div class="col-67">
+                        <span>{{userStore.address.address}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-33">
+                        <label>ตำบล : </label>
+                    </div>
+                    <div class="col-67">
+                        <span>{{userStore.address.subdistrict}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-33">
+                        <label>อำเภอ : </label>
+                    </div>
+                    <div class="col-67">
+                        <span>{{userStore.address.district}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-33">
+                        <label>รหัสไปรษณีย์ : </label>
+                    </div>
+                    <div class="col-67">
+                        <span>{{userStore.address.postcode}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-33">
+                        <label>อีเมลล์ : </label>
+                    </div>
+                    <div class="col-67">
+                        <span>{{userStore.email}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item item-body hbody">
+                <ion-content>
+                    <div id="map" data-tap-disabled="true"> </div>
+                </ion-content>
+            </div>
+            <div class="button-bar">
+                <a class="button button-positive" ng-click="centerOnMe()">ลองอีกครั้ง</a>
+                <a class="button button-balanced" ng-click="postme()">ส่งตำแหน่ง</a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -9837,3 +9837,13 @@ a.button {
   font-size: larger !important;
   font-weight: 900;
 }
+
+.imgdetail {
+  width: 40%;
+  border-radius: 50%;
+  height: 110px;
+}
+
+.hbody{
+  height: 200px;
+}

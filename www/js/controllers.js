@@ -259,16 +259,74 @@ angular.module('starter.controllers', [])
   })
 
 
-  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
+  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.completeDeliver = function (item) {
       var confirmPopup = $ionicPopup.confirm({
         title: 'แจ้งเตือน',
-        template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่'
+        template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่',
       });
       confirmPopup.then(function (res) {
         if (res) {
+          var posOptions = { timeout: 10000, enableHighAccuracy: false };
+
+          $cordovaGeolocation
+            .getCurrentPosition(posOptions)
+            .then(function (position) {
+
+              var lat = position.coords.latitude
+              var long = position.coords.longitude
+              // alert(lat + '\n' + long);
+              // var map = new google.maps.Map(document.getElementById('map'), {
+              //   zoom: 15,
+              //   center: new google.maps.LatLng(lat, long),
+              //   mapTypeId: google.maps.MapTypeId.ROADMAP
+              // });
+              // $scope.map = map;
+
+              var location = {
+                latitude: lat,
+                longitude: long
+              }
+              var status = item.deliverystatus;
+              status = 'complete';
+              var listApt = {
+                status: 'complete',
+                datestatus: new Date()
+              }
+              item.historystatus.push(listApt);
+              var order = {
+                deliverystatus: status,
+                historystatus: item.historystatus,
+                shipping: {
+                  sharelocation: location,
+                  tel: item.shipping.tel,
+                  email: item.shipping.email,
+                  firstname: item.shipping.firstname,
+                  lastname: item.shipping.lastname,
+                  address: item.shipping.address,
+                  postcode: item.shipping.postcode,
+                  subdistrict: item.shipping.subdistrict,
+                  province: item.shipping.province,
+                  district: item.shipping.district
+                }
+              }
+              var orderId = item._id;
+
+              AuthService.updateOrder(orderId, order)
+                .then(function (response) {
+                  $state.go('tab.me');
+                }, function (error) {
+                  console.log(error);
+                  alert('dont success' + " " + error.data.message);
+                });
+
+            }, function (err) {
+            });
+
+
+        } else {
           var status = item.deliverystatus;
           status = 'complete';
           var listApt = {
@@ -289,15 +347,9 @@ angular.module('starter.controllers', [])
               console.log(error);
               alert('dont success' + " " + error.data.message);
             });
-
-        } else {
-          // alert('Cancel');
           $scope.init();
         }
       });
-
-
-
       // console.log(item);
     };
 
@@ -370,69 +422,125 @@ angular.module('starter.controllers', [])
   })
 
   .controller('MapCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
-    console.log('ok');
+    $scope.init = function(){
+        $scope.readMap();
+    }
+    $scope.readMap = function () {
+      console.log('ok');
+      $scope.locationOrders = [];
+      $scope.locationOrdersApt = [];
+      AuthService.getOrder()
+        .then(function (data) {
+          var userStore = AuthService.getUser();
+          data.forEach(function (user) {
 
-    var locations = [
-      [13.9351084, 100.715099],
-      [13.9341505, 100.7141161],
-      [13.9347128, 100.7163853]
-    ]
+            if (user.namedeliver) {
 
-    var posOptions = { timeout: 10000, enableHighAccuracy: false };
-    $cordovaGeolocation
-      .getCurrentPosition(posOptions)
-      .then(function (position) {
-        var lat = position.coords.latitude
-        var long = position.coords.longitude
-        // alert(lat + ':' + long);
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15,
-          center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
+              if (user.namedeliver._id === userStore._id) {
 
-        //////ตำแหน่งที่ mark ปัจจุบัน///////////
-        var marker = new google.maps.Marker({
-          position: map.getCenter(),
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 15,
-            fillColor: 'blue',
-            fillOpacity: 0.2,
-            strokeColor: 'blue',
-            strokeWeight: 0
-          },
-          draggable: true,
-          map: map
-        });
-        var marker = new google.maps.Marker({
-          position: map.getCenter(),
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: '#1c90f3',
-            fillOpacity: 0.5,
-            strokeColor: 'white',
-            strokeWeight: 1
-          },
-          draggable: true,
-          map: map
-        });
+                if (user.deliverystatus === 'wait deliver') {
+                  $scope.locationOrders.push(user);
+                } else if (user.deliverystatus === 'accept') {
+                  $scope.locationOrdersApt.push(user);
+                }
 
-        for (var i = 0; i < locations.length; i++) {
-          var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][0], locations[i][1]),
-            map: map
+              }
+            }
+
           });
-        }
+          var posOptions = { timeout: 10000, enableHighAccuracy: false };
+          $cordovaGeolocation
+            .getCurrentPosition(posOptions)
+            .then(function (position) {
+              var lat = position.coords.latitude
+              var long = position.coords.longitude
+              // alert(lat + ':' + long);
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              });
 
-        $scope.map = map;
-      }, function (err) {
-        // error
-      });
+              //////ตำแหน่งที่ mark ปัจจุบัน///////////
+              var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 15,
+                  fillColor: 'blue',
+                  fillOpacity: 0.2,
+                  strokeColor: 'blue',
+                  strokeWeight: 0
+                },
+                draggable: true,
+                map: map
+              });
+              var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: '#1c90f3',
+                  fillOpacity: 0.5,
+                  strokeColor: 'white',
+                  strokeWeight: 1
+                },
+                draggable: true,
+                map: map
+              });
+
+              $scope.locationOrders.forEach(function (locations) {
+                var location = locations.shipping.sharelocation;
+                // console.log($scope.locationConfirmed.length);
+                if (location) {
+                  var marker = new google.maps.Marker({
+                    icon: {
+                      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                      scale: 10,
+                      fillColor: 'yellow',
+                      fillOpacity: 1,
+                      strokeColor: 'yellow',
+                      strokeWeight: 0
+                    },
+                    position: new google.maps.LatLng(location.latitude, location.longitude),
+                    map: map
+                  });
+                }
+              });
+
+              $scope.locationOrdersApt.forEach(function (locations) {
+                console.log(locations);
+                var location = locations.shipping.sharelocation;
+                console.log(location);
+                // console.log($scope.locationConfirmed.length);
+                if (location) {
+                  var marker = new google.maps.Marker({
+                    icon: {
+                      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                      scale: 10,
+                      fillColor: 'green',
+                      fillOpacity: 1,
+                      strokeColor: 'green',
+                      strokeWeight: 0
+                    },
+                    position: new google.maps.LatLng(location.latitude, location.longitude),
+                    map: map
+                  });
+                }
+              });
+
+              $scope.map = map;
+            }, function (err) {
+              // error
+            });
+
+        });
+
+
+    }
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicModal, ProductService, $ionicPopup, $rootScope) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope) {
     $scope.userStore = AuthService.getUser();
     console.log($scope.userStore);
     $scope.products = [];
@@ -542,9 +650,9 @@ angular.module('starter.controllers', [])
       console.log($scope.order);
       ProductService.postOrder($scope.order)
         .then(function (response) {
-          $scope.products.forEach(function(prod){
+          $scope.products.forEach(function (prod) {
             prod.qty = 0;
-            prod.amount =0;
+            prod.amount = 0;
           });
           $scope.modal.hide();
           $scope.init();
@@ -586,6 +694,11 @@ angular.module('starter.controllers', [])
     $scope.listbl = function () {
       $state.go('listbl');
     };
+
+    $scope.listdetail = function () {
+      $state.go('listdetail');
+    };
+
     $scope.loadData = function () {
 
 
@@ -617,4 +730,141 @@ angular.module('starter.controllers', [])
       console.log(data);
       $state.go('tab.me-detail', { data: JSON.stringify(data) });
     }
+    // 
+    // 
+    console.log('detail map');
+    var posOptions = { timeout: 10000, enableHighAccuracy: false };
+    $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        var lat = position.coords.latitude
+        var long = position.coords.longitude
+        // alert(lat + ':' + long);
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        //////ตำแหน่งที่ mark ปัจจุบัน///////////
+        var marker = new google.maps.Marker({
+          position: map.getCenter(),
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 15,
+            fillColor: 'blue',
+            fillOpacity: 0.2,
+            strokeColor: 'blue',
+            strokeWeight: 0
+          },
+          draggable: true,
+          map: map
+        });
+        var marker = new google.maps.Marker({
+          position: map.getCenter(),
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7,
+            fillColor: '#4285f4',
+            fillOpacity: 1,
+            strokeColor: 'white',
+            strokeWeight: 1
+          },
+          draggable: true,
+          map: map
+        });
+
+        $scope.map = map;
+
+        $scope.centerOnMe = function () {
+          // alert('centerOnMe');
+          if ($scope.map) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            var marker = new google.maps.Marker({
+              position: map.getCenter(),
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 15,
+                fillColor: 'blue',
+                fillOpacity: 0.2,
+                strokeColor: 'blue',
+                strokeWeight: 0
+              },
+              draggable: true,
+              map: map
+            });
+            var marker = new google.maps.Marker({
+              position: map.getCenter(),
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: '#4285f4',
+                fillOpacity: 1,
+                strokeColor: 'white',
+                strokeWeight: 1
+              },
+              draggable: true,
+              map: map
+            });
+          }
+        };
+
+        $scope.postme = function () {
+          if ($scope.map) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            var marker = new google.maps.Marker({
+              position: map.getCenter(),
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 15,
+                fillColor: 'blue',
+                fillOpacity: 0.2,
+                strokeColor: 'blue',
+                strokeWeight: 0
+              },
+              draggable: true,
+              map: map
+            });
+            var marker = new google.maps.Marker({
+              position: map.getCenter(),
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: '#4285f4',
+                fillOpacity: 1,
+                strokeColor: 'white',
+                strokeWeight: 1
+              },
+              draggable: true,
+              map: map
+            });
+            // alert('lat : ' + lat + '\n' + 'long : ' + long);
+            var userId = $scope.userStore._id;
+            var user = {
+              address: {
+                sharelocation: {
+                  latitude: lat,
+                  longitude: long
+                }
+              }
+            }
+            AuthService.updateUser(userId, user)
+              .then(function (response) {
+                alert('เสร็จสมบูรณ์');
+              }, function (error) {
+                alert(error);
+              });
+          }
+        };
+      }, function (err) {
+        // error
+      });
   });

@@ -113,6 +113,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         url: '/listbl',
         templateUrl: 'templates/listbl.html',
         controller: 'MoreCtrl'
+      })
+      
+      .state('listdetail', {
+        url: '/listdetail',
+        templateUrl: 'templates/listdetail.html',
+        controller: 'MoreCtrl'
       });
 
     // if none of the above states are matched, use this as the fallback

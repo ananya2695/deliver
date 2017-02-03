@@ -45,6 +45,12 @@ angular.module('starter.services', [])
       return true;
     };
 
+     this.updateUser = function (userId, user) {
+      console.log(userId);
+      console.log(user);
+      return $http.put(apiURL + '/users/' + userId, user);
+    };
+
     this.getOrder = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/orders').success(function (orders) {

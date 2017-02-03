@@ -1,6 +1,24 @@
 angular.module('starter.controllers', [])
 
-  .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup) {
+  .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup,  $rootScope) {
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        if (notification._raw.additionalData.foreground) {
+          //alert(notification.message);
+          
+          $rootScope.$broadcast('onNotification');
+        }
+      }
+    });
+
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
+
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
       var push_usr = {
@@ -140,62 +158,6 @@ angular.module('starter.controllers', [])
 
       // console.log(item);
     };
-    $scope.doRefresh = function () {
-      $scope.init();
-
-      // Stop the ion-refresher from spinning
-      $scope.$broadcast('scroll.refreshComplete');
-
-    };
-    $scope.readOrder = function () {
-      if ($rootScope.countOrder) {
-        $rootScope.countOrder = $rootScope.countOrder;
-      }
-      $scope.orders = [];
-      $rootScope.countOrder = 0;
-      AuthService.getOrder()
-        .then(function (data) {
-          var userStore = AuthService.getUser();
-          var orderlist = data;
-          angular.forEach(orderlist, function (user) {
-            if (user.namedeliver) {
-              if (user.namedeliver._id === userStore._id) {
-                if (user.deliverystatus === 'confirmed' || user.deliverystatus === 'wait deliver') {
-                  $scope.orders.push(user);
-                }
-
-              }
-            }
-
-          })
-
-          $rootScope.countOrder = $scope.orders.length;
-          console.log($scope.orders);
-        });
-    }
-  })
-
-  .controller('MeCtrl', function ($scope, $http, $state, AuthService, $stateParams, $ionicPopup, $rootScope) {
-    $scope.btnGo = function (data) {
-
-      console.log(data);
-      $state.go('tab.me-detail', { data: JSON.stringify(data) });
-    }
-
-    // $scope.showConfirm = function () {
-    //   var confirmPopup = $ionicPopup.confirm({
-    //     title: '',
-    //     template: 'ต้องการอัพเดต'
-    //   });
-    //   confirmPopup.then(function (res) {
-    //     if (res) {
-    //       $scope.completeDeliver(res);
-    //     } else {
-    //       alert('Cancel');
-    //     }
-    //   });
-    // };
-
     $scope.completeDeliver = function (item) {
       var confirmPopup = $ionicPopup.confirm({
         title: 'แจ้งเตือน',
@@ -235,44 +197,169 @@ angular.module('starter.controllers', [])
 
       // console.log(item);
     };
-    $scope.init = function () {
-      if ($rootScope.countOrderApt) {
-        $rootScope.countOrderApt = $rootScope.countOrderApt;
-      }
-      AuthService.getOrder()
-        .then(function (data) {
-          var userStore = AuthService.getUser();
-          var orderlist = data;
-          $scope.ordersApt = [];
-          angular.forEach(orderlist, function (user) {
-            if (user.namedeliver) {
-              if (user.namedeliver._id === userStore._id && user.deliverystatus === 'accept') {
-                $scope.ordersApt.push(user);
-              }
-            }
-
-          })
-          $rootScope.countOrderApt = $scope.ordersApt.length;
-
-          console.log($scope.ordersApt);
-        });
-    }
     $scope.doRefresh = function () {
       $scope.init();
+
       // Stop the ion-refresher from spinning
       $scope.$broadcast('scroll.refreshComplete');
 
     };
+    $scope.readOrder = function () {
+      if ($rootScope.countOrder) {
+        $rootScope.countOrder = $rootScope.countOrder;
+      }
+      if ($rootScope.countOrderApt) {
+        $rootScope.countOrderApt = $rootScope.countOrderApt;
+      }
+      $scope.orders = [];
+      $scope.ordersApt = [];
+      $rootScope.countOrder = 0;
+      AuthService.getOrder()
+        .then(function (data) {
+          var userStore = AuthService.getUser();
+          var orderlist = data;
+          angular.forEach(orderlist, function (user) {
+            
+            if (user.namedeliver) {
+              
+              if (user.namedeliver._id === userStore._id) {
+                
+                if (user.deliverystatus === 'confirmed' || user.deliverystatus === 'wait deliver') {
+                  $scope.orders.push(user);
+                }else if (user.deliverystatus === 'accept') {
+                  $scope.ordersApt.push(user);
+                }
+
+              }
+            }
+
+          })
+
+          $rootScope.countOrder = $scope.orders.length;
+          if($scope.ordersApt){
+            $rootScope.countOrderApt = $scope.ordersApt.length;
+          }
+          
+          //console.log($scope.orders);
+        });
+    }
+    $scope.$on('onNotification', function (event, args) {
+      // do what you want to do
+      alert();
+      $scope.init();
+    });
+    $scope.btnGo2 = function (data) {
+
+      console.log(data);
+      $state.go('tab.me-detail', { data: JSON.stringify(data) });
+    }
   })
 
-  .controller('MeDetailCtrl', function ($scope, $stateParams) {
+  
+  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
+    $scope.completeDeliver = function (item) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'แจ้งเตือน',
+        template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่'
+      });
+      confirmPopup.then(function (res) {
+        if (res) {
+          var status = item.deliverystatus;
+          status = 'complete';
+          var listApt = {
+            status: 'complete',
+            datestatus: new Date()
+          }
+          item.historystatus.push(listApt);
+          var order = {
+            deliverystatus: status,
+            historystatus: item.historystatus
+          }
+          var orderId = item._id;
+
+          AuthService.updateOrder(orderId, order)
+            .then(function (response) {
+              $state.go('tab.me');
+            }, function (error) {
+              console.log(error);
+              alert('dont success' + " " + error.data.message);
+            });
+
+        } else {
+          // alert('Cancel');
+          $scope.init();
+        }
+      });
+
+
+
+      // console.log(item);
+    };
   })
 
-  .controller('NewDetailCtrl', function ($scope, $stateParams) {
+  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
+    $scope.acceptDeliver = function (item) {
+      var listApt =
+        {
+          status: 'accept',
+          datestatus: new Date()
+        };
+      item.historystatus.push(listApt);
+
+      var status = item.deliverystatus;
+      status = 'accept';
+      var order = {
+        deliverystatus: status,
+        historystatus: item.historystatus
+      }
+      var orderId = item._id;
+
+
+      AuthService.updateOrder(orderId, order)
+        .then(function (response) {
+          //alert('success');
+          //$scope.init();
+          $state.go('tab.new');
+        }, function (error) {
+          console.log(error);
+          //alert('dont success' + " " + error.data.message);
+        });
+      
+
+    };
+    $scope.rejectDeliver = function (item) {
+      var namedeli = item.namedeliver;
+      namedeli = null;
+      var status = item.deliverystatus;
+      status = 'reject';
+      var listApt = {
+        status: 'reject',
+        datestatus: new Date()
+      }
+      item.historystatus.push(listApt);
+      var order = {
+        namedeliver: namedeli,
+        deliverystatus: status,
+        historystatus: item.historystatus
+      }
+      var orderId = item._id;
+
+      AuthService.updateOrder(orderId, order)
+        .then(function (response) {
+          //alert('success');
+          //$scope.init();
+          $state.go('tab.new');
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+
+      // console.log(item);
+    };
   })
 
   .controller('MapCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {

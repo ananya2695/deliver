@@ -9,7 +9,7 @@
     </div>
     
     <ion-list>
-      <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in ordersApt | filter:topsearch" ng-click = "btnGo(data)">
+      <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in ordersApt | filter:topsearch" ng-click = "btnGo2(data)">
         <img src={{data.user.profileImageURL}}>
         <h2>{{data.user.displayName}}</h2>
         <p style="margin-right: 20%">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>

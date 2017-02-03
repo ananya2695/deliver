@@ -28,7 +28,26 @@
                 <input style="background-color: white" type="text" ng-model="data.shipping.tel" readonly>
             </label>
 
-
+            <div class="row">
+            <div class="col"></div>
+            <div class="col col-90">
+                <div class="row">
+                    <div class="col col-10"></div>
+                    <div class="col col-40">
+                        <button class="button button-block button-positive"  ng-click = "acceptDeliver(data)">
+                            ยอมรับ
+                        </button>
+                    </div>
+                    <div class="col col-40">
+                        <button class="button button-block button-assertive" ng-click = "rejectDeliver(data)">
+                            ปฏิเสธ
+                        </button>
+                    </div>
+                    <div class="col col-10"></div>
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
             <div class='item item-avatar-left item-icon-right item-text-wrap' ng-repeat="item in data.items">
                 <img src={{item.product.images}}>
                 <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
@@ -57,6 +76,8 @@
                 <input style="background-color: white" type="text" ng-value="data.totalamount + ' ' + 'บาท'" readonly>
             </label>
         </div>
+        
     </ion-content>
+    
 
 </ion-view>

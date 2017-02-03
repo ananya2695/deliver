@@ -1,16 +1,16 @@
 angular.module('starter.services', [])
-
+  
   .service('AuthService', ['$http', '$q', function ($http, $q) {
-
+    var apiURL = 'https://thamapp.herokuapp.com/api';
     this.saveUser = function (user) {
-      return $http.post('https://thamapp.herokuapp.com/api/auth/signup', user);
+      return $http.post(apiURL + '/auth/signup', user);
 
     };
     this.loginUser = function (login) {
 
       var dfd = $q.defer();
 
-      $http.post('https://thamapp.herokuapp.com/api/auth/signin', login).success(function (database) {
+      $http.post(apiURL + '/auth/signin', login).success(function (database) {
         window.localStorage.user = JSON.stringify(database);
         dfd.resolve(database);
       }).error(function (error) {
@@ -24,7 +24,7 @@ angular.module('starter.services', [])
     this.saveUserPushNoti = function(push_user){
       var dfd = $q.defer();
 
-      $http.post('https://thamapp.herokuapp.com/api/pushnotiusers', push_user).success(function (database) {
+      $http.post(apiURL + '/pushnotiusers', push_user).success(function (database) {
         dfd.resolve(database);
       }).error(function (error) {
         /* Act on the event */
@@ -47,8 +47,8 @@ angular.module('starter.services', [])
 
     this.getOrder = function () {
       var dfd = $q.defer();
-      $http.get('https://thamapp.herokuapp.com/api/orders').success(function (orders) {
-        console.log(orders);
+      $http.get(apiURL + '/orders').success(function (orders) {
+        //console.log(orders);
         dfd.resolve(orders);
       });
       return dfd.promise;
@@ -57,14 +57,14 @@ angular.module('starter.services', [])
     this.updateOrder = function (orderId, order) {
       console.log(orderId);
       console.log(order);
-      return $http.put('https://thamapp.herokuapp.com/api/orders/' + orderId, order);
+      return $http.put(apiURL + '/orders/' + orderId, order);
     }
   }])
 
   .service('ProductService', ['$http', '$q', function ($http, $q) {
     this.getProduct = function () {
       var dfd = $q.defer();
-      $http.get('https://thamapp.herokuapp.com/api/products').success(function (products) {
+      $http.get(apiURL + '/products').success(function (products) {
         console.log(products);
         dfd.resolve(products);
       });

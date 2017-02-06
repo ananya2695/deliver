@@ -45,10 +45,9 @@ angular.module('starter.services', [])
       return true;
     };
 
-     this.updateUser = function (userId, user) {
-      console.log(userId);
-      console.log(user);
-      return $http.put(apiURL + '/users/' + userId, user);
+     this.updateUser = function (userX) {
+       var user = this.getUser();
+      return $http.put(apiURL + '/users' , userX,user);
     };
 
     this.getOrder = function () {

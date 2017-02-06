@@ -422,8 +422,8 @@ angular.module('starter.controllers', [])
   })
 
   .controller('MapCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
-    $scope.init = function(){
-        $scope.readMap();
+    $scope.init = function () {
+      $scope.readMap();
     }
     $scope.readMap = function () {
       console.log('ok');
@@ -495,12 +495,12 @@ angular.module('starter.controllers', [])
                 if (location) {
                   var marker = new google.maps.Marker({
                     icon: {
-                      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                      scale: 10,
-                      fillColor: 'yellow',
-                      fillOpacity: 1,
-                      strokeColor: 'yellow',
-                      strokeWeight: 0
+                      url: ' http://res.cloudinary.com/hflvlav04/image/upload/v1486371643/riwxnxtjdfjganurw46m.png',
+                      scaledSize: new google.maps.Size(32, 51),
+                      // The origin for this image is (0, 0). 
+                      origin: new google.maps.Point(0, 0),
+                      // The anchor for this image is the base of the flagpole at (0, 32). 
+                      //anchor: new google.maps.Point(0, 32)
                     },
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                     map: map
@@ -516,12 +516,12 @@ angular.module('starter.controllers', [])
                 if (location) {
                   var marker = new google.maps.Marker({
                     icon: {
-                      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                      scale: 10,
-                      fillColor: 'green',
-                      fillOpacity: 1,
-                      strokeColor: 'green',
-                      strokeWeight: 0
+                      url: 'http://res.cloudinary.com/hflvlav04/image/upload/v1486371632/sj4niz8oykdqfadnwhbo.png',
+                      scaledSize: new google.maps.Size(28, 45),
+                      // The origin for this image is (0, 0). 
+                      origin: new google.maps.Point(0, 0),
+                      // The anchor for this image is the base of the flagpole at (0, 32). 
+                      // anchor: new google.maps.Point(0, 32)
                     },
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                     map: map
@@ -847,20 +847,27 @@ angular.module('starter.controllers', [])
               map: map
             });
             // alert('lat : ' + lat + '\n' + 'long : ' + long);
-            var userId = $scope.userStore._id;
-            var user = {
+
+            var userX = $scope.userStore
+            userX = {
               address: {
+                postcode: userX.address.postcode,
+                district: userX.address.district,
+                subdistrict: userX.address.subdistrict,
+                province: userX.address.province,
+                address: userX.address.address,
+                tel: userX.address.tel,
                 sharelocation: {
                   latitude: lat,
                   longitude: long
                 }
               }
             }
-            AuthService.updateUser(userId, user)
+            AuthService.updateUser(userX)
               .then(function (response) {
                 alert('เสร็จสมบูรณ์');
               }, function (error) {
-                alert(error);
+                alert('dont success' + " " + error.data.message);
               });
           }
         };

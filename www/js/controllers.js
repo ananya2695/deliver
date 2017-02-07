@@ -5,11 +5,12 @@ angular.module('starter.controllers', [])
       "debug": true,
       "onNotification": function (notification) {
         console.log(notification);
-        if (notification._raw.additionalData.foreground) {
-          //alert(notification.message);
+        $rootScope.$broadcast('onNotification');
+        // if (notification._raw.additionalData.foreground) {
+        //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
+        //   $rootScope.$broadcast('onNotification');
+        // }
       }
     });
 
@@ -89,6 +90,7 @@ angular.module('starter.controllers', [])
   })
 
   .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams) {
+
     $scope.btnGo = function (data) {
 
       console.log(data);
@@ -251,6 +253,22 @@ angular.module('starter.controllers', [])
       //alert();
       $scope.init();
     });
+    $scope.$on('onAccept', function (event, args) {
+      // do what you want to do
+      //alert();
+      $scope.init();
+    });
+    $scope.$on('onReject', function (event, args) {
+      // do what you want to do
+      //alert();
+      $scope.init();
+    });
+    $scope.$on('onComplete', function (event, args) {
+      // do what you want to do
+      //alert();
+      $scope.init();
+    });
+
     $scope.btnGo2 = function (data) {
 
       console.log(data);
@@ -317,6 +335,7 @@ angular.module('starter.controllers', [])
               AuthService.updateOrder(orderId, order)
                 .then(function (response) {
                   $state.go('tab.me');
+                  $rootScope.$broadcast('onComplete');
                 }, function (error) {
                   console.log(error);
                   alert('dont success' + " " + error.data.message);
@@ -343,6 +362,7 @@ angular.module('starter.controllers', [])
           AuthService.updateOrder(orderId, order)
             .then(function (response) {
               $state.go('tab.me');
+              $rootScope.$broadcast('onComplete');
             }, function (error) {
               console.log(error);
               alert('dont success' + " " + error.data.message);
@@ -352,7 +372,6 @@ angular.module('starter.controllers', [])
       });
       // console.log(item);
     };
-
   })
 
   .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
@@ -383,6 +402,7 @@ angular.module('starter.controllers', [])
           //alert('success');
           //$scope.init();
           $state.go('tab.new');
+          $rootScope.$broadcast('onAccept');
         }, function (error) {
           console.log(error);
           //alert('dont success' + " " + error.data.message);
@@ -412,6 +432,7 @@ angular.module('starter.controllers', [])
           //alert('success');
           //$scope.init();
           $state.go('tab.new');
+          $rootScope.$broadcast('onReject');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);

@@ -571,6 +571,7 @@ angular.module('starter.controllers', [])
         $scope.order.amount = 0;
       }
       $scope.loadData();
+      $scope.mapdetail();
 
 
     }
@@ -732,146 +733,149 @@ angular.module('starter.controllers', [])
     }
     // 
     // 
-    console.log('detail map');
-    var posOptions = { timeout: 10000, enableHighAccuracy: false };
-    $cordovaGeolocation
-      .getCurrentPosition(posOptions)
-      .then(function (position) {
-        var lat = position.coords.latitude
-        var long = position.coords.longitude
-        // alert(lat + ':' + long);
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15,
-          center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
+    // console.log('detail map');
+    $scope.mapdetail = function () {
+      var posOptions = { timeout: 10000, enableHighAccuracy: false };
+      $cordovaGeolocation
+        .getCurrentPosition(posOptions)
+        .then(function (position) {
+          var lat = position.coords.latitude
+          var long = position.coords.longitude
+          // alert(lat + ':' + long);
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
 
-        //////ตำแหน่งที่ mark ปัจจุบัน///////////
-        var marker = new google.maps.Marker({
-          position: map.getCenter(),
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 15,
-            fillColor: 'blue',
-            fillOpacity: 0.2,
-            strokeColor: 'blue',
-            strokeWeight: 0
-          },
-          draggable: true,
-          map: map
-        });
-        var marker = new google.maps.Marker({
-          position: map.getCenter(),
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 7,
-            fillColor: '#4285f4',
-            fillOpacity: 1,
-            strokeColor: 'white',
-            strokeWeight: 1
-          },
-          draggable: true,
-          map: map
-        });
+          //////ตำแหน่งที่ mark ปัจจุบัน///////////
+          var marker = new google.maps.Marker({
+            position: map.getCenter(),
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 15,
+              fillColor: 'blue',
+              fillOpacity: 0.2,
+              strokeColor: 'blue',
+              strokeWeight: 0
+            },
+            draggable: true,
+            map: map
+          });
+          var marker = new google.maps.Marker({
+            position: map.getCenter(),
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 7,
+              fillColor: '#4285f4',
+              fillOpacity: 1,
+              strokeColor: 'white',
+              strokeWeight: 1
+            },
+            draggable: true,
+            map: map
+          });
 
-        $scope.map = map;
+          $scope.map = map;
 
-        $scope.centerOnMe = function () {
-          // alert('centerOnMe');
-          if ($scope.map) {
-            var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 15,
-              center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
-            var marker = new google.maps.Marker({
-              position: map.getCenter(),
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 15,
-                fillColor: 'blue',
-                fillOpacity: 0.2,
-                strokeColor: 'blue',
-                strokeWeight: 0
-              },
-              draggable: true,
-              map: map
-            });
-            var marker = new google.maps.Marker({
-              position: map.getCenter(),
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 7,
-                fillColor: '#4285f4',
-                fillOpacity: 1,
-                strokeColor: 'white',
-                strokeWeight: 1
-              },
-              draggable: true,
-              map: map
-            });
-          }
-        };
+          $scope.centerOnMe = function () {
+            // alert('centerOnMe');
+            if ($scope.map) {
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              });
+              var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 15,
+                  fillColor: 'blue',
+                  fillOpacity: 0.2,
+                  strokeColor: 'blue',
+                  strokeWeight: 0
+                },
+                draggable: true,
+                map: map
+              });
+              var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 7,
+                  fillColor: '#4285f4',
+                  fillOpacity: 1,
+                  strokeColor: 'white',
+                  strokeWeight: 1
+                },
+                draggable: true,
+                map: map
+              });
+            }
+          };
 
-        $scope.postme = function () {
-          if ($scope.map) {
-            var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 15,
-              center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
-            var marker = new google.maps.Marker({
-              position: map.getCenter(),
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 15,
-                fillColor: 'blue',
-                fillOpacity: 0.2,
-                strokeColor: 'blue',
-                strokeWeight: 0
-              },
-              draggable: true,
-              map: map
-            });
-            var marker = new google.maps.Marker({
-              position: map.getCenter(),
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 7,
-                fillColor: '#4285f4',
-                fillOpacity: 1,
-                strokeColor: 'white',
-                strokeWeight: 1
-              },
-              draggable: true,
-              map: map
-            });
-            // alert('lat : ' + lat + '\n' + 'long : ' + long);
+          $scope.postme = function () {
+            if ($scope.map) {
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              });
+              var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 15,
+                  fillColor: 'blue',
+                  fillOpacity: 0.2,
+                  strokeColor: 'blue',
+                  strokeWeight: 0
+                },
+                draggable: true,
+                map: map
+              });
+              var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 7,
+                  fillColor: '#4285f4',
+                  fillOpacity: 1,
+                  strokeColor: 'white',
+                  strokeWeight: 1
+                },
+                draggable: true,
+                map: map
+              });
+              // alert('lat : ' + lat + '\n' + 'long : ' + long);
 
-            var userX = $scope.userStore
-            userX = {
-              address: {
-                postcode: userX.address.postcode,
-                district: userX.address.district,
-                subdistrict: userX.address.subdistrict,
-                province: userX.address.province,
-                address: userX.address.address,
-                tel: userX.address.tel,
-                sharelocation: {
-                  latitude: lat,
-                  longitude: long
+              var userX = $scope.userStore
+              userX = {
+                address: {
+                  postcode: userX.address.postcode,
+                  district: userX.address.district,
+                  subdistrict: userX.address.subdistrict,
+                  province: userX.address.province,
+                  address: userX.address.address,
+                  tel: userX.address.tel,
+                  sharelocation: {
+                    latitude: lat,
+                    longitude: long
+                  }
                 }
               }
+              AuthService.updateUser(userX)
+                .then(function (response) {
+                  alert('เสร็จสมบูรณ์');
+                }, function (error) {
+                  alert('dont success' + " " + error.data.message);
+                });
             }
-            AuthService.updateUser(userX)
-              .then(function (response) {
-                alert('เสร็จสมบูรณ์');
-              }, function (error) {
-                alert('dont success' + " " + error.data.message);
-              });
-          }
-        };
-      }, function (err) {
-        // error
-      });
+          };
+        }, function (err) {
+          // error
+        });
+    }
+
   });

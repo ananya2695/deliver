@@ -573,7 +573,6 @@ angular.module('starter.controllers', [])
       $scope.loadData();
       $scope.mapdetail();
 
-
     }
     $scope.calculate = function (item) {
       item.qty = item.qty || 0;

@@ -757,7 +757,9 @@ angular.module('starter.controllers', [])
           angular.forEach(orderlist, function (user) {
             if (user.namedeliver) {
               if (user.user._id === user.namedeliver._id) {
+                if(userStore._id === user.namedeliver._id){
                 $scope.ordersComplete.push(user);
+                }
               }
             }
             // console.log($scope.ordersComplete);

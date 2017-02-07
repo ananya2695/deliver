@@ -13,7 +13,7 @@
             <input type="text" class="form-control" placeholder="ค้นหา..." ng-model="topsearch" aria-describedby="sizing-addon3">
         </div>
         <ion-list>
-            <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in OrdersCpt | filter:topsearch" ng-click="btnGo(data)">
+            <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in OrdersCpt | filter:topsearch" ng-click="goDetail(data)">
                 <img src={{data.user.profileImageURL}}>
                 <h2>{{data.user.displayName}}</h2>
                 <p class="dataMargin">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>

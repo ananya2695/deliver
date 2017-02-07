@@ -21,7 +21,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         StatusBar.styleDefault();
       }
 
-      
+
 
     });
   })
@@ -114,7 +114,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         templateUrl: 'templates/listbl.html',
         controller: 'MoreCtrl'
       })
-      
+      .state('billdetail', {
+        url: '/billdetail:{data}',
+        templateUrl: 'templates/billdetail.html',
+        controller: 'MoreDetailCtrl'
+      })
+
       .state('listdetail', {
         url: '/listdetail',
         templateUrl: 'templates/listdetail.html',

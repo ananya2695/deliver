@@ -586,6 +586,11 @@ angular.module('starter.controllers', [])
 
     }
   })
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
+    console.log(JSON.parse($stateParams.data));
+    $scope.data = JSON.parse($stateParams.data);
+  
+  })
 
   .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope) {
     $scope.userStore = AuthService.getUser();
@@ -757,8 +762,8 @@ angular.module('starter.controllers', [])
           angular.forEach(orderlist, function (user) {
             if (user.namedeliver) {
               if (user.user._id === user.namedeliver._id) {
-                if(userStore._id === user.namedeliver._id){
-                $scope.ordersComplete.push(user);
+                if (userStore._id === user.namedeliver._id) {
+                  $scope.ordersComplete.push(user);
                 }
               }
             }
@@ -774,10 +779,9 @@ angular.module('starter.controllers', [])
       $scope.$broadcast('scroll.refreshComplete');
 
     };
-    $scope.btnGo = function (data) {
-
-      console.log(data);
-      $state.go('tab.me-detail', { data: JSON.stringify(data) });
+    $scope.goDetail = function (data) {
+      $state.go('billdetail', { data: JSON.stringify(data) });
+      console.log($stateParams.data);
     }
     // 
     // 

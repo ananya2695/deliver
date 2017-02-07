@@ -9825,6 +9825,9 @@ a.button {
   font-size: 30px; 
   color: mediumseagreen;
 }
+.fontSize {
+  font-size: 20px; 
+}
 
 .removeQty {
   font-size: 30px; 

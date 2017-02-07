@@ -490,6 +490,11 @@ angular.module('starter.controllers', [])
               });
 
               $scope.locationOrders.forEach(function (locations) {
+                var contentString = '<div>'
+                  + '<p>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</p>'
+                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '</p>'
+                  + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>'
+                  + '</div>';
                 var location = locations.shipping.sharelocation;
                 // console.log($scope.locationConfirmed.length);
                 if (location) {
@@ -505,10 +510,24 @@ angular.module('starter.controllers', [])
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                     map: map
                   });
+
+                  var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                  });
+                  marker.addListener('click', function () {
+                    console.log('click');
+                    infowindow.open($scope.map, this);
+                  });
                 }
+
               });
 
               $scope.locationOrdersApt.forEach(function (locations) {
+                var contentString = '<div>'
+                  + '<p>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</p>'
+                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '</p>'
+                  + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>'
+                  + '</div>';
                 console.log(locations);
                 var location = locations.shipping.sharelocation;
                 console.log(location);
@@ -525,6 +544,13 @@ angular.module('starter.controllers', [])
                     },
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                     map: map
+                  });
+                  var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                  });
+                  marker.addListener('click', function () {
+                    console.log('click');
+                    infowindow.open($scope.map, this);
                   });
                 }
               });

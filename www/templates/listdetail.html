@@ -1,6 +1,6 @@
 <ion-view view-title="ประวัติส่วนตัว" ng-init="init()" cache-view="false">
     <ion-nav-buttons side="primary">
-        <button class="button button-stable button-clear" ui-sref="tab.more">Back</button>
+        <button class="button button-clear" ui-sref="tab.more">Back</button>
     </ion-nav-buttons>
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
@@ -14,43 +14,63 @@
                 <h2 align="center">{{userStore.displayName}}</h2>
                 <p align="center">{{userStore.address.tel}}</p>
                 <div class="row">
-                    <div class="col-33">
-                        <label>เลขที่ : </label>
+                    <div class="col-10">
                     </div>
-                    <div class="col-67">
+                    <div class="col-33">
+                        <label>เลขที่ </label>
+                    </div>
+                    <div class="col-50">
                         <span>{{userStore.address.address}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-33">
-                        <label>ตำบล : </label>
+                    <div class="col-10">
                     </div>
-                    <div class="col-67">
+                    <div class="col-33">
+                        <label>ตำบล </label>
+                    </div>
+                    <div class="col-50">
                         <span>{{userStore.address.subdistrict}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-33">
-                        <label>อำเภอ : </label>
+                    <div class="col-10">
                     </div>
-                    <div class="col-67">
+                    <div class="col-33">
+                        <label>อำเภอ </label>
+                    </div>
+                    <div class="col-50">
                         <span>{{userStore.address.district}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-33">
-                        <label>รหัสไปรษณีย์ : </label>
+                    <div class="col-10">
                     </div>
-                    <div class="col-67">
-                        <span>{{userStore.address.postcode}}</span>
+                    <div class="col-33">
+                        <label>จังหวัด  </label>
+                    </div>
+                    <div class="col-50">
+                        <span>{{userStore.address.province}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-33">
-                        <label>อีเมลล์ : </label>
+                    <div class="col-10">
                     </div>
-                    <div class="col-67">
+                    <div class="col-33">
+                        <label>อีเมลล์ </label>
+                    </div>
+                    <div class="col-50">
                         <span>{{userStore.email}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-10">
+                    </div>
+                    <div class="col-33">
+                        <label>รหัสไปรษณีย์  </label>
+                    </div>
+                    <div class="col-50">
+                        <span>{{userStore.address.postcode}}</span>
                     </div>
                 </div>
             </div>

@@ -1,23 +1,23 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    // var push = new Ionic.Push({
-    //   "debug": true,
-    //   "onNotification": function (notification) {
-    //     console.log(notification);
-    //     if (notification._raw.additionalData.foreground) {
-    //       //alert(notification.message);
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        if (notification._raw.additionalData.foreground) {
+          //alert(notification.message);
 
-    //       $rootScope.$broadcast('onNotification');
-    //     }
-    //   }
-    // });
+          $rootScope.$broadcast('onNotification');
+        }
+      }
+    });
 
-    // push.register(function (token) {
-    //   console.log("My Device token:", token.token);
-    //   window.localStorage.token = JSON.stringify(token.token);
-    //   push.saveToken(token);  // persist the token in the Ionic Platform
-    // });
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -248,7 +248,7 @@ angular.module('starter.controllers', [])
     }
     $scope.$on('onNotification', function (event, args) {
       // do what you want to do
-      alert();
+      //alert();
       $scope.init();
     });
     $scope.btnGo2 = function (data) {

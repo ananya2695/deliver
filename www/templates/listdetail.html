@@ -1,7 +1,12 @@
-<ion-view view-title="ประวัติส่วนตัว" ng-init="init()" cache-view="false">
-    <ion-nav-buttons side="primary">
-        <button class="button button-clear" ui-sref="tab.more">Back</button>
-    </ion-nav-buttons>
+<ion-view view-title="ประวัติส่วนตัว" ng-init="init()" cache-view="false" align-title="center">
+
+    <ion-nav-bar align-title="center">
+        <ion-nav-buttons side="left">
+            <button class="button button-icon icon-left" ui-sref="tab.more">Back
+      </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
         </ion-refresher>
@@ -86,6 +91,10 @@
                 </div>
                 <div class="col">
                     <button class="button button-balanced button-block" ng-click="postme()">ส่งตำแหน่ง</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
                 </div>
             </div>
     </ion-content>

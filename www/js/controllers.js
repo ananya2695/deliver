@@ -511,10 +511,19 @@ angular.module('starter.controllers', [])
               });
 
               $scope.locationOrders.forEach(function (locations) {
+                var product = '';
+                var price = null;
+                locations.items.forEach(function (pro) {
+                  product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
+                })
                 var contentString = '<div>'
-                  + '<p>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</p>'
-                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '</p>'
-                  + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>'
+                  + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
+                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
+                  + '<p>' + product + '</p>'
+                  + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
+                  + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
+                  + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
+                  + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
                   + '</div>';
                 var location = locations.shipping.sharelocation;
                 // console.log($scope.locationConfirmed.length);
@@ -544,10 +553,19 @@ angular.module('starter.controllers', [])
               });
 
               $scope.locationOrdersApt.forEach(function (locations) {
+                var product = '';
+                var price = null;
+                locations.items.forEach(function (pro) {
+                  product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
+                })
                 var contentString = '<div>'
-                  + '<p>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</p>'
-                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '</p>'
-                  + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>'
+                  + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
+                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
+                  + '<p>' + product + '</p>'
+                  + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
+                  + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
+                  + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
+                  + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
                   + '</div>';
                 console.log(locations);
                 var location = locations.shipping.sharelocation;
@@ -589,7 +607,7 @@ angular.module('starter.controllers', [])
   .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
-  
+
   })
 
   .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope) {

@@ -254,24 +254,8 @@ angular.module('starter.controllers', [])
       //alert();
       $scope.init();
     });
-    $scope.$on('onAccept', function (event, args) {
-      // do what you want to do
-      //alert();
-      $scope.init();
-    });
-    $scope.$on('onReject', function (event, args) {
-      // do what you want to do
-      //alert();
-      $scope.init();
-    });
-    $scope.$on('onComplete', function (event, args) {
-      // do what you want to do
-      //alert();
-      $scope.init();
-    });
-    $scope.$on('onLoginSuccess', function (event, args) {
-      // do what you want to do
-      //alert();
+    $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+      // alert('ok');
       $scope.init();
     });
 

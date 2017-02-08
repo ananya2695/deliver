@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
   .service('AuthService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.saveUser = function (user) {
       return $http.post(apiURL + '/auth/signup', user);
 
@@ -68,7 +68,7 @@ angular.module('starter.services', [])
 
 
   .service('ProductService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.getProduct = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/products').success(function (products) {
@@ -88,6 +88,20 @@ angular.module('starter.services', [])
         // return dfd.promise; 
       });
       return dfd.promise;
+    }
+
+    this.deleteOrder = function (orderId) {
+       var dfd = $q.defer();
+      $http.delete(apiURL + '/orders/' + orderId).success(function (database) {
+        dfd.resolve(database);
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.reject(error);
+        // return dfd.promise; 
+     
+      });
+      return dfd.promise;
+    
     }
 
   }])

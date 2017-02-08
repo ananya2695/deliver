@@ -1,24 +1,24 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        // if (notification._raw.additionalData.foreground) {
-        //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     // if (notification._raw.additionalData.foreground) {
+    //     //   //alert(notification.message);
 
-        //   $rootScope.$broadcast('onNotification');
-        // }
-      }
-    });
+    //     //   $rootScope.$broadcast('onNotification');
+    //     // }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -69,6 +69,7 @@ angular.module('starter.controllers', [])
                 .then(function (res) {
                   $scope.credentials = {}
                   $state.go('tab.new');
+                  $rootScope.$broadcast('onLoginSuccess');
                 });
               // alert('success');
             } else {
@@ -268,6 +269,11 @@ angular.module('starter.controllers', [])
       //alert();
       $scope.init();
     });
+    $scope.$on('onLoginSuccess', function (event, args) {
+      // do what you want to do
+      //alert();
+      $scope.init();
+    });
 
     $scope.btnGo2 = function (data) {
 
@@ -446,6 +452,12 @@ angular.module('starter.controllers', [])
     $scope.init = function () {
       $scope.readMap();
     }
+    $scope.$on('onLoginSuccess', function (event, args) {
+      // do what you want to do
+      //alert();
+      $scope.init();
+    });
+    
     $scope.readMap = function () {
       console.log('ok');
       $scope.locationOrders = [];
@@ -604,9 +616,34 @@ angular.module('starter.controllers', [])
 
     }
   })
-  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
+
+    $scope.showConfirm = function (data) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'คุณต้องการลบข้อมูลรายการสินค้านี้ใช่หรือไม่'
+      });
+
+      confirmPopup.then(function (res) {
+        if (res) {
+          $scope.deleteOrder(data);
+        } else {
+          // console.log('Not sure!');
+        }
+      });
+    };
+
+    $scope.deleteOrder = function (data) {
+      ProductService.deleteOrder(data._id)
+        .then(function (response) {
+          $state.go('listbl');
+          $rootScope.$broadcast('onDelete');
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+    }
 
   })
 
@@ -630,7 +667,6 @@ angular.module('starter.controllers', [])
         });
       });
     $scope.init = function () {
-
       $scope.order =
         { items: [] };
       $scope.order.discountpromotion = 0;
@@ -644,6 +680,16 @@ angular.module('starter.controllers', [])
       $scope.mapdetail();
 
     }
+    $scope.$on('onLoginSuccess', function (event, args) {
+      // do what you want to do
+      // alert();
+      // $scope.doRefresh();
+    });
+    $scope.$on('onDelete', function (event, args) {
+      // do what you want to do
+      // alert();
+      $scope.init();
+    });
     $scope.calculate = function (item) {
       item.qty = item.qty || 0;
       item.amount = item.product.price * item.qty;
@@ -731,6 +777,7 @@ angular.module('starter.controllers', [])
           alert('dont success' + " " + error.data.message);
         });
     }
+
     $scope.showConfirm = function () {
       var confirmPopup = $ionicPopup.confirm({
         title: 'สรุปรายการสั่งซื้อ',

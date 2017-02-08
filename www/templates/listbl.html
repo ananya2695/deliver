@@ -33,10 +33,14 @@
 
     <script id="templates/modal.html" type="text/ng-template">
         <ion-modal-view>
-            <ion-header-bar class="bar bar-header bar-positive">
-                <button class="button button-clear button-primary" ng-click="modal.hide()">ยกเลิก</button>
+            <ion-header-bar align-title="center" class="bar-positive">
+                <div class="buttons">
+                    <button class="button button-clear button-primary" ng-click="modal.hide()">ยกเลิก</button>
+                </div>
                 <h1 class="title">เลือกสินค้า</h1>
-                <button class="button button-clear" ng-click="showConfirm()">บันทึก</button>
+                <div class="buttons">
+                    <button class="button button-clear" ng-click="showConfirm()">บันทึก</button>
+                </div>
             </ion-header-bar>
 
             <ion-content class="padding">

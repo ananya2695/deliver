@@ -1,24 +1,24 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    // var push = new Ionic.Push({
-    //   "debug": true,
-    //   "onNotification": function (notification) {
-    //     console.log(notification);
-    //     $rootScope.$broadcast('onNotification');
-    //     // if (notification._raw.additionalData.foreground) {
-    //     //   //alert(notification.message);
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        $rootScope.$broadcast('onNotification');
+        // if (notification._raw.additionalData.foreground) {
+        //   //alert(notification.message);
 
-    //     //   $rootScope.$broadcast('onNotification');
-    //     // }
-    //   }
-    // });
+        //   $rootScope.$broadcast('onNotification');
+        // }
+      }
+    });
 
-    // push.register(function (token) {
-    //   console.log("My Device token:", token.token);
-    //   window.localStorage.token = JSON.stringify(token.token);
-    //   push.saveToken(token);  // persist the token in the Ionic Platform
-    // });
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -457,7 +457,7 @@ angular.module('starter.controllers', [])
       //alert();
       $scope.init();
     });
-    
+
     $scope.readMap = function () {
       console.log('ok');
       $scope.locationOrders = [];
@@ -616,7 +616,7 @@ angular.module('starter.controllers', [])
 
     }
   })
-  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup) {
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
 
@@ -638,7 +638,6 @@ angular.module('starter.controllers', [])
       ProductService.deleteOrder(data._id)
         .then(function (response) {
           $state.go('listbl');
-          $rootScope.$broadcast('onDelete');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -682,12 +681,10 @@ angular.module('starter.controllers', [])
     }
     $scope.$on('onLoginSuccess', function (event, args) {
       // do what you want to do
-      // alert();
-      // $scope.doRefresh();
+      $scope.init();
     });
-    $scope.$on('onDelete', function (event, args) {
-      // do what you want to do
-      // alert();
+    $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
+      // alert('ok');
       $scope.init();
     });
     $scope.calculate = function (item) {

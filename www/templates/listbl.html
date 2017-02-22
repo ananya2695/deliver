@@ -23,10 +23,13 @@
                 <p class="dataMargin">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
                 <p class="dataMargin">{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
                 <p class="dataMargin">{{data.shipping.tel}}</p>
+                <div ng-show="data.deliverystatus === 'complete'">
+                    <span class="icon ion-right marR marT">ออเดอร์สำเร็จ</span><i class="icon ion-checkmark-circled iconic marT"></i>
+                </div>
                 <p class="icon ion-right amount">{{data.totalamount | number:0}} ฿</p>
 
-                <ion-option-button class="button-assertive" ng-click="rejectDeliver(data)">ปฏิเสธ</ion-option-button>
-                <ion-option-button class="button-positive" ng-click="acceptDeliver(data)">ยอมรับ</ion-option-button>
+                <!--<ion-option-button class="button-assertive" ng-click="rejectDeliver(data)">ปฏิเสธ</ion-option-button>
+                <ion-option-button class="button-positive" ng-click="acceptDeliver(data)">ยอมรับ</ion-option-button>-->
             </ion-item>
         </ion-list>
     </ion-content>

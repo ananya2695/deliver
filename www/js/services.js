@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
   .service('AuthService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.saveUser = function (user) {
       return $http.post(apiURL + '/auth/signup', user);
 
@@ -12,7 +12,7 @@ angular.module('starter.services', [])
 
       $http.post(apiURL + '/auth/signin', login).success(function (database) {
         window.localStorage.user = JSON.stringify(database);
-        alert('Success'); 
+        // alert('Success'); 
         dfd.resolve(database);
       }).error(function (error) {
         /* Act on the event */
@@ -70,7 +70,7 @@ angular.module('starter.services', [])
 
 
   .service('ProductService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.getProduct = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/products').success(function (products) {

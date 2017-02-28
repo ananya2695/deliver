@@ -6,15 +6,6 @@
     "ionic-platform-web-client": "^0.7.1"
   },
   "dependencies": {
-    "angular-moment": "^1.0.1",
-    "angular-animate": "~1.6.2",
-    "angular-sanitize": "~1.6.2",
-    "ionic": "~2.1.0"
-  },
-  "resolutions": {
-    "angular-animate": "~1.6.2",
-    "angular": ">= 1.2.23",
-    "angular-sanitize": "~1.6.2",
-    "ionic": "~2.1.0"
+    "angular-moment": "^1.0.1"
   }
 }

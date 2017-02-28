@@ -23,6 +23,7 @@
                 <p class="dataMargin">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
                 <p class="dataMargin">{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
                 <p class="dataMargin">{{data.shipping.tel}}</p>
+                <p class="icon ion-right clock  ion-clock" am-time-ago="data.created"></p>
                 <div ng-show="data.deliverystatus === 'complete'">
                     <span class="icon ion-right marR marT">ออเดอร์สำเร็จ</span><i class="icon ion-checkmark-circled iconic marT"></i>
                 </div>

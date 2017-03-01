@@ -1,24 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    // var push = new Ionic.Push({
-    //   "debug": true,
-    //   "onNotification": function (notification) {
-    //     console.log(notification);
-    //     $rootScope.$broadcast('onNotification');
-    //     // if (notification._raw.additionalData.foreground) {
-    //     //   //alert(notification.message);
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        $rootScope.$broadcast('onNotification');
+        if (notification._raw.additionalData.foreground) {
+          //   //alert(notification.message);
 
-    //     //   $rootScope.$broadcast('onNotification');
-    //     // }
-    //   }
-    // });
+          $rootScope.$broadcast('onNotification');
+        }
+      }
+    });
 
-    // push.register(function (token) {
-    //   console.log("My Device token:", token.token);
-    //   window.localStorage.token = JSON.stringify(token.token);
-    //   push.saveToken(token);  // persist the token in the Ionic Platform
-    // });
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      alert('token.token');
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -600,7 +601,7 @@ angular.module('starter.controllers', [])
 
     }
   })
-  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope) {
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope,RequestService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
 
@@ -628,9 +629,37 @@ angular.module('starter.controllers', [])
         });
     }
 
+    $scope.deliReceived = function (item) {
+      var listrcv =
+        {
+          status: 'received',
+          datestatus: new Date()
+        };
+      item.historystatus.push(listrcv);
+
+      var status = item.deliverystatus;
+      status = 'received';
+      var requestorder = {
+        deliverystatus: status,
+        historystatus: item.historystatus
+      }
+      var requestorderId = item._id;
+
+
+      RequestService.updateRequestOrder(requestorderId, requestorder)
+        .then(function (response) {
+          // alert('success');
+          $state.go('listreceived');
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+
+    };
+
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService) {
     $scope.userStore = AuthService.getUser();
     console.log($scope.userStore);
     $scope.products = [];
@@ -661,6 +690,7 @@ angular.module('starter.controllers', [])
       }
       $scope.loadData();
       $scope.mapdetail();
+      $scope.requestorders();
 
     }
     $scope.$on('onLoginSuccess', function (event, args) {
@@ -793,6 +823,13 @@ angular.module('starter.controllers', [])
       $state.go('listbl');
     };
 
+    $scope.listreceived = function () {
+      $state.go('listreceived');
+    };
+     $scope.detailreceived = function () {
+      $state.go('detailreceived');
+    };
+
     $scope.listdetail = function () {
       $state.go('listdetail');
     };
@@ -827,6 +864,11 @@ angular.module('starter.controllers', [])
     };
     $scope.goDetail = function (data) {
       $state.go('billdetail', { data: JSON.stringify(data) });
+      console.log($stateParams.data);
+    }
+
+     $scope.requestOrderDetail = function (data) {
+      $state.go('detailreceived', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
     // 
@@ -973,6 +1015,33 @@ angular.module('starter.controllers', [])
           };
         }, function (err) {
           // error
+        });
+    }
+
+    $scope.requestorders = function () {
+      RequestService.getRequests()
+        .then(function (data) {
+          var requestlist = data;
+          $scope.listRequest = [];
+          $scope.listResponse = [];
+          $scope.listReceived = [];
+          requestlist.forEach(function (request) {
+            if ($scope.userStore._id === request.namedeliver._id) {
+              if (request.deliverystatus === 'request') {
+                $scope.listRequest.push(request);
+              }
+              else if (request.deliverystatus === 'response') {
+                $scope.listResponse.push(request);
+              }
+              else if (request.deliverystatus === 'received') {
+                $scope.listReceived.push(request);
+              }
+            }
+          })
+
+          console.log($scope.listRequest.length);
+          console.log($scope.listResponse.length);
+          console.log($scope.listReceived.length);
         });
     }
 

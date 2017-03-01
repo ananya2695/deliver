@@ -143,6 +143,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         templateUrl: 'templates/listbl.html',
         controller: 'MoreCtrl'
       })
+
+
       .state('billdetail', {
         url: '/billdetail:{data}',
         templateUrl: 'templates/billdetail.html',
@@ -153,6 +155,18 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         url: '/listdetail',
         templateUrl: 'templates/listdetail.html',
         controller: 'MoreCtrl'
+      })
+
+      .state('listreceived', {
+        url: '/listreceived',
+        templateUrl: 'templates/listreceived.html',
+        controller: 'MoreCtrl'
+      })
+      
+      .state('detailreceived', {
+        url: '/detailreceived:{data}',
+        templateUrl: 'templates/detailreceived.html',
+        controller: 'MoreDetailCtrl'
       });
 
     // if none of the above states are matched, use this as the fallback

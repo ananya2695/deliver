@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
   .service('AuthService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.saveUser = function (user) {
       return $http.post(apiURL + '/auth/signup', user);
 
@@ -12,7 +12,7 @@ angular.module('starter.services', [])
 
       $http.post(apiURL + '/auth/signin', login).success(function (database) {
         window.localStorage.user = JSON.stringify(database);
-        // alert('Success'); 
+        alert('Success');
         dfd.resolve(database);
       }).error(function (error) {
         /* Act on the event */
@@ -47,9 +47,9 @@ angular.module('starter.services', [])
       return true;
     };
 
-     this.updateUser = function (userX) {
-       var user = this.getUser();
-      return $http.put(apiURL + '/users' , userX,user);
+    this.updateUser = function (userX) {
+      var user = this.getUser();
+      return $http.put(apiURL + '/users', userX, user);
     };
 
     this.getOrder = function () {
@@ -70,7 +70,7 @@ angular.module('starter.services', [])
 
 
   .service('ProductService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'https://thamapp.herokuapp.com/api';
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
     this.getProduct = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/products').success(function (products) {
@@ -93,17 +93,37 @@ angular.module('starter.services', [])
     }
 
     this.deleteOrder = function (orderId) {
-       var dfd = $q.defer();
+      var dfd = $q.defer();
       $http.delete(apiURL + '/orders/' + orderId).success(function (database) {
         dfd.resolve(database);
       }).error(function (error) {
         /* Act on the event */
         dfd.reject(error);
         // return dfd.promise; 
-     
+
       });
       return dfd.promise;
-    
+
     }
 
+  }])
+
+  .service('RequestService', ['$http', '$q', function ($http, $q) {
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
+    this.getRequests = function () {
+      var dfd = $q.defer();
+      $http.get(apiURL + '/requestorders').success(function (requestorders) {
+        console.log(requestorders);
+        dfd.resolve(requestorders);
+      });
+      return dfd.promise;
+    };
+    this.updateRequestOrder = function (requestorderId, requestorder) {
+      var dfd = $q.defer();
+      $http.put(apiURL + '/requestorders/' + requestorderId, requestorder).success(function (requestorders) {
+        console.log(requestorders);
+        dfd.resolve(requestorders);
+      });
+      return dfd.promise;
+    };
   }])

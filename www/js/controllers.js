@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      alert('token.token');
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   alert('token.token');
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -209,19 +209,21 @@ angular.module('starter.controllers', [])
 
     };
     $scope.readOrder = function () {
-      if ($rootScope.countOrder) {
-        $rootScope.countOrder = $rootScope.countOrder;
-      }
-      if ($rootScope.countOrderApt) {
-        $rootScope.countOrderApt = $rootScope.countOrderApt;
-      }
-      $scope.orders = [];
-      $scope.ordersApt = [];
-      $rootScope.countOrder = 0;
+      // if ($rootScope.countOrder) {
+      //   $rootScope.countOrder = $rootScope.countOrder;
+      // }
+      // if ($rootScope.countOrderApt) {
+      //   $rootScope.countOrderApt = $rootScope.countOrderApt;
+      // }
+
+      //$rootScope.countOrder = 0;
       AuthService.getOrder()
         .then(function (data) {
+
           var userStore = AuthService.getUser();
           var orderlist = data;
+          $scope.orders = [];
+          $scope.ordersApt = [];
           angular.forEach(orderlist, function (user) {
 
             if (user.namedeliver) {
@@ -239,8 +241,10 @@ angular.module('starter.controllers', [])
 
           })
 
-          $rootScope.countOrder = $scope.orders.length;
-
+          
+          if ($scope.orders) {
+            $rootScope.countOrder = $scope.orders.length;
+          }
           if ($scope.ordersApt) {
             $rootScope.countOrderApt = $scope.ordersApt.length;
           }
@@ -601,7 +605,7 @@ angular.module('starter.controllers', [])
 
     }
   })
-  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope,RequestService) {
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
 
@@ -826,7 +830,7 @@ angular.module('starter.controllers', [])
     $scope.listreceived = function () {
       $state.go('tab.listreceived');
     };
-     $scope.detailreceived = function () {
+    $scope.detailreceived = function () {
       $state.go('tab.detailreceived');
     };
 
@@ -867,7 +871,7 @@ angular.module('starter.controllers', [])
       console.log($stateParams.data);
     }
 
-     $scope.requestOrderDetail = function (data) {
+    $scope.requestOrderDetail = function (data) {
       $state.go('tab.detailreceived', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }

@@ -1,15 +1,8 @@
 <ion-view view-title="บิลลอย" ng-init="init()">
-
-    <ion-nav-bar align-title="center">
-        <ion-nav-buttons side="left">
-            <button class="button button-icon icon-left" ui-sref="tab.more">Back
-      </button>
-        </ion-nav-buttons>
-        <ion-nav-buttons side="right">
-            <button class="button button-positive button-clear" ng-click="modal.show()">สร้างบิลลอย</button>
-        </ion-nav-buttons>
-    </ion-nav-bar>
-
+    <ion-nav-buttons side="right">
+        <button class="button button-positive button-clear" ng-click="modal.show()">สร้างบิลลอย</button>
+    </ion-nav-buttons>
+    
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
         <div class="input-group input-group-sm">

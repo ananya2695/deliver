@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services','angularMoment'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment'])
 
   .run(function ($ionicPlatform, AuthService) {
     $ionicPlatform.ready(function () {
@@ -21,9 +21,9 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         StatusBar.styleDefault();
       }
       if (window.localStorage.credential) {
-                var user = JSON.parse(window.localStorage.credential);
-                AuthService.loginUser(user);
-            }
+        var user = JSON.parse(window.localStorage.credential);
+        AuthService.loginUser(user);
+      }
 
 
 
@@ -138,35 +138,57 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      .state('listbl', {
+      .state('tab.listbl', {
         url: '/listbl',
-        templateUrl: 'templates/listbl.html',
-        controller: 'MoreCtrl'
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/listbl.html',
+            controller: 'MoreCtrl'
+          }
+        }
       })
 
 
-      .state('billdetail', {
+      .state('tab.billdetail', {
         url: '/billdetail:{data}',
-        templateUrl: 'templates/billdetail.html',
-        controller: 'MoreDetailCtrl'
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/billdetail.html',
+            controller: 'MoreDetailCtrl'
+
+          }
+        }
       })
 
-      .state('listdetail', {
+      .state('tab.listdetail', {
         url: '/listdetail',
-        templateUrl: 'templates/listdetail.html',
-        controller: 'MoreCtrl'
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/listdetail.html',
+            controller: 'MoreCtrl'
+
+          }
+        }
       })
 
-      .state('listreceived', {
+      .state('tab.listreceived', {
         url: '/listreceived',
-        templateUrl: 'templates/listreceived.html',
-        controller: 'MoreCtrl'
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/listreceived.html',
+            controller: 'MoreCtrl'
+          }
+        }
       })
-      
-      .state('detailreceived', {
+
+      .state('tab.detailreceived', {
         url: '/detailreceived:{data}',
-        templateUrl: 'templates/detailreceived.html',
-        controller: 'MoreDetailCtrl'
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/detailreceived.html',
+            controller: 'MoreDetailCtrl'
+          }
+        }
       });
 
     // if none of the above states are matched, use this as the fallback

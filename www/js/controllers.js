@@ -622,7 +622,7 @@ angular.module('starter.controllers', [])
     $scope.deleteOrder = function (data) {
       ProductService.deleteOrder(data._id)
         .then(function (response) {
-          $state.go('listbl');
+          $state.go('tab.listbl');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -820,18 +820,18 @@ angular.module('starter.controllers', [])
     };
 
     $scope.listbl = function () {
-      $state.go('listbl');
+      $state.go('tab.listbl');
     };
 
     $scope.listreceived = function () {
-      $state.go('listreceived');
+      $state.go('tab.listreceived');
     };
      $scope.detailreceived = function () {
-      $state.go('detailreceived');
+      $state.go('tab.detailreceived');
     };
 
     $scope.listdetail = function () {
-      $state.go('listdetail');
+      $state.go('tab.listdetail');
     };
 
     $scope.loadData = function () {
@@ -863,12 +863,12 @@ angular.module('starter.controllers', [])
 
     };
     $scope.goDetail = function (data) {
-      $state.go('billdetail', { data: JSON.stringify(data) });
+      $state.go('tab.billdetail', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
 
      $scope.requestOrderDetail = function (data) {
-      $state.go('detailreceived', { data: JSON.stringify(data) });
+      $state.go('tab.detailreceived', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
     // 

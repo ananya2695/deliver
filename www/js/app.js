@@ -24,9 +24,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         var user = JSON.parse(window.localStorage.credential);
         AuthService.loginUser(user);
       }
-
-
-
     });
   })
 

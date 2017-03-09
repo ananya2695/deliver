@@ -25,6 +25,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         AuthService.loginUser(user);
       }
     });
+    $ionicPlatform.on("resume", function (event) {
+      // user opened the app from the background
+      if (window.localStorage.credential) {
+        var user = JSON.parse(window.localStorage.credential);
+        AuthService.loginUser(user);
+      }
+    });
   })
 
   .config(function ($httpProvider) {

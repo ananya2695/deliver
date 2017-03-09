@@ -37,6 +37,7 @@ angular.module('starter.controllers', [])
     $scope.credentials = {}
 
     $scope.doLogIn = function (credentials) {
+      window.localStorage.credential = credentials;
       var login = {
         username: credentials.username,
         password: credentials.password

@@ -127,3 +127,56 @@ angular.module('starter.services', [])
       return dfd.promise;
     };
   }])
+
+  .service('ReturnService', ['$http', '$q', function ($http, $q) {
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
+    this.getReturns = function () {
+      var dfd = $q.defer();
+      $http.get(apiURL + '/returnorders').success(function (returnorders) {
+        console.log(returnorders);
+        dfd.resolve(returnorders);
+      });
+      return dfd.promise;
+    };
+    this.updateReturnOrder = function (returnordersId, returnorder) {
+      var dfd = $q.defer();
+      $http.put(apiURL + '/returnorders/' + returnordersId, returnorder).success(function (returnorders) {
+        console.log(returnorders);
+        dfd.resolve(returnorders);
+      });
+      return dfd.promise;
+    };
+  }])
+
+  .service('AccuralService', ['$http', '$q', function ($http, $q) {
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
+    this.getAccurals = function () {
+      var dfd = $q.defer();
+      $http.get(apiURL + '/accuralreceipts').success(function (accuralreceipts) {
+        console.log(accuralreceipts);
+        dfd.resolve(accuralreceipts);
+      });
+      return dfd.promise;
+    };
+    this.updateAccuralOrder = function (accuralreceiptsId, accuralreceipt) {
+      var dfd = $q.defer();
+      $http.put(apiURL + '/accuralreceipts/' + accuralreceiptsId, accuralreceipts).success(function (accuralreceipts) {
+        console.log(accuralreceipts);
+        dfd.resolve(accuralreceipts);
+      });
+      return dfd.promise;
+    };
+  }])
+
+  .service('StockService', ['$http', '$q', function ($http, $q) {
+    var apiURL = 'https://thamapptest.herokuapp.com/api';
+    this.getStocks = function () {
+      var dfd = $q.defer();
+      $http.get(apiURL + '/stocks').success(function (stocks) {
+        console.log(stocks);
+        dfd.resolve(stocks);
+      });
+      return dfd.promise;
+    };
+    
+  }]);

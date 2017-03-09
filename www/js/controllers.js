@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   // prompt('copy token', token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -242,7 +242,7 @@ angular.module('starter.controllers', [])
 
           })
 
-          
+
           if ($scope.orders) {
             $rootScope.countOrder = $scope.orders.length;
           }
@@ -606,7 +606,7 @@ angular.module('starter.controllers', [])
 
     }
   })
-  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService) {
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
 
@@ -662,9 +662,65 @@ angular.module('starter.controllers', [])
 
     };
 
+    $scope.deliReturn = function (item) {
+      var listrcv =
+        {
+          status: 'return',
+          datestatus: new Date()
+        };
+      item.historystatus.push(listrcv);
+
+      var status = item.deliverystatus;
+      status = 'return';
+      var returnorder = {
+        deliverystatus: status,
+        historystatus: item.historystatus
+      }
+      var returnordersId = item._id;
+
+
+      ReturnService.updateReturnOrder(returnordersId, returnorder)
+        .then(function (response) {
+          // alert('success');
+          $state.go('listReturn');
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+
+    };
+
+    $scope.deliAccural = function (item) {
+      var listrcv =
+        {
+          status: 'confirmed',
+          datestatus: new Date()
+        };
+      item.historystatus.push(listrcv);
+
+      var status = item.deliverystatus;
+      status = 'confirmed';
+      var accuralreceipt = {
+        deliverystatus: status,
+        historystatus: item.historystatus
+      }
+      var accuralreceiptsId = item._id;
+
+
+      AccuralService.updateAccuralOrder(accuralreceiptsId, accuralreceipt)
+        .then(function (response) {
+          // alert('success');
+          $state.go('listAr');
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+
+    };
+
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService) {
     $scope.userStore = AuthService.getUser();
     console.log($scope.userStore);
     $scope.products = [];
@@ -696,6 +752,9 @@ angular.module('starter.controllers', [])
       $scope.loadData();
       $scope.mapdetail();
       $scope.requestorders();
+      $scope.returnorders();
+      $scope.accuralreceipts();
+      $scope.stocks();
 
     }
     $scope.$on('onLoginSuccess', function (event, args) {
@@ -839,6 +898,24 @@ angular.module('starter.controllers', [])
       $state.go('tab.listdetail');
     };
 
+    $scope.listReturn = function () {
+      $state.go('tab.listReturn');
+    };
+    $scope.detailreturn = function () {
+      $state.go('tab.detailreturn');
+    };
+
+    $scope.listAr = function () {
+      $state.go('tab.listAr');
+    };
+
+    $scope.detailAr = function () {
+      $state.go('tab.detailAr');
+    };
+    $scope.liststock = function () {
+      $state.go('tab.liststock');
+    };
+
     $scope.loadData = function () {
 
 
@@ -874,6 +951,16 @@ angular.module('starter.controllers', [])
 
     $scope.requestOrderDetail = function (data) {
       $state.go('tab.detailreceived', { data: JSON.stringify(data) });
+      console.log($stateParams.data);
+    }
+
+    $scope.returnOrderDetail = function (data) {
+      $state.go('tab.detailreturn', { data: JSON.stringify(data) });
+      console.log($stateParams.data);
+    }
+
+    $scope.accuralOrderDetail = function (data) {
+      $state.go('tab.detailAr', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
     // 
@@ -1026,11 +1113,10 @@ angular.module('starter.controllers', [])
     $scope.requestorders = function () {
       RequestService.getRequests()
         .then(function (data) {
-          var requestlist = data;
           $scope.listRequest = [];
           $scope.listResponse = [];
           $scope.listReceived = [];
-          requestlist.forEach(function (request) {
+          data.forEach(function (request) {
             if ($scope.userStore._id === request.namedeliver._id) {
               if (request.deliverystatus === 'request') {
                 $scope.listRequest.push(request);
@@ -1043,10 +1129,71 @@ angular.module('starter.controllers', [])
               }
             }
           })
+        });
+    }
 
-          console.log($scope.listRequest.length);
-          console.log($scope.listResponse.length);
-          console.log($scope.listReceived.length);
+    $scope.returnorders = function () {
+      ReturnService.getReturns()
+        .then(function (data) {
+          $scope.listReturns = [];
+          $scope.listreturnResponse = [];
+          $scope.listreturnReceived = [];
+          data.forEach(function (ret) {
+            if ($scope.userStore._id === ret.namedeliver._id) {
+              if (ret.deliverystatus === 'return') {
+                $scope.listReturns.push(ret);
+              }
+              else if (ret.deliverystatus === 'response') {
+                $scope.listreturnResponse.push(ret);
+              }
+              else if (ret.deliverystatus === 'received') {
+                $scope.listreturnReceived.push(ret);
+              }
+            }
+          });
+
+          console.log($scope.listReturns.length);
+          console.log($scope.listreturnResponse.length);
+          console.log($scope.listreturnReceived.length);
+        });
+    }
+
+    $scope.accuralreceipts = function () {
+      AccuralService.getAccurals()
+        .then(function (data) {
+          $scope.listarWait = [];
+          $scope.listarConfirmed = [];
+          $scope.listarReceipt = [];
+          data.forEach(function (ar) {
+            if ($scope.userStore._id === ar.namedeliver._id) {
+              if (ar.arstatus === 'wait for confirmed') {
+                $scope.listarWait.push(ar);
+              }
+              else if (ar.arstatus === 'confirmed') {
+                $scope.listarConfirmed.push(ar);
+              }
+              else if (ar.arstatus === 'receipt') {
+                $scope.listarReceipt.push(ar);
+              }
+            }
+          });
+
+          console.log($scope.listarWait.length);
+          console.log($scope.listarConfirmed.length);
+          console.log($scope.listarReceipt.length);
+        });
+    }
+
+    $scope.stocks = function () {
+      StockService.getStocks()
+        .then(function (data) {
+          $scope.stockdeli = [];
+          data.forEach(function (stock) {
+            if ($scope.userStore._id === stock.namedeliver._id) {
+              $scope.stockdeli.push(stock);
+            }
+            console.log($scope.stockdeli);
+          });
         });
     }
 

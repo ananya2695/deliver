@@ -193,6 +193,51 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
             controller: 'MoreDetailCtrl'
           }
         }
+      })
+      .state('tab.listReturn', {
+        url: '/listReturn',
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/listReturn.html',
+            controller: 'MoreCtrl'
+          }
+        }
+      })
+      .state('tab.detailreturn', {
+        url: '/detailreturn:{data}',
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/detailreturn.html',
+            controller: 'MoreDetailCtrl'
+          }
+        }
+      })
+      .state('tab.listAr', {
+        url: '/listAr',
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/listAr.html',
+            controller: 'MoreCtrl'
+          }
+        }
+      })
+      .state('tab.detailAr', {
+        url: '/detailAr:{data}',
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/detailAr.html',
+            controller: 'MoreDetailCtrl'
+          }
+        }
+      })
+      .state('tab.liststock', {
+        url: '/liststock',
+        views: {
+          'tab-more': {
+            templateUrl: 'templates/liststock.html',
+            controller: 'MoreCtrl'
+          }
+        }
       });
 
     // if none of the above states are matched, use this as the fallback

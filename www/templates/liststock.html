@@ -5,7 +5,7 @@
             <input type="text" class="form-control" placeholder="ค้นหา..." ng-model="topsearch" aria-describedby="sizing-addon3">
         </div>
         <div class="list" ng-repeat="stock in stockdeli">
-            <a class="item item-thumbnail-left" href="#" ng-repeat="pro in stock.stocks">
+            <a class="item item-thumbnail-left" ng-repeat="pro in stock.stocks">
                 <img src="{{pro.product.images}}">
                 <h2>{{pro.product.name}}</h2>
                 <p>รับเข้า : {{pro.income}}</p>

@@ -123,8 +123,12 @@ angular.module('starter.services', [])
       $http.put(apiURL + '/requestorders/' + requestorderId, requestorder).success(function (requestorders) {
         console.log(requestorders);
         dfd.resolve(requestorders);
-      });
-      return dfd.promise;
+      }).error(function (error) { 
+        /* Act on the event */ 
+        dfd.reject(error); 
+        // return dfd.promise; 
+      }); 
+      return dfd.promise; 
     };
   }])
 
@@ -158,13 +162,17 @@ angular.module('starter.services', [])
       });
       return dfd.promise;
     };
-    this.updateAccuralOrder = function (accuralreceiptsId, accuralreceipt) {
+    this.updateAccuralOrder = function (accuralreceiptsId, accuralreceipts) {
       var dfd = $q.defer();
       $http.put(apiURL + '/accuralreceipts/' + accuralreceiptsId, accuralreceipts).success(function (accuralreceipts) {
         console.log(accuralreceipts);
         dfd.resolve(accuralreceipts);
-      });
-      return dfd.promise;
+      }).error(function (error) { 
+        /* Act on the event */ 
+        dfd.reject(error); 
+        // return dfd.promise; 
+      }); 
+      return dfd.promise; 
     };
   }])
 

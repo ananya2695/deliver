@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    // var push = new Ionic.Push({
-    //   "debug": true,
-    //   "onNotification": function (notification) {
-    //     console.log(notification);
-    //     $rootScope.$broadcast('onNotification');
-    //     if (notification._raw.additionalData.foreground) {
-    //       //   //alert(notification.message);
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        $rootScope.$broadcast('onNotification');
+        if (notification._raw.additionalData.foreground) {
+          //   //alert(notification.message);
 
-    //       $rootScope.$broadcast('onNotification');
-    //     }
-    //   }
-    // });
+          $rootScope.$broadcast('onNotification');
+        }
+      }
+    });
 
-    // push.register(function (token) {
-    //   console.log("My Device token:", token.token);
-    //   // prompt('copy token', token.token);
-    //   window.localStorage.token = JSON.stringify(token.token);
-    //   push.saveToken(token);  // persist the token in the Ionic Platform
-    // });
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      // prompt('copy token', token.token);
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -633,8 +633,8 @@ angular.module('starter.controllers', [])
           alert('dont success' + " " + error.data.message);
         });
     }
-
     $scope.deliReceived = function (item) {
+      var res = null;
       var listrcv =
         {
           status: 'received',
@@ -654,13 +654,13 @@ angular.module('starter.controllers', [])
       RequestService.updateRequestOrder(requestorderId, requestorder)
         .then(function (response) {
           // alert('success');
-          $state.go('listreceived');
+      $state.go('tab.listreceived'); 
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
         });
-
     };
+
 
     $scope.deliReturn = function (item) {
       var listrcv =
@@ -701,7 +701,7 @@ angular.module('starter.controllers', [])
       var status = item.deliverystatus;
       status = 'confirmed';
       var accuralreceipt = {
-        deliverystatus: status,
+        arstatus: status,
         historystatus: item.historystatus
       }
       var accuralreceiptsId = item._id;
@@ -709,8 +709,7 @@ angular.module('starter.controllers', [])
 
       AccuralService.updateAccuralOrder(accuralreceiptsId, accuralreceipt)
         .then(function (response) {
-          // alert('success');
-          $state.go('listAr');
+          $state.go('tab.listAr');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);

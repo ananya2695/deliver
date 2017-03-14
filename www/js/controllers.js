@@ -282,90 +282,90 @@ angular.module('starter.controllers', [])
       //   template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่',
       // });
       // confirmPopup.then(function (res) {
-        // if (res) {
-        //   var posOptions = { timeout: 10000, enableHighAccuracy: false };
+      // if (res) {
+      //   var posOptions = { timeout: 10000, enableHighAccuracy: false };
 
-        //   $cordovaGeolocation
-        //     .getCurrentPosition(posOptions)
-        //     .then(function (position) {
+      //   $cordovaGeolocation
+      //     .getCurrentPosition(posOptions)
+      //     .then(function (position) {
 
-        //       var lat = position.coords.latitude
-        //       var long = position.coords.longitude
-        //       // 
-        //       // alert(lat + '\n' + long);
-        //       // var map = new google.maps.Map(document.getElementById('map'), {
-        //       //   zoom: 15,
-        //       //   center: new google.maps.LatLng(lat, long),
-        //       //   mapTypeId: google.maps.MapTypeId.ROADMAP
-        //       // });
-        //       // $scope.map = map;
+      //       var lat = position.coords.latitude
+      //       var long = position.coords.longitude
+      //       // 
+      //       // alert(lat + '\n' + long);
+      //       // var map = new google.maps.Map(document.getElementById('map'), {
+      //       //   zoom: 15,
+      //       //   center: new google.maps.LatLng(lat, long),
+      //       //   mapTypeId: google.maps.MapTypeId.ROADMAP
+      //       // });
+      //       // $scope.map = map;
 
-        //       var location = {
-        //         latitude: lat,
-        //         longitude: long
-        //       }
-        //       var status = item.deliverystatus;
-        //       status = 'complete';
-        //       var listApt = {
-        //         status: 'complete',
-        //         datestatus: new Date()
-        //       }
-        //       item.historystatus.push(listApt);
-        //       var order = {
-        //         deliverystatus: status,
-        //         historystatus: item.historystatus,
-        //         shipping: {
-        //           sharelocation: location,
-        //           tel: item.shipping.tel,
-        //           email: item.shipping.email,
-        //           firstname: item.shipping.firstname,
-        //           lastname: item.shipping.lastname,
-        //           address: item.shipping.address,
-        //           postcode: item.shipping.postcode,
-        //           subdistrict: item.shipping.subdistrict,
-        //           province: item.shipping.province,
-        //           district: item.shipping.district
-        //         }
-        //       }
-        //       var orderId = item._id;
+      //       var location = {
+      //         latitude: lat,
+      //         longitude: long
+      //       }
+      //       var status = item.deliverystatus;
+      //       status = 'complete';
+      //       var listApt = {
+      //         status: 'complete',
+      //         datestatus: new Date()
+      //       }
+      //       item.historystatus.push(listApt);
+      //       var order = {
+      //         deliverystatus: status,
+      //         historystatus: item.historystatus,
+      //         shipping: {
+      //           sharelocation: location,
+      //           tel: item.shipping.tel,
+      //           email: item.shipping.email,
+      //           firstname: item.shipping.firstname,
+      //           lastname: item.shipping.lastname,
+      //           address: item.shipping.address,
+      //           postcode: item.shipping.postcode,
+      //           subdistrict: item.shipping.subdistrict,
+      //           province: item.shipping.province,
+      //           district: item.shipping.district
+      //         }
+      //       }
+      //       var orderId = item._id;
 
-        //       AuthService.updateOrder(orderId, order)
-        //         .then(function (response) {
-        //           $state.go('tab.me');
-        //           $rootScope.$broadcast('onComplete');
-        //         }, function (error) {
-        //           console.log(error);
-        //           alert('dont success' + " " + error.data.message);
-        //         });
+      //       AuthService.updateOrder(orderId, order)
+      //         .then(function (response) {
+      //           $state.go('tab.me');
+      //           $rootScope.$broadcast('onComplete');
+      //         }, function (error) {
+      //           console.log(error);
+      //           alert('dont success' + " " + error.data.message);
+      //         });
 
-        //     }, function (err) {
-        //     });
+      //     }, function (err) {
+      //     });
 
 
-        // } else {
-          var status = item.deliverystatus;
-          status = 'complete';
-          var listApt = {
-            status: 'complete',
-            datestatus: new Date()
-          }
-          item.historystatus.push(listApt);
-          var order = {
-            deliverystatus: status,
-            historystatus: item.historystatus
-          }
-          var orderId = item._id;
+      // } else {
+      var status = item.deliverystatus;
+      status = 'complete';
+      var listApt = {
+        status: 'complete',
+        datestatus: new Date()
+      }
+      item.historystatus.push(listApt);
+      var order = {
+        deliverystatus: status,
+        historystatus: item.historystatus
+      }
+      var orderId = item._id;
 
-          AuthService.updateOrder(orderId, order)
-            .then(function (response) {
-              $state.go('tab.me');
-              $rootScope.$broadcast('onComplete');
-            }, function (error) {
-              console.log(error);
-              alert('dont success' + " " + error.data.message);
-            });
-          $scope.init();
-        // }
+      AuthService.updateOrder(orderId, order)
+        .then(function (response) {
+          $state.go('tab.me');
+          $rootScope.$broadcast('onComplete');
+        }, function (error) {
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+      $scope.init();
+      // }
       // });
       // console.log(item);
     };
@@ -655,7 +655,7 @@ angular.module('starter.controllers', [])
       RequestService.updateRequestOrder(requestorderId, requestorder)
         .then(function (response) {
           // alert('success');
-      $state.go('tab.listreceived'); 
+          $state.go('tab.listreceived');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -740,6 +740,9 @@ angular.module('starter.controllers', [])
         });
       });
     $scope.init = function () {
+      $scope.Request = true;
+      $scope.Response = false;
+      $scope.Received = false;
       $scope.order =
         { items: [] };
       $scope.order.discountpromotion = 0;

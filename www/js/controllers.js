@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    // var push = new Ionic.Push({
-    //   "debug": true,
-    //   "onNotification": function (notification) {
-    //     console.log(notification);
-    //     $rootScope.$broadcast('onNotification');
-    //     if (notification._raw.additionalData.foreground) {
-    //       //   //alert(notification.message);
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        $rootScope.$broadcast('onNotification');
+        if (notification._raw.additionalData.foreground) {
+          //   //alert(notification.message);
 
-    //       $rootScope.$broadcast('onNotification');
-    //     }
-    //   }
-    // });
+          $rootScope.$broadcast('onNotification');
+        }
+      }
+    });
 
-    // push.register(function (token) {
-    //   console.log("My Device token:", token.token);
-    //   // prompt('copy token', token.token);
-    //   window.localStorage.token = JSON.stringify(token.token);
-    //   push.saveToken(token);  // persist the token in the Ionic Platform
-    // });
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      // prompt('copy token', token.token);
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -277,71 +277,72 @@ angular.module('starter.controllers', [])
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.completeDeliver = function (item) {
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'แจ้งเตือน',
-        template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่',
-      });
-      confirmPopup.then(function (res) {
-        if (res) {
-          var posOptions = { timeout: 10000, enableHighAccuracy: false };
+      // var confirmPopup = $ionicPopup.confirm({
+      //   title: 'แจ้งเตือน',
+      //   template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่',
+      // });
+      // confirmPopup.then(function (res) {
+        // if (res) {
+        //   var posOptions = { timeout: 10000, enableHighAccuracy: false };
 
-          $cordovaGeolocation
-            .getCurrentPosition(posOptions)
-            .then(function (position) {
+        //   $cordovaGeolocation
+        //     .getCurrentPosition(posOptions)
+        //     .then(function (position) {
 
-              var lat = position.coords.latitude
-              var long = position.coords.longitude
-              // alert(lat + '\n' + long);
-              // var map = new google.maps.Map(document.getElementById('map'), {
-              //   zoom: 15,
-              //   center: new google.maps.LatLng(lat, long),
-              //   mapTypeId: google.maps.MapTypeId.ROADMAP
-              // });
-              // $scope.map = map;
+        //       var lat = position.coords.latitude
+        //       var long = position.coords.longitude
+        //       // 
+        //       // alert(lat + '\n' + long);
+        //       // var map = new google.maps.Map(document.getElementById('map'), {
+        //       //   zoom: 15,
+        //       //   center: new google.maps.LatLng(lat, long),
+        //       //   mapTypeId: google.maps.MapTypeId.ROADMAP
+        //       // });
+        //       // $scope.map = map;
 
-              var location = {
-                latitude: lat,
-                longitude: long
-              }
-              var status = item.deliverystatus;
-              status = 'complete';
-              var listApt = {
-                status: 'complete',
-                datestatus: new Date()
-              }
-              item.historystatus.push(listApt);
-              var order = {
-                deliverystatus: status,
-                historystatus: item.historystatus,
-                shipping: {
-                  sharelocation: location,
-                  tel: item.shipping.tel,
-                  email: item.shipping.email,
-                  firstname: item.shipping.firstname,
-                  lastname: item.shipping.lastname,
-                  address: item.shipping.address,
-                  postcode: item.shipping.postcode,
-                  subdistrict: item.shipping.subdistrict,
-                  province: item.shipping.province,
-                  district: item.shipping.district
-                }
-              }
-              var orderId = item._id;
+        //       var location = {
+        //         latitude: lat,
+        //         longitude: long
+        //       }
+        //       var status = item.deliverystatus;
+        //       status = 'complete';
+        //       var listApt = {
+        //         status: 'complete',
+        //         datestatus: new Date()
+        //       }
+        //       item.historystatus.push(listApt);
+        //       var order = {
+        //         deliverystatus: status,
+        //         historystatus: item.historystatus,
+        //         shipping: {
+        //           sharelocation: location,
+        //           tel: item.shipping.tel,
+        //           email: item.shipping.email,
+        //           firstname: item.shipping.firstname,
+        //           lastname: item.shipping.lastname,
+        //           address: item.shipping.address,
+        //           postcode: item.shipping.postcode,
+        //           subdistrict: item.shipping.subdistrict,
+        //           province: item.shipping.province,
+        //           district: item.shipping.district
+        //         }
+        //       }
+        //       var orderId = item._id;
 
-              AuthService.updateOrder(orderId, order)
-                .then(function (response) {
-                  $state.go('tab.me');
-                  $rootScope.$broadcast('onComplete');
-                }, function (error) {
-                  console.log(error);
-                  alert('dont success' + " " + error.data.message);
-                });
+        //       AuthService.updateOrder(orderId, order)
+        //         .then(function (response) {
+        //           $state.go('tab.me');
+        //           $rootScope.$broadcast('onComplete');
+        //         }, function (error) {
+        //           console.log(error);
+        //           alert('dont success' + " " + error.data.message);
+        //         });
 
-            }, function (err) {
-            });
+        //     }, function (err) {
+        //     });
 
 
-        } else {
+        // } else {
           var status = item.deliverystatus;
           status = 'complete';
           var listApt = {
@@ -364,8 +365,8 @@ angular.module('starter.controllers', [])
               alert('dont success' + " " + error.data.message);
             });
           $scope.init();
-        }
-      });
+        // }
+      // });
       // console.log(item);
     };
   })

@@ -123,12 +123,12 @@ angular.module('starter.services', [])
       $http.put(apiURL + '/requestorders/' + requestorderId, requestorder).success(function (requestorders) {
         console.log(requestorders);
         dfd.resolve(requestorders);
-      }).error(function (error) { 
-        /* Act on the event */ 
-        dfd.reject(error); 
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.reject(error);
         // return dfd.promise; 
-      }); 
-      return dfd.promise; 
+      });
+      return dfd.promise;
     };
   }])
 
@@ -167,12 +167,12 @@ angular.module('starter.services', [])
       $http.put(apiURL + '/accuralreceipts/' + accuralreceiptsId, accuralreceipts).success(function (accuralreceipts) {
         console.log(accuralreceipts);
         dfd.resolve(accuralreceipts);
-      }).error(function (error) { 
-        /* Act on the event */ 
-        dfd.reject(error); 
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.reject(error);
         // return dfd.promise; 
-      }); 
-      return dfd.promise; 
+      });
+      return dfd.promise;
     };
   }])
 
@@ -186,5 +186,5 @@ angular.module('starter.services', [])
       });
       return dfd.promise;
     };
-    
+
   }]);

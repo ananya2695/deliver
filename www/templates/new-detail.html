@@ -17,6 +17,11 @@
                 <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
             </label>
 
+            <label class="item item-input" ng-click="btnGoDetail(data)">
+                <span class="input-label">ชื่อ : </span>
+                <input style="background-color: white" type="text" ng-model="data.displayName" readonly>
+            </label>
+
             <label class="item item-input item-text-wrap">
                 <span class="input-label ">ที่อยู่ : </span>
                 <label style="background-color: white;padding-right: 2cm;color:black" type="text" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}

@@ -91,7 +91,27 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
+      // ///////////อันนี้ของพี่/////////////////////////
+      .state('tab.profile-detail', {
+        url: '/profile-detail:{data}',
+        views: {
+          'tab-new': {
+            templateUrl: 'templates/user-profile-detail.html',
+            controller: 'ProfileDetailCtrl'
+          }
+        }
+      })
 
+      .state('tab.chat', {
+        url: '/chat',
+        views: {
+          'tab-new': {
+            templateUrl: 'templates/chat.html',
+            controller: 'ChatCtrl'
+          }
+        }
+      })
+// ///////////////////////////
       .state('tab.newdetail', {
         url: '/newdetail:{data}',
         views: {

@@ -1,0 +1,35 @@
+<ion-view view-title="โปรไฟล์">
+
+
+    <ion-content has-header="true">
+        <img id="profile-image" src="https://scontent.fbkk6-1.fna.fbcdn.net/v/t1.0-9/18157324_10208584742357830_4256608797500139092_n.jpg?oh=38f76dd260acbd194313f9b59ec1f58f&oe=59AC1BE8">
+        <ion-list>
+            <div class="list">
+                <label class="item item-input">
+                <span class="input-label">ชื่อ : </span>
+                <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
+            </label>
+
+                <label class="item item-input item-text-wrap">
+                <span class="input-label ">ที่อยู่ : </span>
+                <label style="background-color: white;padding-right: 2cm;color:black" type="text" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
+                    </label>
+                </label>
+
+                <div class="list card">
+                    <div class="row">
+                        <div class="col col-50">
+                            <a ui-sref="tab.chat" class="item item-icon-left">
+                                <i class="icon ion-ios-chatbubble"></i> พูดคุย
+                            </a>
+                        </div>
+                        <div class="col col-50">
+                            <a ng-click="tel({{data.shipping.tel}})" class="item item-icon-left">
+                                <i class="icon ion-ios-telephone"></i> โทร
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        </ion-list>
+    </ion-content>
+</ion-view>

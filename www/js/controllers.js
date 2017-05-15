@@ -93,6 +93,11 @@ angular.module('starter.controllers', [])
   })
 
   .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams) {
+    $scope.orderstest = [{
+      displayName: 'testmock1'
+    }, {
+      displayName: 'testmock2'
+    }];
 
     $scope.btnGo = function (data) {
 
@@ -369,6 +374,7 @@ angular.module('starter.controllers', [])
       // });
       // console.log(item);
     };
+
   })
 
   .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
@@ -436,6 +442,10 @@ angular.module('starter.controllers', [])
         });
 
       // console.log(item);
+    };
+    $scope.btnGoDetail = function (data) {
+      console.log(data);
+      $state.go('tab.profile-detail', { data: JSON.stringify(data) });
     };
   })
 
@@ -1200,4 +1210,18 @@ angular.module('starter.controllers', [])
         });
     }
 
-  });
+  })
+
+  .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
+
+    $scope.data = JSON.parse($stateParams.data);
+
+    $scope.tel = function (telnumber) {
+      window.location = 'tel:' + telnumber;
+    };
+
+  })
+  
+  .controller('ChatCtrl', function () {
+        
+    });

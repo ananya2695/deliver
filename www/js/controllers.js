@@ -139,11 +139,6 @@ angular.module('starter.controllers', [])
   })
 
   .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams) {
-    $scope.orderstest = [{
-      displayName: 'testmock1'
-    }, {
-      displayName: 'testmock2'
-    }];
 
     $scope.btnGo = function (data) {
 

@@ -1,25 +1,43 @@
 angular.module('starter.services', [])
 
-  .service('AuthService', ['$http', '$q', function ($http, $q) {
+  .service('AuthService', ['$http', '$q', '$rootScope', '$auth', function ($http, $q, $rootScope, $auth) {
     var apiURL = 'https://thamapp.herokuapp.com/api';
     this.saveUser = function (user) {
       return $http.post(apiURL + '/auth/signup', user);
 
     };
-    this.loginUser = function (login) {
-      window.localStorage.credential = JSON.stringify(login);
-      var dfd = $q.defer();
 
-      $http.post(apiURL + '/auth/signin', login).success(function (database) {
-        window.localStorage.user = JSON.stringify(database);
-        // alert('Success');
-        dfd.resolve(database);
-      }).error(function (error) {
-        /* Act on the event */
-        dfd.resolve(error);
-        // return dfd.promise;
-      });
-      return dfd.promise;
+    this.successAuth = function (data) {
+      window.localStorage.user = JSON.stringify(data.data);
+      $rootScope.$emit('userLoggedIn', data.data);
+    };
+    this.failedAuth = function (error) {
+      $rootScope.$emit('userLoggedInerr', error.data);
+    };
+
+    this.loginUser = function (login) {
+
+      $auth
+        .login(login, {
+          url: apiURL + '/auth/signin'
+        })
+        .then(this.successAuth)
+        .catch(this.failedAuth);
+
+
+      // window.localStorage.credential = JSON.stringify(login);
+      // var dfd = $q.defer();
+
+      // $http.post(apiURL + '/auth/signin', login).success(function (database) {
+      //   window.localStorage.user = JSON.stringify(database);
+      //   // alert('Success');
+      //   dfd.resolve(database);
+      // }).error(function (error) {
+      //   /* Act on the event */
+      //   dfd.resolve(error);
+      //   // return dfd.promise;
+      // });
+      // return dfd.promise;
     };
 
     this.saveUserPushNoti = function (push_user) {
@@ -123,12 +141,12 @@ angular.module('starter.services', [])
       $http.put(apiURL + '/requestorders/' + requestorderId, requestorder).success(function (requestorders) {
         console.log(requestorders);
         dfd.resolve(requestorders);
-      }).error(function (error) { 
-        /* Act on the event */ 
-        dfd.reject(error); 
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.reject(error);
         // return dfd.promise; 
-      }); 
-      return dfd.promise; 
+      });
+      return dfd.promise;
     };
   }])
 
@@ -167,12 +185,12 @@ angular.module('starter.services', [])
       $http.put(apiURL + '/accuralreceipts/' + accuralreceiptsId, accuralreceipts).success(function (accuralreceipts) {
         console.log(accuralreceipts);
         dfd.resolve(accuralreceipts);
-      }).error(function (error) { 
-        /* Act on the event */ 
-        dfd.reject(error); 
+      }).error(function (error) {
+        /* Act on the event */
+        dfd.reject(error);
         // return dfd.promise; 
-      }); 
-      return dfd.promise; 
+      });
+      return dfd.promise;
     };
   }])
 
@@ -186,5 +204,5 @@ angular.module('starter.services', [])
       });
       return dfd.promise;
     };
-    
+
   }]);

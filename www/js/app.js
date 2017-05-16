@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
 
   .run(function ($ionicPlatform, AuthService) {
     $ionicPlatform.ready(function () {
@@ -59,20 +59,20 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     })
   })
 
-  .config(function ($stateProvider, $urlRouterProvider, $authProvider) {
+  .config(function ($stateProvider, $urlRouterProvider) {
+    //$authProvider
+    // var commonConfig = {
+    //   popupOptions: {
+    //     location: 'no',
+    //     toolbar: 'yes',
+    //     width: window.screen.width,
+    //     height: window.screen.height
+    //   }
+    // };
 
-    var commonConfig = {
-      popupOptions: {
-        location: 'no',
-        toolbar: 'yes',
-        width: window.screen.width,
-        height: window.screen.height
-      }
-    };
-
-    if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-      commonConfig.redirectUri = 'https://thamapp.herokuapp.com/';
-    }
+    // if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+    //   commonConfig.redirectUri = 'https://thamapp.herokuapp.com/';
+    // }
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
@@ -104,7 +104,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-      // ///////////อันนี้ของพี่/////////////////////////
+
+      ////////////////////////////////////////////////
       .state('tab.profile-detail', {
         url: '/profile-detail:{data}',
         views: {
@@ -116,15 +117,25 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       })
 
       .state('tab.chat', {
-        url: '/chat',
+        url: "/chat",
         views: {
-          'tab-new': {
-            templateUrl: 'templates/chat.html',
+          'tab-chat': {
+            templateUrl: "templates/tab-chat.html",
             controller: 'ChatCtrl'
           }
         }
       })
-// ///////////////////////////
+
+      .state('tab.chat-detail', {
+        url: "/chat/:chatId",
+        views: {
+          'tab-chat': {
+            templateUrl: "templates/chat-detail.html",
+            controller: 'ChatDetailCtrl'
+          }
+        }
+      })
+      //////////////////////////////////////////////////
       .state('tab.newdetail', {
         url: '/newdetail:{data}',
         views: {
@@ -156,7 +167,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       .state('tab.map', {
-        url: '/map',
+        url: '/map:{point}',
         views: {
           'tab-map': {
             templateUrl: 'templates/tab-map.html',

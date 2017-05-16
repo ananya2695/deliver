@@ -12,14 +12,9 @@
                 <input style="background-color: white" type="text" ng-value="data.docdate | date:'dd/MM/yyyy'" readonly>
             </label>
 
-            <label class="item item-input">
-                <span class="input-label">ชื่อ : </span>
-                <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
-            </label>
-
             <label class="item item-input" ng-click="btnGoDetail(data)">
                 <span class="input-label">ชื่อ : </span>
-                <input style="background-color: white" type="text" ng-model="data.displayName" readonly>
+                <input style="background-color: white" type="text" ng-model="data.user.displayName" readonly>
             </label>
 
             <label class="item item-input item-text-wrap">
@@ -27,6 +22,13 @@
                 <label style="background-color: white;padding-right: 2cm;color:black" type="text" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
                     </label>
             </label>
+            <div class="row">
+                <div class="col">
+                    <a ui-sref="tab.map({point:data._id})" class="item item-icon-left">
+                        <i class="icon ion-ios-chatbubble"></i> ค้นหาเส้นทาง
+                    </a>
+                </div>
+            </div>
 
             <label class="item item-input">
                 <span class="input-label">เบอร์โทร : </span>
@@ -34,25 +36,25 @@
             </label>
 
             <div class="row">
-            <div class="col"></div>
-            <div class="col col-90">
-                <div class="row">
-                    <div class="col col-10"></div>
-                    <div class="col col-40">
-                        <button class="button button-block button-positive"  ng-click = "acceptDeliver(data)">
+                <div class="col"></div>
+                <div class="col col-90">
+                    <div class="row">
+                        <div class="col col-10"></div>
+                        <div class="col col-40">
+                            <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
                             ยอมรับ
                         </button>
-                    </div>
-                    <div class="col col-40">
-                        <button class="button button-block button-assertive" ng-click = "rejectDeliver(data)">
+                        </div>
+                        <div class="col col-40">
+                            <button class="button button-block button-assertive" ng-click="rejectDeliver(data)">
                             ปฏิเสธ
                         </button>
+                        </div>
+                        <div class="col col-10"></div>
                     </div>
-                    <div class="col col-10"></div>
                 </div>
+                <div class="col"></div>
             </div>
-            <div class="col"></div>
-        </div>
             <div class='item item-avatar-left item-icon-right item-text-wrap' ng-repeat="item in data.items">
                 <img src={{item.product.images}}>
                 <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
@@ -81,8 +83,8 @@
                 <input style="background-color: white" type="text" ng-value="data.totalamount + ' ' + 'บาท'" readonly>
             </label>
         </div>
-        
+
     </ion-content>
-    
+
 
 </ion-view>

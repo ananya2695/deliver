@@ -37,7 +37,7 @@ angular.module('starter.controllers', [])
     $scope.credentials = {}
 
     $rootScope.$on('userLoggedIn', function (e, response) {
-      console.log(response);
+      // console.log(response);
       if (response.roles[0] === 'deliver') {
         var push_usr = {
           user_id: response._id,
@@ -69,6 +69,7 @@ angular.module('starter.controllers', [])
       if (response["message"]) {
         $scope.credentials = {}
         //alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        $rootScope.$broadcast('loading:hide')
         var alertPopup = $ionicPopup.alert({
           title: 'แจ้งเตือน',
           template: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
@@ -83,7 +84,7 @@ angular.module('starter.controllers', [])
     });
 
     $scope.doLogIn = function (credentials) {
-      window.localStorage.credential = credentials;
+      window.localStorage.credential = JSON.stringify(credentials);
       var login = {
         username: credentials.username,
         password: credentials.password
@@ -147,7 +148,7 @@ angular.module('starter.controllers', [])
     }
 
     var orderId = $stateParams.orderId;
-    console.log(orderId);
+    // console.log(orderId);
     // AuthService.Order(orderId).then(function (order) {
     //   $scope.order = order;
     // });
@@ -493,6 +494,7 @@ angular.module('starter.controllers', [])
   .controller('MapCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
     $scope.init = function () {
       $scope.readMap();
+      // console.log($stateParams.point);
     }
     $scope.$on('onLoginSuccess', function (event, args) {
       // do what you want to do
@@ -501,7 +503,7 @@ angular.module('starter.controllers', [])
     });
 
     $scope.readMap = function () {
-      console.log('ok');
+      // console.log('ok');
       $scope.locationOrders = [];
       $scope.locationOrdersApt = [];
       AuthService.getOrder()
@@ -536,117 +538,126 @@ angular.module('starter.controllers', [])
                 mapTypeId: google.maps.MapTypeId.ROADMAP
               });
 
-              //////ตำแหน่งที่ mark ปัจจุบัน///////////
-              var marker = new google.maps.Marker({
-                position: map.getCenter(),
-                icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 15,
-                  fillColor: 'blue',
-                  fillOpacity: 0.2,
-                  strokeColor: 'blue',
-                  strokeWeight: 0
-                },
-                draggable: true,
-                map: map
-              });
-              var marker = new google.maps.Marker({
-                position: map.getCenter(),
-                icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                  fillColor: '#1c90f3',
-                  fillOpacity: 0.5,
-                  strokeColor: 'white',
-                  strokeWeight: 1
-                },
-                draggable: true,
-                map: map
-              });
+              var directionsDisplay = new google.maps.DirectionsRenderer();
+              var directionsService = new google.maps.DirectionsService();
 
-              $scope.locationOrders.forEach(function (locations) {
-                var product = '';
-                var price = null;
-                locations.items.forEach(function (pro) {
-                  product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
-                })
-                var contentString = '<div>'
-                  + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
-                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
-                  + '<p>' + product + '</p>'
-                  + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
-                  + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
-                  + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
-                  + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
-                  + '</div>';
-                var location = locations.shipping.sharelocation;
-                // console.log($scope.locationConfirmed.length);
-                if (location) {
-                  var marker = new google.maps.Marker({
-                    icon: {
-                      url: ' http://res.cloudinary.com/hflvlav04/image/upload/v1486371643/riwxnxtjdfjganurw46m.png',
-                      scaledSize: new google.maps.Size(32, 51),
-                      // The origin for this image is (0, 0). 
-                      origin: new google.maps.Point(0, 0),
-                      // The anchor for this image is the base of the flagpole at (0, 32). 
-                      //anchor: new google.maps.Point(0, 32)
-                    },
-                    position: new google.maps.LatLng(location.latitude, location.longitude),
-                    map: map
-                  });
 
-                  var infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                  });
-                  marker.addListener('click', function () {
-                    console.log('click');
-                    infowindow.open($scope.map, this);
-                  });
-                }
+              if ($stateParams.point === null) {
+                //////ตำแหน่งที่ mark ปัจจุบัน///////////
+                var marker = new google.maps.Marker({
+                  position: map.getCenter(),
+                  icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 15,
+                    fillColor: 'blue',
+                    fillOpacity: 0.2,
+                    strokeColor: 'blue',
+                    strokeWeight: 0
+                  },
+                  draggable: true,
+                  map: map
+                });
+                var marker = new google.maps.Marker({
+                  position: map.getCenter(),
+                  icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 10,
+                    fillColor: '#1c90f3',
+                    fillOpacity: 0.5,
+                    strokeColor: 'white',
+                    strokeWeight: 1
+                  },
+                  draggable: true,
+                  map: map
+                });
 
-              });
+                $scope.locationOrders.forEach(function (locations) {
+                  var product = '';
+                  var price = null;
+                  locations.items.forEach(function (pro) {
+                    product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
+                  })
+                  var contentString = '<div>'
+                    + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
+                    + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
+                    + '<p>' + product + '</p>'
+                    + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
+                    + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
+                    + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
+                    + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
+                    + '</div>';
+                  var location = locations.shipping.sharelocation;
+                  // console.log($scope.locationConfirmed.length);
+                  if (location) {
+                    var marker = new google.maps.Marker({
+                      icon: {
+                        url: ' http://res.cloudinary.com/hflvlav04/image/upload/v1486371643/riwxnxtjdfjganurw46m.png',
+                        scaledSize: new google.maps.Size(32, 51),
+                        // The origin for this image is (0, 0). 
+                        origin: new google.maps.Point(0, 0),
+                        // The anchor for this image is the base of the flagpole at (0, 32). 
+                        //anchor: new google.maps.Point(0, 32)
+                      },
+                      position: new google.maps.LatLng(location.latitude, location.longitude),
+                      map: map
+                    });
 
-              $scope.locationOrdersApt.forEach(function (locations) {
-                var product = '';
-                var price = null;
-                locations.items.forEach(function (pro) {
-                  product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
-                })
-                var contentString = '<div>'
-                  + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
-                  + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
-                  + '<p>' + product + '</p>'
-                  + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
-                  + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
-                  + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
-                  + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
-                  + '</div>';
-                console.log(locations);
-                var location = locations.shipping.sharelocation;
-                console.log(location);
-                // console.log($scope.locationConfirmed.length);
-                if (location) {
-                  var marker = new google.maps.Marker({
-                    icon: {
-                      url: 'http://res.cloudinary.com/hflvlav04/image/upload/v1486371632/sj4niz8oykdqfadnwhbo.png',
-                      scaledSize: new google.maps.Size(28, 45),
-                      // The origin for this image is (0, 0). 
-                      origin: new google.maps.Point(0, 0),
-                      // The anchor for this image is the base of the flagpole at (0, 32). 
-                      // anchor: new google.maps.Point(0, 32)
-                    },
-                    position: new google.maps.LatLng(location.latitude, location.longitude),
-                    map: map
-                  });
-                  var infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                  });
-                  marker.addListener('click', function () {
-                    console.log('click');
-                    infowindow.open($scope.map, this);
-                  });
-                }
-              });
+                    var infowindow = new google.maps.InfoWindow({
+                      content: contentString
+                    });
+                    marker.addListener('click', function () {
+                      console.log('click');
+                      infowindow.open($scope.map, this);
+                    });
+                  }
+
+                });
+
+                $scope.locationOrdersApt.forEach(function (locations) {
+                  var product = '';
+                  var price = null;
+                  locations.items.forEach(function (pro) {
+                    product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
+                  })
+                  var contentString = '<div>'
+                    + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
+                    + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
+                    + '<p>' + product + '</p>'
+                    + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
+                    + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
+                    + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
+                    + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
+                    + '</div>';
+                  console.log(locations);
+                  var location = locations.shipping.sharelocation;
+                  console.log(location);
+                  // console.log($scope.locationConfirmed.length);
+                  if (location) {
+                    var marker = new google.maps.Marker({
+                      icon: {
+                        url: 'http://res.cloudinary.com/hflvlav04/image/upload/v1486371632/sj4niz8oykdqfadnwhbo.png',
+                        scaledSize: new google.maps.Size(28, 45),
+                        // The origin for this image is (0, 0). 
+                        origin: new google.maps.Point(0, 0),
+                        // The anchor for this image is the base of the flagpole at (0, 32). 
+                        // anchor: new google.maps.Point(0, 32)
+                      },
+                      position: new google.maps.LatLng(location.latitude, location.longitude),
+                      map: map
+                    });
+                    var infowindow = new google.maps.InfoWindow({
+                      content: contentString
+                    });
+                    marker.addListener('click', function () {
+                      console.log('click');
+                      infowindow.open($scope.map, this);
+                    });
+                  }
+                });
+
+              } else {
+                $scope.calcRoute(lat, long);
+              }
 
               $scope.map = map;
             }, function (err) {
@@ -655,6 +666,34 @@ angular.module('starter.controllers', [])
 
         });
 
+    }
+
+
+    $scope.calcRoute = function (lat, long) {
+      // $state.go('tab.map');
+      console.log(routePoints);
+      var pointlat = routePoints.shipping.sharelocation.latitude;
+      var pointlong = routePoints.shipping.sharelocation.longitude;
+      var routePoints = {
+        start: { lat, long },
+        end: { lat, long }
+      }
+      directionsDisplay.setDirections({ routes: [] });
+      directionsDisplay.setMap($scope.map);
+
+      var start = routePoints.start;
+      var end = routePoints.end;
+      var request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+      };
+      directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+        }
+      });
+      return;
 
     }
   })
@@ -773,7 +812,7 @@ angular.module('starter.controllers', [])
 
   .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService) {
     $scope.userStore = AuthService.getUser();
-    console.log($scope.userStore);
+    // console.log($scope.userStore);
     $scope.products = [];
     ProductService.getProduct()
       .then(function (data) {
@@ -787,7 +826,7 @@ angular.module('starter.controllers', [])
             amount: pro.amount
           }
           $scope.products.push(product);
-          console.log($scope.products);
+          // console.log($scope.products);
         });
       });
     $scope.init = function () {
@@ -1206,9 +1245,9 @@ angular.module('starter.controllers', [])
             }
           });
 
-          console.log($scope.listReturns.length);
-          console.log($scope.listreturnResponse.length);
-          console.log($scope.listreturnReceived.length);
+          // console.log($scope.listReturns.length);
+          // console.log($scope.listreturnResponse.length);
+          // console.log($scope.listreturnReceived.length);
         });
     }
 
@@ -1232,9 +1271,9 @@ angular.module('starter.controllers', [])
             }
           });
 
-          console.log($scope.listarWait.length);
-          console.log($scope.listarConfirmed.length);
-          console.log($scope.listarReceipt.length);
+          // console.log($scope.listarWait.length);
+          // console.log($scope.listarConfirmed.length);
+          // console.log($scope.listarReceipt.length);
         });
     }
 
@@ -1246,7 +1285,7 @@ angular.module('starter.controllers', [])
             if ($scope.userStore._id === stock.namedeliver._id) {
               $scope.stockdeli.push(stock);
             }
-            console.log($scope.stockdeli);
+            // console.log($scope.stockdeli);
           });
         });
     }
@@ -1262,7 +1301,158 @@ angular.module('starter.controllers', [])
     };
 
   })
-  
-  .controller('ChatCtrl', function () {
-        
+
+  .controller('ChatCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket) {
+
+    $scope.user = AuthService.getUser();
+    //  alert(JSON.stringify($scope.user));
+    $scope.listRoom = function () {
+      roomService.getrooms().then(function (res) {
+        // alert(JSON.stringify(res));
+        $scope.chats = res;
+      }, function (err) {
+        // alert(JSON.stringify(err));
+        console.log(err);
+      });
+    };
+    $scope.listRoom();
+    $scope.createRoom = function (data) {
+      roomService.createRoom(data).then(function (res) {
+        $scope.listRoom();
+      }, function (err) {
+        console.log(err);
+      });
+    };
+
+    Socket.on('invite', function (res) {
+      $scope.listRoom();
     });
+
+  })
+
+  .controller('ChatDetailCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, $stateParams, Socket, $ionicScrollDelegate, $timeout) {
+    $scope.user = AuthService.getUser();
+    $scope.messages = [];
+    $scope.chat = null;
+    $scope.room = {};
+    Socket.connect();
+    // ทดสอบ mobile connect
+    // Socket.on('mobile', function (message) {
+    //   $scope.messages.unshift(message);
+    // });
+    $scope.loadRoom = function () {
+      var roomId = $stateParams.chatId;
+      roomService.getRoom(roomId).then(function (res) {
+        res.users.forEach(function (user) {
+          if ($scope.user._id != user._id) {
+            $scope.title = user.displayName;
+          }
+        });
+        $scope.chat = res;
+        Socket.emit('join', $scope.chat);
+      }, function (err) {
+        console.log(err);
+      });
+    };
+
+    // Add an event listener to the 'invite' event
+    Socket.on('invite', function (res) {
+      // alert('invite : ' + JSON.stringify(data));
+      Socket.emit('join', res);
+    });
+
+    // Add an event listener to the 'joinsuccess' event
+    Socket.on('joinsuccess', function (data) {
+      $scope.room = data;
+      $scope.pageDown();
+      // alert('joinsuccess : ' + JSON.stringify(data));
+    });
+
+    // Add an event listener to the 'chatMessage' event
+    Socket.on('chatMessage', function (data) {
+      // alert(JSON.stringify(data));
+      $scope.room = data;
+    });
+    $scope.hideTime = true;
+    var alternate,
+      isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+    // Create a controller method for sending messages
+    $scope.sendMessage = function () {
+      // alternate = !alternate
+      // if (!$scope.room.messages) {
+      //     $scope.room.messages = [];
+      $scope.room.messages.unshift({
+        type: 'message',
+        created: Date.now(),
+        profileImageURL: $scope.user.profileImageURL,
+        username: $scope.user.displayName,
+        text: this.message
+      });
+      // } else {
+      //     $scope.room.messages.unshift({
+      //         type: 'message',
+      //         created: Date.now(),
+      //         profileImageURL: $scope.user.profileImageURL,
+      //         username: $scope.user.username,
+      //         text: this.message
+      //     });
+      // }
+      $ionicScrollDelegate.scrollBottom(true);
+
+      Socket.emit('chatMessage', $scope.room);
+      this.message = '';
+    };
+
+
+    $scope.pageDown = function () {
+      $timeout(function () {
+        $ionicScrollDelegate.scrollBottom(true);
+      }, 300);
+    };
+
+
+
+
+
+
+
+    // $scope.sendMessage = function () {
+    //     alternate = !alternate;
+
+    //     // var d = new Date();
+    //     // d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+    //     // $scope.room.messages.forEach(function(message){
+
+    //     // });
+    //     $scope.messages.push({
+    //         userId: alternate ? '12345' : '54321',
+    //         text: $scope.room.message,
+    //         time: d
+    //     });
+
+    //     delete $scope.room.message;
+    //     $ionicScrollDelegate.scrollBottom(true);
+
+    // };
+
+    $scope.inputUp = function () {
+      // if (isIOS) $scope.room.keyboardHeight = 216;
+      $timeout(function () {
+        $ionicScrollDelegate.scrollBottom(true);
+      }, 300);
+
+    };
+
+    $scope.inputDown = function () {
+      // if (isIOS) $scope.room.keyboardHeight = 0;
+      $ionicScrollDelegate.resize();
+    };
+
+    $scope.closeKeyboard = function () {
+      // cordova.plugins.Keyboard.close();
+    };
+
+
+    $scope.data = {};
+    $scope.myId = $scope.user.displayName;
+  })

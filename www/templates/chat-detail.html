@@ -1,10 +1,10 @@
-<ion-view ng-init="loadRoom()" cache-view="false" view-title="Chat">
+<ion-view ng-init="loadRoom()" cache-view="false" view-title="{{title}}">
 
-    <ion-nav-buttons side="right">
+    <!--<ion-nav-buttons side="right">-->
         <!--<a class="button button-icon" ui-sref="app.shop.cart">
             <i class="icon ion-ios-cart"><span class="badge badge-assertive badge-cart">{{countProduct.getCountProduct()}}</span></i>
         </a>-->
-    </ion-nav-buttons>
+    <!--</ion-nav-buttons>-->
     <ion-content scroll="true" class="content-stable" on-swipe-left="hideTime = false" on-swipe-right="hideTime = true">
 
         <div ng-repeat="message in room.messages | orderBy: '-'" ng-class="{other: message.username == myId}" class="messages">
@@ -13,14 +13,9 @@
                 <!--<p> {{ message.username }}</p>-->
                 <span1> {{ message.text }}</span1>
                 <div style="color:gray">{{ message.time }}</div>
-
             </div>
-
             <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}"></div>
-
-
         </div>
-
     </ion-content>
 
     <ion-footer-bar class="bar-stable item-input-inset">
@@ -31,4 +26,3 @@
         Send
       </button>
     </ion-footer-bar>
-</ion-view>

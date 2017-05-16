@@ -167,7 +167,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       .state('tab.map', {
-        url: '/map:{point}',
+        url: '/map',
         views: {
           'tab-map': {
             templateUrl: 'templates/tab-map.html',

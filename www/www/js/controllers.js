@@ -323,6 +323,9 @@ angular.module('starter.controllers', [])
   .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
+    $scope.setItem = function () {
+      window.localStorage.point = $stateParams.data;
+    }
     $scope.completeDeliver = function (item) {
       // var confirmPopup = $ionicPopup.confirm({
       //   title: 'แจ้งเตือน',
@@ -422,6 +425,9 @@ angular.module('starter.controllers', [])
   .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
+    $scope.setItem = function () {
+      window.localStorage.point = $stateParams.data;
+    }
     $scope.acceptDeliver = function (item) {
       var listApt =
         {
@@ -438,9 +444,6 @@ angular.module('starter.controllers', [])
 
       }
       var orderId = item._id;
-
-
-
 
       AuthService.updateOrder(orderId, order)
         .then(function (response) {
@@ -491,58 +494,70 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('MapCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
+  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
     $scope.init = function () {
       $scope.readMap();
-      // console.log($stateParams.point);
     }
-    $scope.$on('onLoginSuccess', function (event, args) {
-      // do what you want to do
-      //alert();
-      $scope.init();
-    });
 
+    $scope.clearItem = function () {
+      window.localStorage.removeItem("point");
+      $state.go('tab.map');
+    }
+    // $scope.$on('onLoginSuccess', function (event, args) {
+    //   // do what you want to do
+    //   //alert();
+    //   $scope.init();
+    // });
     $scope.readMap = function () {
       // console.log('ok');
       $scope.locationOrders = [];
       $scope.locationOrdersApt = [];
-      AuthService.getOrder()
-        .then(function (data) {
-          var userStore = AuthService.getUser();
-          data.forEach(function (user) {
 
-            if (user.namedeliver) {
 
-              if (user.namedeliver._id === userStore._id) {
 
-                if (user.deliverystatus === 'wait deliver') {
-                  $scope.locationOrders.push(user);
-                } else if (user.deliverystatus === 'accept') {
-                  $scope.locationOrdersApt.push(user);
-                }
+      function pinDirection(e) {
+        console.log(e);
+      }
 
-              }
-            }
-
+      var posOptions = { timeout: 10000, enableHighAccuracy: false };
+      var lat = null;
+      var long = null;
+      var map;
+      $cordovaGeolocation
+        .getCurrentPosition(posOptions)
+        .then(function (position) {
+          lat = position.coords.latitude
+          long = position.coords.longitude
+          map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+            mapTypeId: google.maps.MapTypeId.ROADMAP
           });
-          var posOptions = { timeout: 10000, enableHighAccuracy: false };
-          $cordovaGeolocation
-            .getCurrentPosition(posOptions)
-            .then(function (position) {
-              var lat = position.coords.latitude
-              var long = position.coords.longitude
-              // alert(lat + ':' + long);
-              var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-              });
+          $scope.map = map;
 
-              var directionsDisplay = new google.maps.DirectionsRenderer();
-              var directionsService = new google.maps.DirectionsService();
+          if (!window.localStorage.point || window.localStorage.point === "") {
+            AuthService.getOrder()
+              .then(function (data) {
+                var userStore = AuthService.getUser();
 
+                data.forEach(function (user) {
 
-              if ($stateParams.point === null) {
+                  if (user.namedeliver) {
+
+                    if (user.namedeliver._id === userStore._id) {
+
+                      if (user.deliverystatus === 'wait deliver') {
+                        $scope.locationOrders.push(user);
+                      } else if (user.deliverystatus === 'accept') {
+                        $scope.locationOrdersApt.push(user);
+                      }
+
+                    }
+                  }
+
+                });
+                // alert(lat + ':' + long);
+
                 //////ตำแหน่งที่ mark ปัจจุบัน///////////
                 var marker = new google.maps.Marker({
                   position: map.getCenter(),
@@ -585,6 +600,7 @@ angular.module('starter.controllers', [])
                     + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
                     + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                     + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
+                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" onclick="pinDirection(locations)"> ค้นหาเส้นทาง </button>'
                     + '</div>';
                   var location = locations.shipping.sharelocation;
                   // console.log($scope.locationConfirmed.length);
@@ -606,7 +622,7 @@ angular.module('starter.controllers', [])
                       content: contentString
                     });
                     marker.addListener('click', function () {
-                      console.log('click');
+                      // console.log('click');
                       infowindow.open($scope.map, this);
                     });
                   }
@@ -627,10 +643,11 @@ angular.module('starter.controllers', [])
                     + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
                     + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                     + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
+                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" onclick="pinDirection(locations)"> ค้นหาเส้นทาง </button>'
                     + '</div>';
-                  console.log(locations);
+                  // console.log(locations);
                   var location = locations.shipping.sharelocation;
-                  console.log(location);
+                  // console.log(location);
                   // console.log($scope.locationConfirmed.length);
                   if (location) {
                     var marker = new google.maps.Marker({
@@ -654,45 +671,57 @@ angular.module('starter.controllers', [])
                     });
                   }
                 });
+              }, function (err) {
+                $rootScope.$broadcast('loading:hide');
+                alert(JSON.stringify(err));
+              });
+          } else {
+            var pointStart = {
+              lat: parseFloat(lat),
+              lng: parseFloat(long)
+            }
+            $scope.calcRoute(pointStart);
+          }
 
-              } else {
-                $scope.calcRoute(lat, long);
-              }
-
-              $scope.map = map;
-            }, function (err) {
-              // error
-            });
-
+        }, function (err) {
+          // error
         });
 
     }
 
 
-    $scope.calcRoute = function (lat, long) {
-      // $state.go('tab.map');
-      console.log(routePoints);
-      var pointlat = routePoints.shipping.sharelocation.latitude;
-      var pointlong = routePoints.shipping.sharelocation.longitude;
-      var routePoints = {
-        start: { lat, long },
-        end: { lat, long }
-      }
-      directionsDisplay.setDirections({ routes: [] });
-      directionsDisplay.setMap($scope.map);
-
-      var start = routePoints.start;
-      var end = routePoints.end;
-      var request = {
-        origin: start,
-        destination: end,
-        travelMode: google.maps.DirectionsTravelMode.DRIVING
-      };
-      directionsService.route(request, function (response, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-          directionsDisplay.setDirections(response);
+    $scope.calcRoute = function (pointStart) {
+      var item = JSON.parse(window.localStorage.point);
+      if (item) {
+        $stateParams.point = false;
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+        var directionsService = new google.maps.DirectionsService();
+        var pointEnd = {
+          lat: parseFloat(item.shipping.sharelocation.latitude),
+          lng: parseFloat(item.shipping.sharelocation.longitude)
         }
-      });
+        var routePoints = {
+          start: { lat: pointStart.lat, lng: pointStart.lng },
+          end: { lat: pointEnd.lat, lng: pointEnd.lng }
+        }
+        directionsDisplay.setDirections({ routes: [] });
+        directionsDisplay.setMap($scope.map);
+
+        var start = routePoints.start;
+        var end = routePoints.end;
+        var request = {
+          origin: start,
+          destination: end,
+          travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+        directionsService.route(request, function (response, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+          }
+        });
+      }
+
+      window.localStorage.removeItem("point");
       return;
 
     }

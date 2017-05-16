@@ -1,0 +1,73 @@
+<ion-view ng-init="setItem()" view-title="รายละเอียด" cache-view="false">
+  <ion-content>
+    <div class="list">
+      <label class="item item-input">
+                <span class="input-label">เลขใบสั่งซื้อ : </span>
+                <input ng-model="data.docno" type="text" style="background-color: white" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">วันที่ : </span>
+                <input ng-value="data.docdate | date:'dd/MM/yyyy'" type="text" style="background-color: white" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ชื่อ : </span>
+                <input ng-model="data.user.displayName" type="text" style="background-color: white" readonly>
+            </label>
+
+            <label class="item item-input item-text-wrap">
+                <span class="input-label ">ที่อยู่ : </span>
+                <label type="text" style="background-color: white;padding-right: 2cm;color:black" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
+                    </label>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">เบอร์โทร : </span>
+                <input ng-model="data.shipping.tel" type="text" style="background-color: white" readonly>
+            </label>
+            <div>
+                <button class="button button-block button-outline button-positive icon-left ion-ios-location" ui-sref="tab.map({point:data._id})">
+                                ค้นหาเส้นทาง
+                </button>
+            </div>
+            <div class="row">
+            <div class="col"></div>
+            <div class="col col-90">
+                <button class="button button-block button-positive" ng-click="completeDeliver(data)">
+                            ส่งแล้ว
+                        </button>
+            </div>
+            <div class="col"></div>
+        </div>
+
+            <div class="item item-avatar-left item-icon-right item-text-wrap" ng-repeat="item in data.items">
+                <img src="{{item.product.images}}">
+                <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
+                <p style="margin-right: 20%">จำนวน {{item.qty}} ถุง</p>
+                <p style="margin-right: 20%">ราคารวม {{item.amount}} บาท</p>
+
+            </div>
+
+            <label class="item item-input">
+                <span class="input-label">ราคารวม : </span>
+                <input ng-value="data.amount+' บาท'" type="text" style="background-color: white" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ค่าจัดส่ง : </span>
+                <input ng-value="data.deliveryamount +' บาท'" type="text" style="background-color: white" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ส่วนลด : </span>
+                <input ng-value="data.discountpromotion + ' ' + 'บาท'" type="text" style="background-color: white" readonly>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">ราคาสุทธิ : </span>
+                <input ng-value="data.totalamount + ' ' + 'บาท'" type="text" style="background-color: white" readonly>
+            </label>
+    </div>
+  </ion-content>
+</ion-view>

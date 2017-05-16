@@ -494,7 +494,15 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation) {
+  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile) {
+
+
+    var lat = null;
+    var long = null;
+    var map;
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    var directionsService = new google.maps.DirectionsService();
+
     $scope.init = function () {
       $scope.readMap();
     }
@@ -513,16 +521,7 @@ angular.module('starter.controllers', [])
       $scope.locationOrders = [];
       $scope.locationOrdersApt = [];
 
-
-
-      function pinDirection(e) {
-        console.log(e);
-      }
-
       var posOptions = { timeout: 10000, enableHighAccuracy: false };
-      var lat = null;
-      var long = null;
-      var map;
       $cordovaGeolocation
         .getCurrentPosition(posOptions)
         .then(function (position) {
@@ -592,7 +591,7 @@ angular.module('starter.controllers', [])
                   locations.items.forEach(function (pro) {
                     product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
                   })
-                  var contentString = '<div>'
+                  var contentString = $compile('<div>'
                     + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
                     + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
                     + '<p>' + product + '</p>'
@@ -600,8 +599,8 @@ angular.module('starter.controllers', [])
                     + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
                     + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                     + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
-                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" onclick="pinDirection(locations)"> ค้นหาเส้นทาง </button>'
-                    + '</div>';
+                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="pinDirection(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> ค้นหาเส้นทาง </button>'
+                    + '</div>')($scope);
                   var location = locations.shipping.sharelocation;
                   // console.log($scope.locationConfirmed.length);
                   if (location) {
@@ -619,7 +618,7 @@ angular.module('starter.controllers', [])
                     });
 
                     var infowindow = new google.maps.InfoWindow({
-                      content: contentString
+                      content: contentString[0]
                     });
                     marker.addListener('click', function () {
                       // console.log('click');
@@ -635,7 +634,7 @@ angular.module('starter.controllers', [])
                   locations.items.forEach(function (pro) {
                     product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
                   })
-                  var contentString = '<div>'
+                  var contentString = $compile('<div>'
                     + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
                     + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
                     + '<p>' + product + '</p>'
@@ -643,8 +642,8 @@ angular.module('starter.controllers', [])
                     + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
                     + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                     + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
-                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" onclick="pinDirection(locations)"> ค้นหาเส้นทาง </button>'
-                    + '</div>';
+                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="pinDirection(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> ค้นหาเส้นทาง </button>'
+                    + '</div>')($scope);
                   // console.log(locations);
                   var location = locations.shipping.sharelocation;
                   // console.log(location);
@@ -663,7 +662,7 @@ angular.module('starter.controllers', [])
                       map: map
                     });
                     var infowindow = new google.maps.InfoWindow({
-                      content: contentString
+                      content: contentString[0]
                     });
                     marker.addListener('click', function () {
                       console.log('click');
@@ -686,16 +685,10 @@ angular.module('starter.controllers', [])
         }, function (err) {
           // error
         });
-
     }
-
-
     $scope.calcRoute = function (pointStart) {
       var item = JSON.parse(window.localStorage.point);
       if (item) {
-        $stateParams.point = false;
-        var directionsDisplay = new google.maps.DirectionsRenderer();
-        var directionsService = new google.maps.DirectionsService();
         var pointEnd = {
           lat: parseFloat(item.shipping.sharelocation.latitude),
           lng: parseFloat(item.shipping.sharelocation.longitude)
@@ -725,7 +718,32 @@ angular.module('starter.controllers', [])
       return;
 
     }
+
+    $scope.pinDirection = function (lati, lngi) {
+      var routePoints = {
+        start: { lat: lat, lng: long },
+        end: { lat: parseFloat(lati), lng: parseFloat(lngi) }
+      }
+
+      directionsDisplay.setDirections({ routes: [] });
+      directionsDisplay.setMap($scope.map);
+
+      var start = routePoints.start;
+      var end = routePoints.end;
+      var request = {
+        origin: start,
+        destination: end,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+      };
+      directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+        }
+      });
+    }
+
   })
+
   .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService) {
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
@@ -1326,7 +1344,8 @@ angular.module('starter.controllers', [])
     $scope.data = JSON.parse($stateParams.data);
 
     $scope.tel = function (telnumber) {
-      window.location = 'tel:' + telnumber;
+      // alert(telnumber);
+      window.location = 'tel:' + '0' + telnumber;
     };
 
   })

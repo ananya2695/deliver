@@ -10,13 +10,13 @@ navigation history that also transitions its views in and out.
   <div ng-controller="NewCtrl" ng-init="init()">
 
     <ion-tab title="งานใหม่" badge="countOrder" on-select="readOrder()" icon-off="ion-ios-paper" icon-on="ion-ios-paper-outline"
-      href="#/tab/new">
+      href="#/app/tab/new">
       <ion-nav-view name="tab-new"></ion-nav-view>
     </ion-tab>
   </div>
   <!-- Me Tab -->
   <div ng-controller="NewCtrl" ng-init="init()">
-    <ion-tab title="ของฉัน" badge="countOrderApt" icon-off="ion-ios-compose-outline" icon-on="ion-ios-compose" href="#/tab/me">
+    <ion-tab title="ของฉัน" badge="countOrderApt" icon-off="ion-ios-compose-outline" icon-on="ion-ios-compose" href="#/app/tab/me">
       <ion-nav-view name="tab-me"></ion-nav-view>
     </ion-tab>
   </div>
@@ -30,15 +30,15 @@ navigation history that also transitions its views in and out.
 
   <!-- chat -->
   <div ng-controller="ChatCtrl">
-    <ion-tab title="สนทนา" icon-off="ion-ios-chatbubble-outline" icon-on="ion-ios-chatbubble" href="#/tab/chat">
+    <ion-tab title="สนทนา" icon-off="ion-ios-chatbubble-outline" icon-on="ion-ios-chatbubble" href="#/app/tab/chat">
       <ion-nav-view name="tab-chat"></ion-nav-view>
     </ion-tab>
   </div>
 
   <!-- More Tab -->
-  <ion-tab title="อื่นๆ" icon-off="ion-ios-more-outline" icon-on="ion-ios-more" href="#/tab/more">
+  <!--<ion-tab title="อื่นๆ" icon-off="ion-ios-more-outline" icon-on="ion-ios-more" href="#/app/tab/more">
     <ion-nav-view name="tab-more"></ion-nav-view>
-  </ion-tab>
+  </ion-tab>-->
 
 
 

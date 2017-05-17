@@ -83,9 +83,20 @@ angular.module('starter.services', [])
       console.log(orderId);
       console.log(order);
       return $http.put(apiURL + '/orders/' + orderId, order);
-    }
-  }])
+    };
 
+    this.getusers = function () {
+      var dfd = $q.defer();
+      var user = this.getUser();
+      $http.get(apiURL + '/users').success(function (data) {
+        // window.localStorage.setItem("storage", JSON.stringify(data));
+        dfd.resolve(data);
+      }).error(function (err) {
+        dfd.reject(err);
+      })
+      return dfd.promise;
+    };
+  }])
 
   .service('ProductService', ['$http', '$q', function ($http, $q) {
     var apiURL = 'https://thamapptest.herokuapp.com/api';

@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   // prompt('copy token', token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -31,7 +31,7 @@ angular.module('starter.controllers', [])
       };
       AuthService.saveUserPushNoti(push_usr)
         .then(function (res) {
-          $state.go('tab.new');
+          $state.go('app.tab.new');
         });
     }
     $scope.credentials = {}
@@ -48,7 +48,7 @@ angular.module('starter.controllers', [])
         AuthService.saveUserPushNoti(push_usr)
           .then(function (res) {
             $scope.credentials = {}
-            $state.go('tab.new');
+            $state.go('app.tab.new');
             $rootScope.$broadcast('onLoginSuccess');
           });
         // alert('success');
@@ -117,7 +117,7 @@ angular.module('starter.controllers', [])
       //       AuthService.saveUserPushNoti(push_usr)
       //         .then(function (res) {
       //           $scope.credentials = {}
-      //           $state.go('tab.new');
+      //           $state.go('app.tab.new');
       //           $rootScope.$broadcast('onLoginSuccess');
       //         });
       //       // alert('success');
@@ -144,7 +144,7 @@ angular.module('starter.controllers', [])
     $scope.btnGo = function (data) {
 
       console.log(data);
-      $state.go('tab.newdetail', { data: JSON.stringify(data) });
+      $state.go('app.tab.newdetail', { data: JSON.stringify(data) });
     }
 
     var orderId = $stateParams.orderId;
@@ -315,12 +315,15 @@ angular.module('starter.controllers', [])
     $scope.btnGo2 = function (data) {
 
       console.log(data);
-      $state.go('tab.me-detail', { data: JSON.stringify(data) });
+      $state.go('app.tab.me-detail', { data: JSON.stringify(data) });
     }
   })
 
-
   .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation) {
+    $scope.btnGoDetail = function (data) {
+      console.log(data);
+      $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
+    };
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.setItem = function () {
@@ -381,7 +384,7 @@ angular.module('starter.controllers', [])
 
       //       AuthService.updateOrder(orderId, order)
       //         .then(function (response) {
-      //           $state.go('tab.me');
+      //           $state.go('app.tab.me');
       //           $rootScope.$broadcast('onComplete');
       //         }, function (error) {
       //           console.log(error);
@@ -408,7 +411,7 @@ angular.module('starter.controllers', [])
 
       AuthService.updateOrder(orderId, order)
         .then(function (response) {
-          $state.go('tab.me');
+          $state.go('app.tab.me');
           $rootScope.$broadcast('onComplete');
         }, function (error) {
           console.log(error);
@@ -449,7 +452,7 @@ angular.module('starter.controllers', [])
         .then(function (response) {
           //alert('success');
           //$scope.init();
-          $state.go('tab.new');
+          $state.go('app.tab.new');
           $rootScope.$broadcast('onAccept');
         }, function (error) {
           console.log(error);
@@ -479,7 +482,7 @@ angular.module('starter.controllers', [])
         .then(function (response) {
           //alert('success');
           //$scope.init();
-          $state.go('tab.new');
+          $state.go('app.tab.new');
           $rootScope.$broadcast('onReject');
         }, function (error) {
           console.log(error);
@@ -490,11 +493,11 @@ angular.module('starter.controllers', [])
     };
     $scope.btnGoDetail = function (data) {
       console.log(data);
-      $state.go('tab.profile-detail', { data: JSON.stringify(data) });
+      $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
     };
   })
 
-  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile) {
+  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading) {
 
 
     var lat = null;
@@ -509,7 +512,7 @@ angular.module('starter.controllers', [])
 
     $scope.clearItem = function () {
       window.localStorage.removeItem("point");
-      $state.go('tab.map');
+      $state.go('app.tab.map');
     }
     // $scope.$on('onLoginSuccess', function (event, args) {
     //   // do what you want to do
@@ -686,6 +689,7 @@ angular.module('starter.controllers', [])
           // error
         });
     }
+    
     $scope.calcRoute = function (pointStart) {
       var item = JSON.parse(window.localStorage.point);
       if (item) {
@@ -765,7 +769,7 @@ angular.module('starter.controllers', [])
     $scope.deleteOrder = function (data) {
       ProductService.deleteOrder(data._id)
         .then(function (response) {
-          $state.go('tab.listbl');
+          $state.go('app.listbl');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -792,7 +796,7 @@ angular.module('starter.controllers', [])
       RequestService.updateRequestOrder(requestorderId, requestorder)
         .then(function (response) {
           // alert('success');
-          $state.go('tab.listreceived');
+          $state.go('app.s');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -820,7 +824,7 @@ angular.module('starter.controllers', [])
       ReturnService.updateReturnOrder(returnordersId, returnorder)
         .then(function (response) {
           // alert('success');
-          $state.go('listReturn');
+          $state.go('app.listReturn');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -847,7 +851,7 @@ angular.module('starter.controllers', [])
 
       AccuralService.updateAccuralOrder(accuralreceiptsId, accuralreceipt)
         .then(function (response) {
-          $state.go('tab.listAr');
+          $state.go('app.listAr');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -1024,36 +1028,36 @@ angular.module('starter.controllers', [])
     };
 
     $scope.listbl = function () {
-      $state.go('tab.listbl');
+      $state.go('app.listbl');
     };
 
     $scope.listreceived = function () {
-      $state.go('tab.listreceived');
+      $state.go('app.listreceived');
     };
     $scope.detailreceived = function () {
-      $state.go('tab.detailreceived');
+      $state.go('app.detailreceived');
     };
 
     $scope.listdetail = function () {
-      $state.go('tab.listdetail');
+      $state.go('app.listdetail');
     };
 
     $scope.listReturn = function () {
-      $state.go('tab.listReturn');
+      $state.go('app.listReturn');
     };
     $scope.detailreturn = function () {
-      $state.go('tab.detailreturn');
+      $state.go('app.detailreturn');
     };
 
     $scope.listAr = function () {
-      $state.go('tab.listAr');
+      $state.go('app.listAr');
     };
 
     $scope.detailAr = function () {
-      $state.go('tab.detailAr');
+      $state.go('app.detailAr');
     };
     $scope.liststock = function () {
-      $state.go('tab.liststock');
+      $state.go('app.liststock');
     };
 
     $scope.loadData = function () {
@@ -1066,9 +1070,12 @@ angular.module('starter.controllers', [])
           $scope.ordersComplete = [];
           angular.forEach(orderlist, function (user) {
             if (user.namedeliver) {
-              if (user.user._id === user.namedeliver._id) {
-                if (userStore._id === user.namedeliver._id) {
-                  $scope.ordersComplete.push(user);
+              if (user.user) {
+
+                if (user.user._id === user.namedeliver._id) {
+                  if (userStore._id === user.namedeliver._id) {
+                    $scope.ordersComplete.push(user);
+                  }
                 }
               }
             }
@@ -1085,22 +1092,22 @@ angular.module('starter.controllers', [])
 
     };
     $scope.goDetail = function (data) {
-      $state.go('tab.billdetail', { data: JSON.stringify(data) });
+      $state.go('app.billdetail', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
 
     $scope.requestOrderDetail = function (data) {
-      $state.go('tab.detailreceived', { data: JSON.stringify(data) });
+      $state.go('app.detailreceived', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
 
     $scope.returnOrderDetail = function (data) {
-      $state.go('tab.detailreturn', { data: JSON.stringify(data) });
+      $state.go('app.detailreturn', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
 
     $scope.accuralOrderDetail = function (data) {
-      $state.go('tab.detailAr', { data: JSON.stringify(data) });
+      $state.go('app.detailAr', { data: JSON.stringify(data) });
       console.log($stateParams.data);
     }
     // 
@@ -1504,3 +1511,44 @@ angular.module('starter.controllers', [])
     $scope.data = {};
     $scope.myId = $scope.user.displayName;
   })
+
+  .controller('FriendsCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket) {
+    $scope.user = AuthService.getUser();
+    $scope.listAccount = function () {
+      $scope.listRoom = [];
+      $scope.friends = [];
+      roomService.getrooms().then(function (rooms) {
+        rooms.forEach(function (room) {
+          room.users.forEach(function (user) {
+            if ($scope.user._id === user._id) {
+              $scope.listRoom.push(room);
+            }
+          });
+        });
+        if ($scope.listRoom.length > 0) {
+          $scope.listRoom.forEach(function (room) {
+            room.users.forEach(function (user) {
+              if ($scope.user._id !== user._id) {
+                $scope.friends.push(user);
+              }
+            });
+          });
+        }
+        AuthService.getusers().then(function (accounts) {
+          $scope.accounts = accounts;
+        }, function (err) {
+          console.log(err);
+        });
+      });
+    };
+    $scope.listAccount();
+    $scope.addFriend = function (user) {
+      var data = {
+        name: $scope.user.username + '' + user.username,
+        type: 'P',
+        users: [$scope.user, user],
+        user: $scope.user
+      };
+      Socket.emit('createroom', data);
+    };
+  });

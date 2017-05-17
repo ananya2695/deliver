@@ -59,7 +59,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     })
   })
 
-  .config(function ($stateProvider, $urlRouterProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    $ionicConfigProvider.tabs.position("bottom")
     //$authProvider
     // var commonConfig = {
     //   popupOptions: {
@@ -81,11 +82,39 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     $stateProvider
 
       // setup an abstract state for the tabs directive
-      .state('tab', {
-        url: '/tab',
+      // .state('tab', {
+      //   url: '/tab',
+      //   abstract: true,
+      //   templateUrl: 'templates/tabs.html'
+      // })
+
+      //side menu
+      .state('app', {
+        url: '/app',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/menu.html',
+        controller: 'MoreCtrl'
       })
+
+      .state('app.tab', {
+        url: "/tab",
+        abstract: true,
+        views: {
+          'menuContent': {
+            templateUrl: "templates/tabs.html",
+          }
+        }
+      })
+
+      // .state('app.test', {
+      //   url: "/test",
+      //   views: {
+      //     'menuContent': {
+      //       templateUrl: "templates/test.html"
+      //     }
+      //   }
+      // })
+
 
       // Each tab has its own nav history stack:
 
@@ -95,7 +124,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         controller: 'LogInCtrl'
       })
 
-      .state('tab.new', {
+      .state('app.tab.new', {
         url: '/new',
         views: {
           'tab-new': {
@@ -105,8 +134,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      ////////////////////////////////////////////////
-      .state('tab.profile-detail', {
+      .state('app.tab.profile-detail', {
         url: '/profile-detail:{data}',
         views: {
           'tab-new': {
@@ -116,7 +144,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      .state('tab.chat', {
+      .state('app.tab.chat', {
         url: "/chat",
         views: {
           'tab-chat': {
@@ -126,7 +154,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      .state('tab.chat-detail', {
+      .state('app.tab.chat-detail', {
         url: "/chat/:chatId",
         views: {
           'tab-chat': {
@@ -135,8 +163,18 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-      //////////////////////////////////////////////////
-      .state('tab.newdetail', {
+
+      .state('app.tab.listfriend', {
+        url: "/listfriend",
+        views: {
+          'tab-chat': {
+            templateUrl: "templates/listfriend.html",
+            controller: 'FriendsCtrl'
+          }
+        }
+      })
+
+      .state('app.tab.newdetail', {
         url: '/newdetail:{data}',
         views: {
           'tab-new': {
@@ -147,7 +185,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       })
 
 
-      .state('tab.me', {
+      .state('app.tab.me', {
         url: '/me',
         views: {
           'tab-me': {
@@ -157,7 +195,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      .state('tab.me-detail', {
+      .state('app.tab.me-detail', {
         url: '/me/:{data}',
         views: {
           'tab-me': {
@@ -166,7 +204,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-      .state('tab.map', {
+      .state('app.tab.map', {
         url: '/map',
         views: {
           'tab-map': {
@@ -176,108 +214,102 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      .state('tab.more', {
-        url: '/more',
-        views: {
-          'tab-more': {
-            templateUrl: 'templates/tab-more.html',
-            controller: 'MoreCtrl'
-          }
-        }
-      })
-
-      .state('tab.listbl', {
+      // .state('app.tab.more', {
+      //   url: '/more',
+      //   views: {
+      //     'tab-more': {
+      //       templateUrl: 'templates/tab-more.html',
+      //       controller: 'MoreCtrl'
+      //     }
+      //   }
+      // })
+      .state('app.listbl', {
         url: '/listbl',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/listbl.html',
             controller: 'MoreCtrl'
           }
         }
       })
-
-
-      .state('tab.billdetail', {
+      .state('app.billdetail', {
         url: '/billdetail:{data}',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/billdetail.html',
             controller: 'MoreDetailCtrl'
 
           }
         }
       })
-
-      .state('tab.listdetail', {
+      .state('app.listdetail', {
         url: '/listdetail',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/listdetail.html',
             controller: 'MoreCtrl'
 
           }
         }
       })
-
-      .state('tab.listreceived', {
+      .state('app.listreceived', {
         url: '/listreceived',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/listreceived.html',
             controller: 'MoreCtrl'
           }
         }
       })
-
-      .state('tab.detailreceived', {
+      .state('app.detailreceived', {
         url: '/detailreceived:{data}',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/detailreceived.html',
             controller: 'MoreDetailCtrl'
           }
         }
       })
-      .state('tab.listReturn', {
+      .state('app.listReturn', {
         url: '/listReturn',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/listReturn.html',
             controller: 'MoreCtrl'
           }
         }
       })
-      .state('tab.detailreturn', {
+      .state('app.detailreturn', {
         url: '/detailreturn:{data}',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/detailreturn.html',
             controller: 'MoreDetailCtrl'
           }
         }
       })
-      .state('tab.listAr', {
+      .state('app.listAr', {
         url: '/listAr',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/listAr.html',
             controller: 'MoreCtrl'
           }
         }
       })
-      .state('tab.detailAr', {
+      .state('app.detailAr', {
         url: '/detailAr:{data}',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/detailAr.html',
             controller: 'MoreDetailCtrl'
           }
         }
       })
-      .state('tab.liststock', {
+      .state('app.liststock', {
         url: '/liststock',
         views: {
-          'tab-more': {
+          'menuContent': {
             templateUrl: 'templates/liststock.html',
             controller: 'MoreCtrl'
           }

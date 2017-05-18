@@ -8,17 +8,19 @@
             <input type="text" class="form-control" placeholder="ค้นหา..." ng-model="topsearch" aria-describedby="sizing-addon3">
         </div>
         <div class="list" ng-repeat="stock in stockdeli">
-            <a class="item item-thumbnail-left" ng-repeat="pro in stock.stocks | filter:topsearch">
-                <img src="{{pro.product.images}}">
-                <h2>{{pro.product.name}}</h2>
-                <p>รับเข้า : {{pro.income}}</p>
-                <p>รับคืน : {{pro.returnord}}</p>
-                <p>จ่ายแล้ว : {{pro.ap}}</p>
-                <p>ขายออก : {{pro.outcome}}</p>
-                <p>จอง : {{pro.wip}}</p>
-                <p>คงเหลือ : {{pro.income-(pro.ap+pro.outcome+pro.wip+pro.returnord)}}</p>
+            <div ng-show="userStore._id === stock.namedeliver._id">
+                <a class="item item-thumbnail-left" ng-repeat="pro in stock.stocks | filter:topsearch">
+                    <img src="{{pro.product.images}}">
+                    <h2>{{pro.product.name}}</h2>
+                    <p>รับเข้า : {{pro.income}}</p>
+                    <p>รับคืน : {{pro.returnord}}</p>
+                    <p>จ่ายแล้ว : {{pro.ap}}</p>
+                    <p>ขายออก : {{pro.outcome}}</p>
+                    <p>จอง : {{pro.wip}}</p>
+                    <p>คงเหลือ : {{pro.income-(pro.ap+pro.outcome+pro.wip+pro.returnord)}}</p>
 
-            </a>
+                </a>
+            </div>
         </div>
     </ion-content>
 </ion-view>

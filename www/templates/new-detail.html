@@ -1,4 +1,4 @@
-<ion-view view-title="รายละเอียด" ng-init="setItem()"  cache-view="false">
+<ion-view view-title="รายละเอียด" ng-init="setItem()" cache-view="false">
     <ion-content>
         <div class="list">
 
@@ -12,25 +12,55 @@
                 <input ng-value="data.docdate | date:'dd/MM/yyyy'" type="text" style="background-color: white" readonly>
             </label>
 
-            <label class="item item-input" ng-click="btnGoDetail(data)">
+
+            <div class="row" ng-click="btnGoDetail(data)">
+                <div class="col col-33">
+                    <img class="imagempf" src={{data.user.profileImageURL}}>
+                </div>
+                <div class="col col-66">
+                    <h4>{{data.user.displayName}}</h4>
+                    <p>{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
+                    <p>{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a class="item item-icon-left" ng-click="joinChat(data.user)">
+                        <i class="icon ion-ios-chatbubble"></i> พูดคุย
+                    </a>
+                </div>
+                <div class="col">
+                    <a ng-click="tels({{data.shipping.tel}})" class="item item-icon-left">
+                        <i class="icon ion-ios-telephone"></i> โทร
+                    </a>
+                </div>
+                <div class="col">
+                    <a ui-sref="app.tab.map({point:data._id})" class="item item-icon-left">
+                        <i class="icon ion-ios-location"></i> นำทาง
+                    </a>
+                </div>
+            </div>
+
+
+            <!--<label class="item item-input" ng-click="btnGoDetail(data)">
                 <span class="input-label">ชื่อ : </span>
                 <input ng-model="data.user.displayName" type="text" style="background-color: white" readonly>
-            </label>
+            </label>-->
 
-            <label class="item item-input item-text-wrap">
+            <!--<label class="item item-input item-text-wrap">
                 <span class="input-label ">ที่อยู่ : </span>
                 <label type="text" style="background-color: white;padding-right: 2cm;color:black" readonly>{{data.shipping.address +''+data.shipping.subdistrict+''+data.shipping.district+''+data.shipping.province+''+data.shipping.postcode}}
                     </label>
-            </label>
-            <div>
+            </label>-->
+            <!--<div>
                 <button class="button button-block button-outline button-positive icon-left ion-ios-location" ui-sref="app.tab.map({point:data._id})">
                                 ค้นหาเส้นทาง
                 </button>
-            </div>
-            <label class="item item-input">
+            </div>-->
+            <!--<label class="item item-input">
                 <span class="input-label">เบอร์โทร : </span>
                 <input ng-model="data.shipping.tel" type="text" style="background-color: white" readonly>
-            </label>
+            </label>-->
 
             <div class="row">
                 <div class="col"></div>

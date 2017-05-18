@@ -139,8 +139,8 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams) {
-
+  .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.btnGo = function (data) {
 
       console.log(data);
@@ -319,7 +319,8 @@ angular.module('starter.controllers', [])
     }
   })
 
-  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation) {
+  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.btnGoDetail = function (data) {
       console.log(data);
       $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
@@ -425,7 +426,9 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
+  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.setItem = function () {
@@ -497,8 +500,11 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading) {
-
+  .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading, $ionicSideMenuDelegate, $ionicHistory) {
+    $scope.$on('$ionicView.enter', function () {
+      $ionicHistory.clearHistory();
+      $ionicSideMenuDelegate.canDragContent(false);
+    });
 
     var lat = null;
     var long = null;
@@ -689,7 +695,7 @@ angular.module('starter.controllers', [])
           // error
         });
     }
-    
+
     $scope.calcRoute = function (pointStart) {
       var item = JSON.parse(window.localStorage.point);
       if (item) {
@@ -748,7 +754,9 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService) {
+  .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
 
@@ -861,7 +869,8 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService) {
+  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.userStore = AuthService.getUser();
     // console.log($scope.userStore);
     $scope.products = [];
@@ -1276,6 +1285,22 @@ angular.module('starter.controllers', [])
               }
             }
           })
+
+          if ($scope.listRequest) {
+            $rootScope.countlistRequest = $scope.listRequest.length;
+          }
+          if ($scope.listResponse) {
+            $rootScope.countlistResponse = $scope.listResponse.length;
+          }
+          if ($scope.listReceived) {
+            $rootScope.countlistReceived = $scope.listReceived.length;
+          }
+
+          $rootScope.countlistreceiveds = $scope.listRequest.length + $scope.listReceived.length + $scope.listRequest.length;
+
+          // console.log($scope.listRequest.length);
+          // console.log($scope.listResponse.length);
+          // console.log($scope.listReceived.length);
         });
     }
 
@@ -1302,7 +1327,19 @@ angular.module('starter.controllers', [])
           // console.log($scope.listReturns.length);
           // console.log($scope.listreturnResponse.length);
           // console.log($scope.listreturnReceived.length);
+          if ($scope.listReturns) {
+            $rootScope.countlistReturns = $scope.listReturns.length;
+          }
+          if ($scope.listreturnResponse) {
+            $rootScope.countlistreturnResponse = $scope.listreturnResponse.length;
+          }
+          if ($scope.listreturnReceived) {
+            $rootScope.countlistreturnReceived = $scope.listreturnReceived.length;
+          }
+
+          $rootScope.countlistReturned = $scope.listreturnReceived.length + $scope.listreturnResponse.length + $scope.listReturns.length;
         });
+
     }
 
     $scope.accuralreceipts = function () {
@@ -1325,6 +1362,17 @@ angular.module('starter.controllers', [])
             }
           });
 
+          if ($scope.listarWait) {
+            $rootScope.countlistarWait = $scope.listarWait.length;
+          }
+          if ($scope.listarConfirmed) {
+            $rootScope.countlistarConfirmed = $scope.listarConfirmed.length;
+          }
+          if ($scope.listarReceipt) {
+            $rootScope.countlistarReceipt = $scope.listarReceipt.length;
+          }
+
+          $rootScope.countlistAr = $scope.listarReceipt.length + $scope.listarConfirmed.length + $scope.listarWait.length;
           // console.log($scope.listarWait.length);
           // console.log($scope.listarConfirmed.length);
           // console.log($scope.listarReceipt.length);
@@ -1338,16 +1386,16 @@ angular.module('starter.controllers', [])
           data.forEach(function (stock) {
             if ($scope.userStore._id === stock.namedeliver._id) {
               $scope.stockdeli.push(stock);
+              $rootScope.countStock = stock.stocks.length;
             }
-            // console.log($scope.stockdeli);
           });
         });
     }
 
   })
 
-  .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService) {
-
+  .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.data = JSON.parse($stateParams.data);
 
     $scope.tel = function (telnumber) {
@@ -1357,7 +1405,8 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ChatCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket) {
+  .controller('ChatCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
 
     $scope.user = AuthService.getUser();
     //  alert(JSON.stringify($scope.user));
@@ -1385,7 +1434,9 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ChatDetailCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, $stateParams, Socket, $ionicScrollDelegate, $timeout) {
+  .controller('ChatDetailCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, $stateParams, Socket, $ionicScrollDelegate, $timeout, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+
     $scope.user = AuthService.getUser();
     $scope.messages = [];
     $scope.chat = null;
@@ -1512,7 +1563,9 @@ angular.module('starter.controllers', [])
     $scope.myId = $scope.user.displayName;
   })
 
-  .controller('FriendsCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket) {
+  .controller('FriendsCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket, $ionicSideMenuDelegate) {
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+
     $scope.user = AuthService.getUser();
     $scope.listAccount = function () {
       $scope.listRoom = [];
@@ -1551,4 +1604,10 @@ angular.module('starter.controllers', [])
       };
       Socket.emit('createroom', data);
     };
+  })
+
+  .controller('menuCtrl', function ($scope, $ionicHistory, $http, $state, AuthService, $ionicModal, $rootScope, ProductService, RequestService, ReturnService, AccuralService, StockService, $stateParams, $ionicSideMenuDelegate) {
+    $rootScope.userStore = AuthService.getUser();
+    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+
   });

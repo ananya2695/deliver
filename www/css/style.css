@@ -181,7 +181,13 @@ span1 {
     box-shadow: none !important;
     color: #000000 !important;
 }
-
+.badge-buttonnoti{
+    margin-top: 15px
+}
+.badge-notify{
+   position: fixed !important;
+   top: 0px !important;
+}
 /*.amount {
     font-size: smaller !important;
 };*/

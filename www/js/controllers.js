@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   // prompt('copy token', token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -53,31 +53,31 @@ angular.module('starter.controllers', [])
           });
         // alert('success');
       } else {
-        //alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
-        var alertPopup = $ionicPopup.alert({
-          title: 'แจ้งเตือน',
-          template: 'คุณไม่มีสิทธิ์เข้าใช้งาน'
-        });
+        alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
+        // var alertPopup = $ionicPopup.alert({
+        //   title: 'แจ้งเตือน',
+        //   template: 'คุณไม่มีสิทธิ์เข้าใช้งาน'
+        // });
 
-        alertPopup.then(function (res) {
-          console.log('คุณไม่มีสิทธิ์เข้าใช้งาน');
-        });
+        // alertPopup.then(function (res) {
+        //   console.log('คุณไม่มีสิทธิ์เข้าใช้งาน');
+        // });
       }
     });
     $rootScope.$on('userLoggedInerr', function (e, response) {
       console.log(response);
       if (response["message"]) {
         $scope.credentials = {}
-        //alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
         $rootScope.$broadcast('loading:hide')
-        var alertPopup = $ionicPopup.alert({
-          title: 'แจ้งเตือน',
-          template: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
-        });
+        // var alertPopup = $ionicPopup.alert({
+        //   title: 'แจ้งเตือน',
+        //   template: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
+        // });
 
-        alertPopup.then(function (res) {
-          console.log('Invalid username or password');
-        });
+        // alertPopup.then(function (res) {
+        //   console.log('Invalid username or password');
+        // });
 
       }
       // console.log(error);
@@ -143,7 +143,7 @@ angular.module('starter.controllers', [])
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.btnGo = function (data) {
 
-      console.log(data);
+      // console.log(data);
       $state.go('app.tab.newdetail', { data: JSON.stringify(data) });
     }
 
@@ -314,18 +314,20 @@ angular.module('starter.controllers', [])
 
     $scope.btnGo2 = function (data) {
 
-      console.log(data);
+      // console.log(data);
       $state.go('app.tab.me-detail', { data: JSON.stringify(data) });
     }
   })
 
   .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate) {
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
-    $scope.btnGoDetail = function (data) {
-      console.log(data);
-      $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
+
+    $scope.telephone = function (telnumber) {
+      // alert(telnumber);
+      window.location = 'tel:' + '0' + telnumber;
     };
-    console.log(JSON.parse($stateParams.data));
+
+    // console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.setItem = function () {
       window.localStorage.point = $stateParams.data;
@@ -426,10 +428,15 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate) {
+  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.userStore = AuthService.getUser();
 
-    console.log(JSON.parse($stateParams.data));
+    $scope.tels = function (telnumber) {
+      window.location = 'tel:' + '0' + telnumber;
+    };
+
+    // console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.setItem = function () {
       window.localStorage.point = $stateParams.data;
@@ -498,6 +505,33 @@ angular.module('starter.controllers', [])
       console.log(data);
       $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
     };
+
+    $scope.joinChat = function (user) {
+      // console.log(user);
+      var data = {
+        name: $scope.userStore.username + '' + user.username,
+        type: 'P',
+        users: [$scope.userStore, user],
+        user: $scope.userStore
+      };
+      console.log(data);
+
+      Socket.emit('createroom', data);
+    };
+    // Add an event listener to the 'invite' event
+    Socket.on('invite', function (res) {
+      alert('invite : ' + JSON.stringify(res));
+      Socket.emit('join', res);
+    });
+
+    // Add an event listener to the 'joinsuccess' event
+    Socket.on('joinsuccess', function (data) {
+      alert('joinsuccess : ' + JSON.stringify(data));
+      $scope.room = data;
+      $state.go('app.tab.chat-detail', { chatId: data._id });
+      // $scope.pageDown();
+      // alert('joinsuccess : ' + JSON.stringify(data));
+    });
   })
 
   .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading, $ionicSideMenuDelegate, $ionicHistory) {
@@ -1463,7 +1497,7 @@ angular.module('starter.controllers', [])
 
     // Add an event listener to the 'invite' event
     Socket.on('invite', function (res) {
-      // alert('invite : ' + JSON.stringify(data));
+      // alert('invite : ' + JSON.stringify(res));
       Socket.emit('join', res);
     });
 
@@ -1602,6 +1636,7 @@ angular.module('starter.controllers', [])
         users: [$scope.user, user],
         user: $scope.user
       };
+
       Socket.emit('createroom', data);
     };
   })

@@ -1,7 +1,7 @@
 <ion-view ng-init="setItem()" view-title="รายละเอียด" cache-view="false">
-  <ion-content>
-    <div class="list">
-      <label class="item item-input">
+    <ion-content>
+        <div class="list">
+            <label class="item item-input">
                 <span class="input-label">เลขใบสั่งซื้อ : </span>
                 <input ng-model="data.docno" type="text" style="background-color: white" readonly>
             </label>
@@ -10,8 +10,38 @@
                 <span class="input-label">วันที่ : </span>
                 <input ng-value="data.docdate | date:'dd/MM/yyyy'" type="text" style="background-color: white" readonly>
             </label>
+            <!---->
 
-            <label class="item item-input" ng-click="btnGoDetail(data)">
+            <div class="row" ng-click="btnGoDetail(data)">
+                <div class="col col-33">
+                    <img class="imagempf" src={{data.user.profileImageURL}}>
+                </div>
+                <div class="col col-66">
+                    <h4>{{data.user.displayName}}</h4>
+                    <p>{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
+                    <p>{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a ui-sref="app.tab.chat" class="item item-icon-left">
+                        <i class="icon ion-ios-chatbubble"></i> พูดคุย
+                    </a>
+                </div>
+                <div class="col">
+                    <a ng-click="telephone({{data.shipping.tel}})" class="item item-icon-left">
+                        <i class="icon ion-ios-telephone"></i> โทร
+                    </a>
+                </div>
+                <div class="col">
+                    <a ui-sref="app.tab.map({point:data._id})" class="item item-icon-left">
+                        <i class="icon ion-ios-location"></i> นำทาง
+                    </a>
+                </div>
+            </div>
+
+            <!---->
+            <!--<label class="item item-input" ng-click="btnGoDetail(data)">
                 <span class="input-label">ชื่อ : </span>
                 <input ng-model="data.user.displayName" type="text" style="background-color: white" readonly>
             </label>
@@ -30,16 +60,16 @@
                 <button class="button button-block button-outline button-positive icon-left ion-ios-location" ui-sref="app.tab.map({point:data._id})">
                                 ค้นหาเส้นทาง
                 </button>
-            </div>
+            </div>-->
             <div class="row">
-            <div class="col"></div>
-            <div class="col col-90">
-                <button class="button button-block button-positive" ng-click="completeDeliver(data)">
+                <div class="col"></div>
+                <div class="col col-90">
+                    <button class="button button-block button-positive" ng-click="completeDeliver(data)">
                             ส่งแล้ว
                         </button>
+                </div>
+                <div class="col"></div>
             </div>
-            <div class="col"></div>
-        </div>
 
             <div class="item item-avatar-left item-icon-right item-text-wrap" ng-repeat="item in data.items">
                 <img src="{{item.product.images}}">
@@ -68,6 +98,6 @@
                 <span class="input-label">ราคาสุทธิ : </span>
                 <input ng-value="data.totalamount + ' ' + 'บาท'" type="text" style="background-color: white" readonly>
             </label>
-    </div>
-  </ion-content>
+        </div>
+    </ion-content>
 </ion-view>

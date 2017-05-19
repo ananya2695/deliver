@@ -141,7 +141,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         views: {
           'tab-me': {
             templateUrl: 'templates/user-profile-detail.html',
-            controller: 'MeDetailCtrl'
+            controller: 'ProfileDetailCtrl'
           }
         }
       })

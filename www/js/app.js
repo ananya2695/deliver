@@ -108,17 +108,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-
-      // .state('app.test', {
-      //   url: "/test",
-      //   views: {
-      //     'menuContent': {
-      //       templateUrl: "templates/test.html"
-      //     }
-      //   }
-      // })
-
-
       // Each tab has its own nav history stack:
 
       .state('authen', {
@@ -143,6 +132,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           'tab-new': {
             templateUrl: 'templates/user-profile-detail.html',
             controller: 'ProfileDetailCtrl'
+          }
+        }
+      })
+
+      .state('app.tab.profile-detail2', {
+        url: '/profile-detail:{data}',
+        views: {
+          'tab-me': {
+            templateUrl: 'templates/user-profile-detail.html',
+            controller: 'MeDetailCtrl'
           }
         }
       })

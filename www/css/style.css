@@ -199,6 +199,11 @@ span1 {
    position: fixed !important;
    top: 0px !important;
 }
+
+.badge-notify1{
+   position: fixed !important;
+   top: 4px !important;
+}
 /*.amount {
     font-size: smaller !important;
 };*/

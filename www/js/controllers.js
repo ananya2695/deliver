@@ -319,12 +319,17 @@ angular.module('starter.controllers', [])
     }
   })
 
-  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate) {
+  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket) {
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
-
+    $scope.userStore = AuthService.getUser();
     $scope.telephone = function (telnumber) {
       // alert(telnumber);
       window.location = 'tel:' + '0' + telnumber;
+    };
+
+    $scope.btnGoDetail = function (data) {
+      console.log(data);
+      $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
     };
 
     // console.log(JSON.parse($stateParams.data));
@@ -426,6 +431,34 @@ angular.module('starter.controllers', [])
       // console.log(item);
     };
 
+    $scope.gotoChat2 = function (user) {
+      console.log('MeDetailCtrl' + user.username);
+      var data = {
+        name: $scope.userStore.username + '' + user.username,
+        type: 'P',
+        users: [$scope.userStore, user],
+        user: $scope.userStore
+      };
+      Socket.emit('createroom', data);
+    }
+
+    // Add an event listener to the 'invite' event
+    Socket.on('invite', function (res) {
+      // console.log('invite ConfirmedCtrl');
+      // alert('invite : ' + JSON.stringify(res));
+      Socket.emit('join', res);
+    });
+
+    // Add an event listener to the 'joinsuccess' event
+    Socket.on('joinsuccess', function (data) {
+      // console.log('joinsuccess ConfirmedCtrl');
+      // alert('joinsuccess : ' + JSON.stringify(data));
+      $scope.room = data;
+      $state.go('app.tab.chat-detail', { chatId: data._id });
+      // $scope.pageDown();
+      // alert('joinsuccess : ' + JSON.stringify(data));
+    });
+
   })
 
   .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
@@ -506,32 +539,34 @@ angular.module('starter.controllers', [])
       $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
     };
 
-    $scope.joinChat = function (user) {
-      // console.log(user);
+    $scope.gotoChat = function (user) {
+      console.log('NewDetailCtrl' + user.username);
       var data = {
         name: $scope.userStore.username + '' + user.username,
         type: 'P',
         users: [$scope.userStore, user],
         user: $scope.userStore
       };
-      console.log(data);
-
       Socket.emit('createroom', data);
-    };
+    }
+
     // Add an event listener to the 'invite' event
     Socket.on('invite', function (res) {
-      alert('invite : ' + JSON.stringify(res));
+      // console.log('invite ConfirmedCtrl');
+      // alert('invite : ' + JSON.stringify(res));
       Socket.emit('join', res);
     });
 
     // Add an event listener to the 'joinsuccess' event
     Socket.on('joinsuccess', function (data) {
-      alert('joinsuccess : ' + JSON.stringify(data));
+      // console.log('joinsuccess ConfirmedCtrl');
+      // alert('joinsuccess : ' + JSON.stringify(data));
       $scope.room = data;
       $state.go('app.tab.chat-detail', { chatId: data._id });
       // $scope.pageDown();
       // alert('joinsuccess : ' + JSON.stringify(data));
     });
+
   })
 
   .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading, $ionicSideMenuDelegate, $ionicHistory) {
@@ -1428,14 +1463,43 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate) {
+  .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.data = JSON.parse($stateParams.data);
+    $scope.userStore = AuthService.getUser();
 
     $scope.tel = function (telnumber) {
       // alert(telnumber);
       window.location = 'tel:' + '0' + telnumber;
     };
+
+    $scope.gotoChat3 = function (user) {
+      console.log('MeDetailCtrl' + user.username);
+      var data = {
+        name: $scope.userStore.username + '' + user.username,
+        type: 'P',
+        users: [$scope.userStore, user],
+        user: $scope.userStore
+      };
+      Socket.emit('createroom', data);
+    }
+
+    // Add an event listener to the 'invite' event
+    Socket.on('invite', function (res) {
+      // console.log('invite ConfirmedCtrl');
+      // alert('invite : ' + JSON.stringify(res));
+      Socket.emit('join', res);
+    });
+
+    // Add an event listener to the 'joinsuccess' event
+    Socket.on('joinsuccess', function (data) {
+      // console.log('joinsuccess ConfirmedCtrl');
+      // alert('joinsuccess : ' + JSON.stringify(data));
+      $scope.room = data;
+      $state.go('app.tab.chat-detail', { chatId: data._id });
+      // $scope.pageDown();
+      // alert('joinsuccess : ' + JSON.stringify(data));
+    });
 
   })
 

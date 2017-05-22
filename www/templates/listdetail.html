@@ -18,90 +18,42 @@
                 </div>
                 <h2 align="center">{{userStore.displayName}}</h2>
                 <p align="center">{{userStore.address.tel}}</p>
-                <!--<div class="row">
-                    <div class="col-10">
-                    </div>
-                    <div class="col-33">
-                        <label>เลขที่ </label>
-                    </div>
-                    <div class="col-50">
-                        <span>{{userStore.address.address}}</span>
-                        <input ng-model="userStore.address.address">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                    </div>
-                    <div class="col-33">
-                        <label>ตำบล </label>
-                    </div>
-                    <div class="col-50">
-                        <span>{{userStore.address.subdistrict}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                    </div>
-                    <div class="col-33">
-                        <label>อำเภอ </label>
-                    </div>
-                    <div class="col-50">
-                        <span>{{userStore.address.district}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                    </div>
-                    <div class="col-33">
-                        <label>จังหวัด  </label>
-                    </div>
-                    <div class="col-50">
-                        <span>{{userStore.address.province}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                    </div>
-                    <div class="col-33">
-                        <label>อีเมลล์ </label>
-                    </div>
-                    <div class="col-50">
-                        <span>{{userStore.email}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                    </div>
-                    <div class="col-33">
-                        <label>รหัสไปรษณีย์  </label>
-                    </div>
-                    <div class="col-50">
-                        <span>{{userStore.address.postcode}}</span>
-                    </div>
-                </div>-->
                 <!---->
+                <div class="item-iconEditPro">
+                    <div ng-hide="updateDeliver" ng-click="updateDeliver = true">
+                        <span class="item-fontEditDeli">แก้ไขข้อมูล</span>
+                        <i class="icon icon ion-ios-compose-outline"></i>
+                    </div>
+                    <div ng-show="updateDeliver" ng-click="updateDeliver = false">
+                        <span class="item-fontEditDeli">แก้ไขข้อมูล</span>
+                        <i class="icon icon ion-ios-compose"></i>
+                    </div>
+                </div>
+
                 <div class="list" ng-hide="updateDeliver">
-                    <label class="item item-icon-right">เลขที่<span class="item-note">{{userStore.address.address}}</span></label>
-                    <label class="item item-icon-right">ตำบล<span class="item-note">{{userStore.address.subdistrict}}</span></label>
-                    <label class="item item-icon-right">อำเภอ<span class="item-note">{{userStore.address.district}}</span></label>
-                    <label class="item item-icon-right">จังหวัด<span class="item-note">{{userStore.address.province}}</span></label>
-                    <label class="item item-icon-right">รหัสไปรษณีย์<span class="item-note">{{userStore.address.postcode}}</span></label>
-                    <label class="item item-icon-right">อีเมลล์<span class="item-note">{{userStore.email}}</span></label>
+                    <label class="item item-icon-right item-fontProfile">เลขที่ :<span class="item-detailRight">{{userStore.address.address}}</span></label>
+                    <label class="item item-icon-right item-fontProfile">ตำบล :<span class="item-detailRight">{{userStore.address.subdistrict}}</span></label>
+                    <label class="item item-icon-right item-fontProfile">อำเภอ :<span class="item-detailRight">{{userStore.address.district}}</span></label>
+                    <label class="item item-icon-right item-fontProfile">จังหวัด :<span class="item-detailRight">{{userStore.address.province}}</span></label>
+                    <label class="item item-icon-right item-fontProfile">รหัสไปรษณีย์ :<span class="item-detailRight">{{userStore.address.postcode}}</span></label>
+                    <label class="item item-icon-right item-fontProfile">อีเมลล์ :<span class="item-detailRight">{{userStore.email}}</span></label>
                 </div>
-                <!---->
                 <div class="list" ng-show="updateDeliver">
-                    <label class="item item-input item-stacked-label"><span class="input-label">เลขที่</span><input type="text" placeholder="{{userStore.address.address}}" ng-model="user.address"></label>
-                    <label class="item item-input item-stacked-label"><span class="input-label">ตำบล</span><input type="text" placeholder="{{userStore.address.subdistrict}}" ng-model="user.subdistrict"></label>
-                    <label class="item item-input item-stacked-label"><span class="input-label">อำเภอ</span><input type="text" placeholder="{{userStore.address.district}}" ng-model="user.district"></label>
-                    <label class="item item-input item-stacked-label"><span class="input-label">จังหวัด</span><input type="text" placeholder="{{userStore.address.province}}" ng-model="user.province"></label>
-                    <label class="item item-input item-stacked-label"><span class="input-label">รหัสไปรษณีย์</span><input type="text" placeholder="{{userStore.address.postcode}}" ng-model="user.postcode"></label>
-                    <label class="item item-input item-stacked-label"><span class="input-label">เบอร์โทรศัพท์</span><input type="text" placeholder="{{userStore.address.tel}}" ng-model="user.tel"></label>
+                    <label class="item item-icon-right item-fontProfile">เลขที่ :<input class="item-input item-editfontProfile" type="text" placeholder="{{userStore.address.address ? userStore.address.address : 'เลขที่'}}" ng-model="userStore.address.address"></label>
+                    <label class="item item-icon-right item-fontProfile">ตำบล :<input class="item-input item-editfontProfile" type="text" placeholder="{{userStore.address.subdistrict ? userStore.address.subdistrict : 'ตำบล'}}" ng-model="userStore.address.subdistrict"></label>
+                    <label class="item item-icon-right item-fontProfile">อำเภอ :<input class="item-input item-editfontProfile" type="text" placeholder="{{userStore.address.district ? userStore.address.district : 'อำเภอ'}}" ng-model="userStore.address.district"></label>
+                    <label class="item item-icon-right item-fontProfile">จังหวัด :<input class="item-input item-editfontProfile" type="text" placeholder="{{userStore.address.province ? userStore.address.province : 'จังหวัด'}}" ng-model="userStore.address.province"></label>
+                    <label class="item item-icon-right item-fontProfile">รหัสไปรษณีย์ :<input class="item-input item-editfontProfile" type="text" placeholder="{{userStore.address.postcode ? userStore.address.postcode : 'รหัสไปรษณีย์'}}" ng-model="userStore.address.postcode"></label>
+                    <label class="item item-icon-right item-fontProfile">เบอร์โทรศัพท์ :<input class="item-input item-editfontProfile" type="text" placeholder="{{userStore.address.tel ? userStore.address.tel : 'เบอร์โทรศัพท์'}}" ng-model="userStore.address.tel"></label>
                 </div>
                 <!---->
-                <div></div>
+                <div class="row" ng-show="updateDeliver">
+                    <div class="col">
+                        <button class="button button-balanced button-block" ng-click="updateProfileDeli(userStore)">อัพเดตโปรไฟล์</button>
+                    </div>
+                </div>
 
             </div>
-            <button ng-click="testup(userStore)">test</button>
             <div class="item item-body hbody">
                 <ion-content>
                     <div id="map" data-tap-disabled="true"> </div>

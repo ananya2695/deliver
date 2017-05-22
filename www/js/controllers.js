@@ -471,7 +471,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.openMap = function (data) {
-      console.log(data);
+      // console.log(data);
       // var address = data.street + ", " + data.city + ", " + data.state;
       $scope.Platform = window.localStorage.adminplatform;
       var address = data.shipping.sharelocation.latitude + ", " + data.shipping.sharelocation.longitude;
@@ -967,18 +967,27 @@ angular.module('starter.controllers', [])
 
     $scope.updateDeliver = false;
 
-    $scope.testup = function (user) {
-
+    $scope.updateProfileDeli = function (user) {
       var userX = $scope.userStore
-      // console.log(user.address.address);
       userX = {
         address: {
-          address: user.address.address,
+          address: user.address.address ? userX.address.address : ' ',
+          district: user.address.district ? userX.address.district : ' ',
+          subdistrict: user.address.subdistrict ? userX.address.subdistrict : ' ',
+          province: user.address.province ? userX.address.province : ' ',
+          postcode: user.address.postcode ? userX.address.postcode : ' ',
+          tel: user.address.tel ? userX.address.tel : ' ',
+          sharelocation: {
+            latitude: user.address.sharelocation.latitude ? userX.address.sharelocation.latitude : ' ',
+            longitude: user.address.sharelocation.longitude ? userX.address.sharelocation.longitude : ' '
+          }
         }
       }
+      // console.log(userX);
       AuthService.updateUser(userX)
         .then(function (response) {
           alert('เสร็จสมบูรณ์');
+          $scope.updateDeliver = false;
         }, function (error) {
           alert('dont success' + " " + error.data.message);
         });

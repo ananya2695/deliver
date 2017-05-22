@@ -470,6 +470,26 @@ angular.module('starter.controllers', [])
       window.location = 'tel:' + '0' + telnumber;
     };
 
+    $scope.openMap = function (data) {
+      console.log(data);
+      // var address = data.street + ", " + data.city + ", " + data.state;
+      $scope.Platform = window.localStorage.adminplatform;
+      var address = data.shipping.sharelocation.latitude + ", " + data.shipping.sharelocation.longitude;
+      var text = data.shipping.address + ' ' + data.shipping.district + ' ' + data.shipping.subdistrict + ' ' + data.shipping.province + ' ' + data.shipping.postcode;
+      var url = '';
+      if ($scope.Platform === 'iOS' || $scope.Platform === 'iPhone') {
+        url = "http://maps.apple.com/maps?q=" + encodeURIComponent(text + ',' + address);
+      } else if ($scope.Platform === 'Android' || $scope.Platform === 'IEMobile' || $scope.Platform === 'BlackBerry') {
+        url = "geo:?q=" + encodeURIComponent(text + ',' + address);
+      } else {
+        //this will be used for browsers if we ever want to convert to a website
+        url = "http://maps.google.com?q=" + encodeURIComponent(text + ',' + address);
+        // url = "http://maps.google.com?q=" + 'สยามพารากอน' +',' +'13.7461473' + ',' + '100.5323265';
+      }
+      window.open(url, "_system", 'location=yes');
+      // window.open("http://maps.apple.com/?q=#{text}&ll=#{lat},#{long}&near=#{lat},#{long}", '_system', 'location=yes')
+      // window.open("geo:#{lat},#{long}?q=#{text}", '_system', 'location=yes')
+    };
     // console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
     $scope.setItem = function () {
@@ -944,6 +964,27 @@ angular.module('starter.controllers', [])
     $scope.userStore = AuthService.getUser();
 
     $scope.Platform = window.localStorage.adminplatform;
+
+    $scope.updateDeliver = false;
+
+    $scope.testup = function (user) {
+
+      var userX = $scope.userStore
+      // console.log(user.address.address);
+      userX = {
+        address: {
+          address: user.address.address,
+        }
+      }
+      AuthService.updateUser(userX)
+        .then(function (response) {
+          alert('เสร็จสมบูรณ์');
+        }, function (error) {
+          alert('dont success' + " " + error.data.message);
+        });
+    };
+
+
     // alert($scope.Platform);
     // console.log($scope.userStore);
     $scope.products = [];
@@ -1714,5 +1755,5 @@ angular.module('starter.controllers', [])
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
 
 
-    
+
   });

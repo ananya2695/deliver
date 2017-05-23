@@ -14,9 +14,12 @@ angular.module('starter.services', [])
     this.failedAuth = function (error) {
       $rootScope.$emit('userLoggedInerr', error.data);
     };
+    this.successResume = function (data) {
+      window.localStorage.user = JSON.stringify(data.data);
+      $rootScope.$emit('userResume', data.data);
+    };
 
     this.loginUser = function (login) {
-
       $auth
         .login(login, {
           url: apiURL + '/auth/signin'
@@ -38,6 +41,15 @@ angular.module('starter.services', [])
       //   // return dfd.promise;
       // });
       // return dfd.promise;
+    };
+
+    this.loginResume = function (login) {
+      $auth
+        .login(login, {
+          url: apiURL + '/auth/signin'
+        })
+        .then(this.successResume)
+        .catch(this.failedAuth);
     };
 
     this.saveUserPushNoti = function (push_user) {

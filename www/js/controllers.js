@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    // var push = new Ionic.Push({
-    //   "debug": true,
-    //   "onNotification": function (notification) {
-    //     console.log(notification);
-    //     $rootScope.$broadcast('onNotification');
-    //     if (notification._raw.additionalData.foreground) {
-    //       //   //alert(notification.message);
+    var push = new Ionic.Push({
+      "debug": true,
+      "onNotification": function (notification) {
+        console.log(notification);
+        $rootScope.$broadcast('onNotification');
+        if (notification._raw.additionalData.foreground) {
+          //   //alert(notification.message);
 
-    //       $rootScope.$broadcast('onNotification');
-    //     }
-    //   }
-    // });
+          $rootScope.$broadcast('onNotification');
+        }
+      }
+    });
 
-    // push.register(function (token) {
-    //   console.log("My Device token:", token.token);
-    //   // prompt('copy token', token.token);
-    //   window.localStorage.token = JSON.stringify(token.token);
-    //   push.saveToken(token);  // persist the token in the Ionic Platform
-    // });
+    push.register(function (token) {
+      console.log("My Device token:", token.token);
+      // prompt('copy token', token.token);
+      window.localStorage.token = JSON.stringify(token.token);
+      push.saveToken(token);  // persist the token in the Ionic Platform
+    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -49,7 +49,8 @@ angular.module('starter.controllers', [])
           .then(function (res) {
             $scope.credentials = {}
             $state.go('app.tab.new');
-            $rootScope.$broadcast('onLoginSuccess');
+            // $rootScope.$broadcast('onLoginSuccess');
+            $rootScope.$broadcast('loading:hide');
           });
         // alert('success');
       } else {
@@ -70,7 +71,7 @@ angular.module('starter.controllers', [])
         // $scope.credentials = {}
         $scope.credentials.password = '';
         alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
-        $rootScope.$broadcast('loading:hide')
+        $rootScope.$broadcast('loading:hide');
         // var alertPopup = $ionicPopup.alert({
         //   title: 'แจ้งเตือน',
         //   template: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
@@ -82,6 +83,23 @@ angular.module('starter.controllers', [])
 
       }
       // console.log(error);
+    });
+    $rootScope.$on('userResume', function (e, response) {
+      if (response.roles[0] === 'deliver') {
+        var push_usr = {
+          user_id: response._id,
+          user_name: response.username,
+          role: 'deliver',
+          device_token: JSON.parse(window.localStorage.token || null)
+        };
+        AuthService.saveUserPushNoti(push_usr)
+          .then(function (res) {
+            $scope.credentials = {}
+            $rootScope.$broadcast('loading:hide');
+          });
+      } else {
+        alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
+      }
     });
 
     $scope.doLogIn = function (credentials) {
@@ -1678,12 +1696,12 @@ angular.module('starter.controllers', [])
     };
     $scope.listRoom();
     $scope.createRoom = function (data) {
-      $ionicLoading.show({ template: '<ion-spinner icon="android"></ion-spinner><p style="margin: 5px 0 0 0;">กรุณารอสักครู่</p>' }); 
+      $ionicLoading.show({ template: '<ion-spinner icon="android"></ion-spinner><p style="margin: 5px 0 0 0;">กรุณารอสักครู่</p>' });
       roomService.createRoom(data).then(function (res) {
         $scope.listRoom();
-        $ionicLoading.hide();  
+        $ionicLoading.hide();
       }, function (err) {
-        $ionicLoading.hide();  
+        $ionicLoading.hide();
         console.log(err);
       });
     };

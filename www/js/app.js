@@ -41,7 +41,8 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       // user opened the app from the background
       if (window.localStorage.credential) {
         var user = JSON.parse(window.localStorage.credential);
-        AuthService.loginUser(user);
+        // AuthService.loginUser(user);
+        AuthService.loginResume(user);
       }
     });
   })

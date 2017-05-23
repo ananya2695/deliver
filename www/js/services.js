@@ -70,6 +70,11 @@ angular.module('starter.services', [])
       return $http.put(apiURL + '/users', userX, user);
     };
 
+    this.updateImgUser = function (newUser) {
+      window.localStorage.user = newUser;
+      return JSON.parse(window.localStorage.user);
+    };
+
     this.getOrder = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/orders').success(function (orders) {

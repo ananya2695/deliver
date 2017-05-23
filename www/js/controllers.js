@@ -959,9 +959,10 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('MoreCtrl', function ($scope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService, $ionicSideMenuDelegate) {
+  .controller('MoreCtrl', function ($scope, $http, $state, config, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService, $ionicSideMenuDelegate, $cordovaImagePicker, $cordovaFileTransfer, $ionicLoading) {
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.userStore = AuthService.getUser();
+    $scope.apiUrl = config.apiUrl;
 
     $scope.Platform = window.localStorage.adminplatform;
 
@@ -993,6 +994,38 @@ angular.module('starter.controllers', [])
         });
     };
 
+    $scope.changeImageProfile = function () {
+      var optionsImg = {
+        maximumImagesCount: 1,
+        width: 600,
+        height: 600,
+        quality: 80
+      };
+
+      var options = {
+        fileKey: "newProfilePicture",
+        httpMethod: "POST",
+        mimeType: "image/jpeg",
+        chunkedMode: true
+      };
+
+      $cordovaImagePicker.getPictures(optionsImg)
+        .then(function (results) {
+          var user = AuthService.getUser();
+          $cordovaFileTransfer.upload($scope.apiUrl + 'api/users/picture', results[0], options).then(function (result) {
+            $scope.loggedUser = AuthService.updateImgUser(result.response);
+            $state.go('app.tab.listdetail');
+            $ionicLoading.hide();
+          }, function (err) {
+            $ionicLoading.hide();
+            alert("ERROR: " + JSON.stringify(err));
+          }, function (progress) {
+            $ionicLoading.show({ template: '<ion-spinner icon="android"></ion-spinner><p style="margin: 5px 0 0 0;">กำลังอัพโหลดรูปภาพ</p>' });
+          });
+        }, function (error) {
+          alert("ERROR: " + JSON.stringify(error));
+        });
+    };
 
     // alert($scope.Platform);
     // console.log($scope.userStore);

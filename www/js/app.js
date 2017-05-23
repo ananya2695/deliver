@@ -6,7 +6,16 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
-
+  .constant('config', {
+    apiUrl: 'https://thamapptest.herokuapp.com/',
+    redirectUri: 'http://localhost:8100/', // oauth callback url of ionic app example http://localhost:8100/
+    facebook: {
+      clientId: '414384685598077' // your client id from facebook console example 
+    },
+    //https://thamapp.herokuapp.com/      for production
+    //https://thamapptest.herokuapp.com/  for heroku test
+    //http://localhost:3000/              for local
+  })
   .run(function ($ionicPlatform, AuthService) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

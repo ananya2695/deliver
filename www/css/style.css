@@ -244,3 +244,26 @@ span1 {
 .item-fontEditDeli {
     font-size: 14px;
 }
+.height-100per {
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 50%;
+}
+.bg-gray {
+    background-color: #e2e2e2 !important;
+}
+.icon-image{
+    color: #aaaaaa !important;
+}
+.position-absolute{
+  position: absolute;
+}
+.badge-cart {
+    margin-left: -10px !important;
+}
+.font-30 {
+    font-size: 200%;
+}
+.listeditPro {
+  margin-top: -30px;
+}

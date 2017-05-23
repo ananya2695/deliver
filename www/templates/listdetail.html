@@ -10,15 +10,28 @@
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
         </ion-refresher>
-        <div class="list card">
-            <div class="item item-body">
-                <div align="center">
-                    <img class="imgdetail" src="{{userStore.profileImageURL}}">
-                    <!--<img class="imgdetail" src="http://www.w3schools.com/css/lights600x400.jpg">-->
+        <!---->
+        <div class="form-fields-outer list list-inset">
+            <div class="row slide-content">
+                <div class="col col-20"></div>
+                <div class="col col-center user-data">
+                    <!-- We need a wrapper with width set for the preload image directive -->
+                    <div class="user-image-outer">
+                        <pre-img ratio="_1_1" helper-class="rounded-image">
+                            <img class="user-image height-100per text-center" id="myImage" ng-src="{{userStore.profileImageURL}}" spinner-on-load>
+                        </pre-img>
+                    </div>
+                    <span class="badge badge-assertive icon-image bg-gray badge-cart position-absolute" ng-click="changeImageProfile()">
+                                <i class="icon ion-ios-camera-outline font-30" ></i></span>
+                    <!--<h3 class="user-name text-center">แก้ไขรูป</h3>-->
+                    <div align="center">
+                        <h5 class="text-center">{{userStore.displayName}}</h5>
+                        <p align="center">{{userStore.address.tel}}</p>
+                    </div>
                 </div>
-                <h2 align="center">{{userStore.displayName}}</h2>
-                <p align="center">{{userStore.address.tel}}</p>
-                <!---->
+                <div class="col col-20"></div>
+            </div>
+            <div align="right" class="listeditPro">
                 <div class="item-iconEditPro">
                     <div ng-hide="updateDeliver" ng-click="updateDeliver = true">
                         <span class="item-fontEditDeli">แก้ไขข้อมูล</span>
@@ -29,6 +42,21 @@
                         <i class="icon icon ion-ios-compose"></i>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!---->
+        <div class="list card">
+            <div class="item item-body">
+                <!--<div class="item-iconEditPro">
+                    <div ng-hide="updateDeliver" ng-click="updateDeliver = true">
+                        <span class="item-fontEditDeli">แก้ไขข้อมูล</span>
+                        <i class="icon icon ion-ios-compose-outline"></i>
+                    </div>
+                    <div ng-show="updateDeliver" ng-click="updateDeliver = false">
+                        <span class="item-fontEditDeli">แก้ไขข้อมูล</span>
+                        <i class="icon icon ion-ios-compose"></i>
+                    </div>
+                </div>-->
 
                 <div class="list" ng-hide="updateDeliver">
                     <label class="item item-icon-right item-fontProfile">เลขที่ :<span class="item-detailRight">{{userStore.address.address}}</span></label>

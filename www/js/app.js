@@ -25,7 +25,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        cordova.plugins.Keyboard.disableScroll(true);
+        // cordova.plugins.Keyboard.disableScroll(true);
 
       }
       if (window.StatusBar) {
@@ -136,7 +136,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       })
 
       .state('app.tab.profile-detail', {
-        url: '/profile-detail:{data}',
+        url: '/profile-detail/:{data}',
         views: {
           'tab-new': {
             templateUrl: 'templates/user-profile-detail.html',
@@ -146,7 +146,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       })
 
       .state('app.tab.profile-detail2', {
-        url: '/profile-detail:{data}',
+        url: '/profile-detail/:{data}',
         views: {
           'tab-me': {
             templateUrl: 'templates/user-profile-detail.html',
@@ -186,7 +186,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       })
 
       .state('app.tab.newdetail', {
-        url: '/newdetail:{data}',
+        url: '/newdetail/:{data}',
         views: {
           'tab-new': {
             templateUrl: 'templates/new-detail.html',
@@ -254,7 +254,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       .state('app.billdetail', {
-        url: '/billdetail:{data}',
+        url: '/billdetail/:{data}',
         views: {
           'menuContent': {
             templateUrl: 'templates/billdetail.html',
@@ -273,7 +273,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       .state('app.detailreceived', {
-        url: '/detailreceived:{data}',
+        url: '/detailreceived/:{data}',
         views: {
           'menuContent': {
             templateUrl: 'templates/detailreceived.html',
@@ -291,7 +291,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       .state('app.detailreturn', {
-        url: '/detailreturn:{data}',
+        url: '/detailreturn/:{data}',
         views: {
           'menuContent': {
             templateUrl: 'templates/detailreturn.html',
@@ -309,7 +309,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       .state('app.detailAr', {
-        url: '/detailAr:{data}',
+        url: '/detailAr/:{data}',
         views: {
           'menuContent': {
             templateUrl: 'templates/detailAr.html',

@@ -987,8 +987,8 @@ angular.module('starter.controllers', [])
       // console.log(userX);
       AuthService.updateUser(userX)
         .then(function (response) {
-          alert('เสร็จสมบูรณ์');
-          $scope.updateDeliver = false;
+          showdata = false;
+          alert('อัพเดตเสร็จสมบูรณ์');
         }, function (error) {
           alert('dont success' + " " + error.data.message);
         });
@@ -1016,6 +1016,7 @@ angular.module('starter.controllers', [])
             $scope.loggedUser = AuthService.updateImgUser(result.response);
             $state.go('app.tab.listdetail');
             $ionicLoading.hide();
+            $scope.userStore = AuthService.getUser();
           }, function (err) {
             $ionicLoading.hide();
             alert("ERROR: " + JSON.stringify(err));

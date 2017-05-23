@@ -249,7 +249,7 @@ span1 {
     width: 100% !important;
     border-radius: 50%;
     max-height: 170px !important;
-    max-width: 170px !important;
+    /*max-width: 170px !important;*/
 }
 .bg-gray {
     background-color: #e2e2e2 !important;

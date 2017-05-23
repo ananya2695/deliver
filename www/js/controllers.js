@@ -982,15 +982,16 @@ angular.module('starter.controllers', [])
             latitude: user.address.sharelocation.latitude ? userX.address.sharelocation.latitude : ' ',
             longitude: user.address.sharelocation.longitude ? userX.address.sharelocation.longitude : ' '
           }
-        }
+        },
+        email : user.email ? userX.email : ' ',
       }
       // console.log(userX);
       AuthService.updateUser(userX)
         .then(function (response) {
-          showdata = false;
           alert('อัพเดตเสร็จสมบูรณ์');
         }, function (error) {
           alert('dont success' + " " + error.data.message);
+          $scope.userStore = AuthService.getUser();
         });
     };
 

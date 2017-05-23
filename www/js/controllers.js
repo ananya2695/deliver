@@ -1323,7 +1323,6 @@ angular.module('starter.controllers', [])
           $scope.map = map;
 
           $scope.centerOnMe = function () {
-            // alert('centerOnMe');
             if ($scope.map) {
               var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 15,
@@ -1411,7 +1410,7 @@ angular.module('starter.controllers', [])
               }
               AuthService.updateUser(userX)
                 .then(function (response) {
-                  alert('เสร็จสมบูรณ์');
+                  alert('ส่งตำแหน่งสำเร็จ');
                 }, function (error) {
                   alert('dont success' + " " + error.data.message);
                 });

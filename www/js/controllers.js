@@ -48,7 +48,7 @@ angular.module('starter.controllers', [])
         AuthService.saveUserPushNoti(push_usr)
           .then(function (res) {
             $scope.credentials = {}
-            $state.go('app.tab.new');
+            // $state.go('app.tab.new');
             $rootScope.$broadcast('onLoginSuccess');
           });
         // alert('success');
@@ -561,7 +561,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.gotoChat = function (user) {
-      console.log('NewDetailCtrl' + user.username);
+      // console.log('NewDetailCtrl' + user.username);
       var data = {
         name: $scope.userStore.username + '' + user.username,
         type: 'P',
@@ -698,7 +698,7 @@ angular.module('starter.controllers', [])
                     + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
                     + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                     + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
-                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="pinDirection(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> ค้นหาเส้นทาง </button>'
+                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="openMap(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> นำทาง </button>'
                     + '</div>')($scope);
                   var location = locations.shipping.sharelocation;
                   // console.log($scope.locationConfirmed.length);
@@ -741,7 +741,7 @@ angular.module('starter.controllers', [])
                     + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
                     + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                     + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
-                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="pinDirection(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> ค้นหาเส้นทาง </button>'
+                    + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="openMap(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> นำทาง </button>'
                     + '</div>')($scope);
                   // console.log(locations);
                   var location = locations.shipping.sharelocation;
@@ -817,6 +817,20 @@ angular.module('starter.controllers', [])
       window.localStorage.removeItem("point");
       return;
 
+    }
+
+    $scope.openMap = function (la, long) {
+      $scope.Platform = window.localStorage.adminplatform;
+      var address = la + ", " + long;
+      var url = '';
+      if ($scope.Platform === 'iOS' || $scope.Platform === 'iPhone') {
+        url = "http://maps.apple.com/maps?q=" + encodeURIComponent(address);
+      } else if ($scope.Platform === 'Android' || $scope.Platform === 'IEMobile' || $scope.Platform === 'BlackBerry') {
+        url = "geo:?q=" + encodeURIComponent(address);
+      } else {
+        url = "http://maps.google.com?q=" + encodeURIComponent(address);
+      }
+      window.open(url, "_system", 'location=yes');
     }
 
     $scope.pinDirection = function (lati, lngi) {
@@ -983,7 +997,7 @@ angular.module('starter.controllers', [])
             longitude: user.address.sharelocation.longitude ? userX.address.sharelocation.longitude : ' '
           }
         },
-        email : user.email ? userX.email : ' ',
+        email: user.email ? userX.email : ' ',
       }
       // console.log(userX);
       AuthService.updateUser(userX)
@@ -1066,7 +1080,7 @@ angular.module('starter.controllers', [])
       $scope.returnorders();
       $scope.accuralreceipts();
       $scope.stocks();
-
+      $scope.centerOnMe();
     }
     $scope.$on('onLoginSuccess', function (event, args) {
       // do what you want to do
@@ -1280,6 +1294,7 @@ angular.module('starter.controllers', [])
     // 
     // 
     // console.log('detail map');
+
     $scope.mapdetail = function () {
       var posOptions = { timeout: 10000, enableHighAccuracy: false };
       $cordovaGeolocation
@@ -1422,6 +1437,57 @@ angular.module('starter.controllers', [])
           // error
         });
     }
+    // init()
+    $scope.centerOnMe = function () {
+      var posOptions = { timeout: 10000, enableHighAccuracy: false };
+      $cordovaGeolocation
+        .getCurrentPosition(posOptions)
+        .then(function (position) {
+          var lat = position.coords.latitude
+          var long = position.coords.longitude
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+          $scope.map = map;
+          if ($scope.map) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              center: new google.maps.LatLng(lat, long), //เปลี่ยนตามต้องการ
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            var marker = new google.maps.Marker({
+              position: map.getCenter(),
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 15,
+                fillColor: 'blue',
+                fillOpacity: 0.2,
+                strokeColor: 'blue',
+                strokeWeight: 0
+              },
+              draggable: true,
+              map: map
+            });
+            var marker = new google.maps.Marker({
+              position: map.getCenter(),
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: '#4285f4',
+                fillOpacity: 1,
+                strokeColor: 'white',
+                strokeWeight: 1
+              },
+              draggable: true,
+              map: map
+            });
+          }
+        }, function (err) {
+        });
+
+    };
 
     $scope.requestorders = function () {
       RequestService.getRequests()
@@ -1557,7 +1623,7 @@ angular.module('starter.controllers', [])
     $scope.userStore = AuthService.getUser();
 
     $scope.tel = function (telnumber) {
-      // alert(telnumber);
+
       window.location = 'tel:' + '0' + telnumber;
     };
 
@@ -1585,6 +1651,8 @@ angular.module('starter.controllers', [])
       // alert('joinsuccess : ' + JSON.stringify(data));
       $scope.room = data;
       $state.go('app.tab.chat-detail', { chatId: data._id });
+      // alert('มาจากโปรไฟล์');
+
       // $scope.pageDown();
       // alert('joinsuccess : ' + JSON.stringify(data));
     });

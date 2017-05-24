@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   // prompt('copy token', token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -342,8 +342,14 @@ angular.module('starter.controllers', [])
     $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
     $scope.userStore = AuthService.getUser();
     $scope.telephone = function (telnumber) {
-      // alert(telnumber);
-      window.location = 'tel:' + '0' + telnumber;
+      var reNumber = '';
+      var regex = /(\d+)/g;
+      var reNum = telnumber.match(regex);
+      reNum.forEach(function (item) {
+        reNumber += item
+      });
+      // alert(reNumber);
+      window.location = 'tel:' + reNumber;
     };
 
     $scope.btnGoDetail = function (data) {
@@ -485,7 +491,15 @@ angular.module('starter.controllers', [])
     $scope.userStore = AuthService.getUser();
 
     $scope.tels = function (telnumber) {
-      window.location = 'tel:' + '0' + telnumber;
+      var reNumber = '';
+      var regex = /(\d+)/g;
+      var reNum = telnumber.match(regex);
+      reNum.forEach(function (item) {
+        reNumber += item
+      });
+      // alert(reNumber);
+      window.location = 'tel:' + reNumber;
+      // window.location = 'tel:' + '0' + telnumber;
     };
 
     $scope.openMap = function (data) {
@@ -1641,8 +1655,14 @@ angular.module('starter.controllers', [])
     $scope.userStore = AuthService.getUser();
 
     $scope.tel = function (telnumber) {
-
-      window.location = 'tel:' + '0' + telnumber;
+      var reNumber = '';
+      var regex = /(\d+)/g;
+      var reNum = telnumber.match(regex);
+      reNum.forEach(function (item) {
+        reNumber += item
+      });
+      // alert(reNumber);
+      window.location = 'tel:' + reNumber;
     };
 
     $scope.gotoChat3 = function (user) {

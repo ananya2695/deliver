@@ -356,6 +356,27 @@ angular.module('starter.controllers', [])
       window.location = 'tel:' + reNumber;
     };
 
+    $scope.openMap = function (data) {
+      // console.log(data);
+      // var address = data.street + ", " + data.city + ", " + data.state;
+      $scope.Platform = window.localStorage.adminplatform;
+      var address = data.shipping.sharelocation.latitude + ", " + data.shipping.sharelocation.longitude;
+      var text = data.shipping.address + ' ' + data.shipping.district + ' ' + data.shipping.subdistrict + ' ' + data.shipping.province + ' ' + data.shipping.postcode;
+      var url = '';
+      if ($scope.Platform === 'iOS' || $scope.Platform === 'iPhone') {
+        url = "http://maps.apple.com/maps?q=" + encodeURIComponent(text + ',' + address);
+      } else if ($scope.Platform === 'Android' || $scope.Platform === 'IEMobile' || $scope.Platform === 'BlackBerry') {
+        url = "geo:?q=" + encodeURIComponent(text + ',' + address);
+      } else {
+        //this will be used for browsers if we ever want to convert to a website
+        url = "http://maps.google.com?q=" + encodeURIComponent(text + ',' + address);
+        // url = "http://maps.google.com?q=" + 'สยามพารากอน' +',' +'13.7461473' + ',' + '100.5323265';
+      }
+      window.open(url, "_system", 'location=yes');
+      // window.open("http://maps.apple.com/?q=#{text}&ll=#{lat},#{long}&near=#{lat},#{long}", '_system', 'location=yes')
+      // window.open("geo:#{lat},#{long}?q=#{text}", '_system', 'location=yes')
+    };
+
     $scope.btnGoDetail = function (data) {
       console.log(data);
       $state.go('app.tab.profile-detail2', { data: JSON.stringify(data) });

@@ -175,7 +175,17 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           }
         }
       })
-
+      // 
+      // .state('app.tab.chat-detailNew', {
+      //   url: "/new/profile-detail/:chatId",
+      //   views: {
+      //     'tab-new': {
+      //       templateUrl: "templates/chat-detail.html",
+      //       controller: 'ChatDetailCtrl'
+      //     }
+      //   }
+      // })
+      // 
       .state('app.tab.listfriend', {
         url: "/listfriend",
         views: {

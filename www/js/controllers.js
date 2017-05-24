@@ -159,7 +159,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $ionicSideMenuDelegate) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
     $scope.btnGo = function (data) {
 
       // console.log(data);
@@ -339,7 +341,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
     $scope.userStore = AuthService.getUser();
     $scope.telephone = function (telnumber) {
       var reNumber = '';
@@ -487,7 +491,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
     $scope.userStore = AuthService.getUser();
 
     $scope.tels = function (telnumber) {
@@ -891,7 +897,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('MoreDetailCtrl', function ($scope, $state, $stateParams, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, $ionicSideMenuDelegate) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
 
     console.log(JSON.parse($stateParams.data));
     $scope.data = JSON.parse($stateParams.data);
@@ -1006,7 +1014,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('MoreCtrl', function ($scope, $http, $state, config, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService, $ionicSideMenuDelegate, $cordovaImagePicker, $cordovaFileTransfer, $ionicLoading) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
     $scope.userStore = AuthService.getUser();
     $scope.apiUrl = config.apiUrl;
 
@@ -1650,7 +1660,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
     $scope.data = JSON.parse($stateParams.data);
     $scope.userStore = AuthService.getUser();
 
@@ -1698,8 +1710,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('ChatCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket, $ionicSideMenuDelegate, $ionicLoading) {
-    // $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
-
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
     $scope.user = AuthService.getUser();
     //  alert(JSON.stringify($scope.user));
     $scope.listRoom = function () {
@@ -1733,7 +1746,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('ChatDetailCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, $stateParams, Socket, $ionicScrollDelegate, $timeout, $ionicSideMenuDelegate) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
 
     $scope.user = AuthService.getUser();
     $scope.messages = [];
@@ -1862,7 +1877,9 @@ angular.module('starter.controllers', [])
   })
 
   .controller('FriendsCtrl', function ($scope, $state, $ionicModal, AuthService, $rootScope, roomService, Socket, $ionicSideMenuDelegate) {
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
 
     $scope.user = AuthService.getUser();
     $scope.listAccount = function () {
@@ -1907,7 +1924,9 @@ angular.module('starter.controllers', [])
 
   .controller('menuCtrl', function ($scope, $ionicHistory, $http, $state, AuthService, $ionicModal, $rootScope, ProductService, RequestService, ReturnService, AccuralService, StockService, $stateParams, $ionicSideMenuDelegate) {
     $rootScope.userStore = AuthService.getUser();
-    $scope.$on('$ionicView.enter', function () { $ionicSideMenuDelegate.canDragContent(true); });
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
+    });
 
 
 

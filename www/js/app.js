@@ -136,22 +136,22 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
 
-      .state('app.tab.profile-detail', {
-        url: '/profile-detail/:{data}',
+      .state('app.tab.profile-detailnew', {
+        url: '/profile-detailnew/:{data}',
         views: {
           'tab-new': {
-            templateUrl: 'templates/user-profile-detail.html',
-            controller: 'ProfileDetailCtrl'
+            templateUrl: 'templates/user-profile-detailnew.html',
+            controller: 'ProfileDetailNewCtrl'
           }
         }
       })
 
-      .state('app.tab.profile-detail2', {
-        url: '/profile-detail/:{data}',
+      .state('app.tab.profile-detailme', {
+        url: '/profile-detailme/:{data}',
         views: {
           'tab-me': {
-            templateUrl: 'templates/user-profile-detail.html',
-            controller: 'ProfileDetailCtrl'
+            templateUrl: 'templates/user-profile-detailme.html',
+            controller: 'ProfileDetailMeCtrl'
           }
         }
       })
@@ -176,15 +176,42 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         }
       })
       // 
-      // .state('app.tab.chat-detailNew', {
-      //   url: "/new/profile-detail/:chatId",
-      //   views: {
-      //     'tab-new': {
-      //       templateUrl: "templates/chat-detail.html",
-      //       controller: 'ChatDetailCtrl'
-      //     }
-      //   }
-      // })
+      .state('app.tab.chat-detailMe', {
+        url: "/me/:chatId",
+        views: {
+          'tab-me': {
+            templateUrl: "templates/chat-detail.html",
+            controller: 'ChatDetailCtrl'
+          }
+        }
+      })
+      .state('app.tab.chat-detailNew', {
+        url: "/newdetail/:chatId",
+        views: {
+          'tab-new': {
+            templateUrl: "templates/chat-detail.html",
+            controller: 'ChatDetailCtrl'
+          }
+        }
+      })
+      .state('app.tab.chat-detailprome', {
+        url: "/profile-detailme/:chatId",
+        views: {
+          'tab-me': {
+            templateUrl: "templates/chat-detail.html",
+            controller: 'ChatDetailCtrl'
+          }
+        }
+      })
+      .state('app.tab.chat-detailpronew', {
+        url: "/profile-detailnew/:chatId",
+        views: {
+          'tab-new': {
+            templateUrl: "templates/chat-detail.html",
+            controller: 'ChatDetailCtrl'
+          }
+        }
+      })
       // 
       .state('app.tab.listfriend', {
         url: "/listfriend",

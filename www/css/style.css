@@ -245,10 +245,10 @@ span1 {
     font-size: 14px;
 }
 .height-100per {
-    height: 100% !important;
-    width: 100% !important;
+    height: 150px !important;
+    width: 150px !important;
     border-radius: 50%;
-    max-height: 170px !important;
+    max-height: 145px !important;
     /*max-width: 170px !important;*/
 }
 .bg-gray {

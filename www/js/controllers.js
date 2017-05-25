@@ -340,7 +340,7 @@ angular.module('starter.controllers', [])
     }
   })
 
-  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket) {
+  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket, $rootScope) {
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
@@ -379,7 +379,7 @@ angular.module('starter.controllers', [])
 
     $scope.btnGoDetail = function (data) {
       console.log(data);
-      $state.go('app.tab.profile-detail2', { data: JSON.stringify(data) });
+      $state.go('app.tab.profile-detailme', { data: JSON.stringify(data) });
     };
 
     // console.log(JSON.parse($stateParams.data));
@@ -480,9 +480,16 @@ angular.module('starter.controllers', [])
       // });
       // console.log(item);
     };
+    $rootScope.chattype = 'Me';
 
     $scope.gotoChat2 = function (user) {
-      console.log('MeDetailCtrl' + user.username);
+      if ($rootScope.chattype === 'normal') {
+        $rootScope.chattype = 'Me';
+      } else {
+        $rootScope.chattype = 'Me';
+      }
+
+      // console.log('MeDetailCtrl' + user.username);
       var data = {
         name: $scope.userStore.username + '' + user.username,
         type: 'P',
@@ -490,28 +497,34 @@ angular.module('starter.controllers', [])
         user: $scope.userStore
       };
       Socket.emit('createroom', data);
+
+      // Add an event listener to the 'invite' event
+      Socket.on('invite', function (res) {
+        // console.log('invite ConfirmedCtrl');
+        // alert('invite : ' + JSON.stringify(res));
+        Socket.emit('join', res);
+      });
+
+      // Add an event listener to the 'joinsuccess' event
+      Socket.on('joinsuccess', function (data) {
+        // console.log('joinsuccess ConfirmedCtrl');
+        // alert('joinsuccess : ' + JSON.stringify(data));
+        $scope.room = data;
+        if ($rootScope.chattype === 'Me') {
+          $state.go('app.tab.chat-detailMe', { chatId: data._id });
+        }
+
+        // $scope.pageDown();
+        // alert('joinsuccess : ' + JSON.stringify(data));
+      });
+
     }
 
-    // Add an event listener to the 'invite' event
-    Socket.on('invite', function (res) {
-      // console.log('invite ConfirmedCtrl');
-      // alert('invite : ' + JSON.stringify(res));
-      Socket.emit('join', res);
-    });
 
-    // Add an event listener to the 'joinsuccess' event
-    Socket.on('joinsuccess', function (data) {
-      // console.log('joinsuccess ConfirmedCtrl');
-      // alert('joinsuccess : ' + JSON.stringify(data));
-      $scope.room = data;
-      $state.go('app.tab.chat-detail', { chatId: data._id });
-      // $scope.pageDown();
-      // alert('joinsuccess : ' + JSON.stringify(data));
-    });
 
   })
 
-  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
+  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket, $rootScope) {
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
@@ -616,10 +629,15 @@ angular.module('starter.controllers', [])
     };
     $scope.btnGoDetail = function (data) {
       console.log(data);
-      $state.go('app.tab.profile-detail', { data: JSON.stringify(data) });
+      $state.go('app.tab.profile-detailnew', { data: JSON.stringify(data) });
     };
-
+    $rootScope.chattype = 'New';
     $scope.gotoChat = function (user) {
+      if ($rootScope.chattype === 'normal' || $rootScope.chattype === 'Me') {
+        $rootScope.chattype = 'New';
+      } else {
+        $rootScope.chattype = 'New';
+      }
       // console.log('NewDetailCtrl' + user.username);
       var data = {
         name: $scope.userStore.username + '' + user.username,
@@ -628,25 +646,25 @@ angular.module('starter.controllers', [])
         user: $scope.userStore
       };
       Socket.emit('createroom', data);
+      // Add an event listener to the 'invite' event
+      Socket.on('invite', function (res) {
+        // console.log('invite ConfirmedCtrl');
+        // alert('invite : ' + JSON.stringify(res));
+        Socket.emit('join', res);
+      });
+
+      // Add an event listener to the 'joinsuccess' event
+      Socket.on('joinsuccess', function (data) {
+        // console.log('joinsuccess ConfirmedCtrl');
+        // alert('joinsuccess : ' + JSON.stringify(data));
+        $scope.room = data;
+        if ($rootScope.chattype === 'New') {
+          $state.go('app.tab.chat-detailNew', { chatId: data._id });
+        }
+        // $scope.pageDown();
+        // alert('joinsuccess : ' + JSON.stringify(data));
+      });
     }
-
-    // Add an event listener to the 'invite' event
-    Socket.on('invite', function (res) {
-      // console.log('invite ConfirmedCtrl');
-      // alert('invite : ' + JSON.stringify(res));
-      Socket.emit('join', res);
-    });
-
-    // Add an event listener to the 'joinsuccess' event
-    Socket.on('joinsuccess', function (data) {
-      // console.log('joinsuccess ConfirmedCtrl');
-      // alert('joinsuccess : ' + JSON.stringify(data));
-      $scope.room = data;
-      $state.go('app.tab.chat-detail', { chatId: data._id });
-      // $scope.pageDown();
-      // alert('joinsuccess : ' + JSON.stringify(data));
-    });
-
   })
 
   .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading, $ionicSideMenuDelegate, $ionicHistory) {
@@ -1083,7 +1101,7 @@ angular.module('starter.controllers', [])
       var options = {
         fileKey: "newProfilePicture",
         httpMethod: "POST",
-        mimeType: "image/jpeg",
+        michattype: "image/jpeg",
         chunkedMode: true
       };
 
@@ -1680,7 +1698,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ProfileDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket) {
+  .controller('ProfileDetailMeCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket, $rootScope) {
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
@@ -1698,8 +1716,15 @@ angular.module('starter.controllers', [])
       window.location = 'tel:' + reNumber;
     };
 
+    $rootScope.chattype = 'ProMe';
     $scope.gotoChat3 = function (user) {
-      console.log('MeDetailCtrl' + user.username);
+      if ($rootScope.chattype === 'normal' || $rootScope.chattype === 'Me') {
+        $rootScope.chattype = 'ProMe';
+      } else {
+        $rootScope.chattype = 'ProMe';
+      }
+      // alert($rootScope.chattype);
+      // console.log('MeDetailCtrl' + user.username);
       var data = {
         name: $scope.userStore.username + '' + user.username,
         type: 'P',
@@ -1707,26 +1732,86 @@ angular.module('starter.controllers', [])
         user: $scope.userStore
       };
       Socket.emit('createroom', data);
+      // Add an event listener to the 'invite' event
+      Socket.on('invite', function (res) {
+        // console.log('invite ConfirmedCtrl');
+        // alert('invite : ' + JSON.stringify(res));
+        Socket.emit('join', res);
+      });
+
+      // Add an event listener to the 'joinsuccess' event
+      Socket.on('joinsuccess', function (data) {
+        // console.log('joinsuccess ConfirmedCtrl');
+        // alert('joinsuccess : ' + JSON.stringify(data));
+        $scope.room = data;
+        if ($rootScope.chattype === 'ProMe') {
+          $state.go('app.tab.chat-detailprome', { chatId: data._id });
+        }
+        // alert('มาจากโปรไฟล์');
+
+        // $scope.pageDown();
+        // alert('joinsuccess : ' + JSON.stringify(data));
+      });
     }
 
-    // Add an event listener to the 'invite' event
-    Socket.on('invite', function (res) {
-      // console.log('invite ConfirmedCtrl');
-      // alert('invite : ' + JSON.stringify(res));
-      Socket.emit('join', res);
-    });
+  })
 
-    // Add an event listener to the 'joinsuccess' event
-    Socket.on('joinsuccess', function (data) {
-      // console.log('joinsuccess ConfirmedCtrl');
-      // alert('joinsuccess : ' + JSON.stringify(data));
-      $scope.room = data;
-      $state.go('app.tab.chat-detail', { chatId: data._id });
-      // alert('มาจากโปรไฟล์');
-
-      // $scope.pageDown();
-      // alert('joinsuccess : ' + JSON.stringify(data));
+  .controller('ProfileDetailNewCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket, $rootScope) {
+    $scope.$on('$ionicView.enter', function () {
+      $ionicSideMenuDelegate.canDragContent(true);
     });
+    $scope.data = JSON.parse($stateParams.data);
+    $scope.userStore = AuthService.getUser();
+
+    $scope.tel = function (telnumber) {
+      var reNumber = '';
+      var regex = /(\d+)/g;
+      var reNum = telnumber.match(regex);
+      reNum.forEach(function (item) {
+        reNumber += item
+      });
+      // alert(reNumber);
+      window.location = 'tel:' + reNumber;
+    };
+
+
+    $rootScope.chattype = 'ProNew';
+    $scope.gotoChat4 = function (user) {
+      if ($rootScope.chattype === 'normal' || $rootScope.chattype === 'New') {
+        $rootScope.chattype = 'ProNew';
+      } else {
+        $rootScope.chattype = 'ProNew';
+      }
+      // alert($rootScope.chattype);
+      // console.log('MeDetailCtrl' + user.username);
+      var data = {
+        name: $scope.userStore.username + '' + user.username,
+        type: 'P',
+        users: [$scope.userStore, user],
+        user: $scope.userStore
+      };
+      Socket.emit('createroom', data);
+      // Add an event listener to the 'invite' event
+      Socket.on('invite', function (res) {
+        // console.log('invite ConfirmedCtrl');
+        // alert('invite : ' + JSON.stringify(res));
+        Socket.emit('join', res);
+      });
+
+      // Add an event listener to the 'joinsuccess' event
+      Socket.on('joinsuccess', function (data) {
+        // console.log('joinsuccess ConfirmedCtrl');
+        // alert('joinsuccess : ' + JSON.stringify(data));
+        $scope.room = data;
+        if ($rootScope.chattype === 'ProNew') {
+          $state.go('app.tab.chat-detailpronew', { chatId: data._id });
+        }
+        // alert('มาจากโปรไฟล์');
+
+        // $scope.pageDown();
+        // alert('joinsuccess : ' + JSON.stringify(data));
+      });
+    }
 
   })
 
@@ -1770,6 +1855,12 @@ angular.module('starter.controllers', [])
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
+
+    if ($rootScope.chattype) {
+      $rootScope.chattype = 'normal';
+    } else {
+      $rootScope.chattype = 'normal';
+    }
 
     $scope.user = AuthService.getUser();
     $scope.messages = [];

@@ -17,24 +17,27 @@
                     <img class="imagempf" src={{data.user.profileImageURL}}>
                 </div>
                 <div class="col col-66">
-                    <h4>{{data.user.displayName}}</h4>
-                    <p>{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
+                    <h4>ชื่อ : {{data.user.displayName}}</h4>
+                    <p>ที่อยู่ : {{data.shipping.address}} {{data.shipping.subdistrict}}</p>
                     <p>{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <a class="item item-icon-left" ng-click="gotoChat2(data.user)">
+                    <a class="item item-icon-left tapbuttonNone" ng-click="gotoChat2(data.user)">
                         <i class="icon ion-ios-chatbubble"></i> พูดคุย
                     </a>
                 </div>
                 <div class="col">
-                    <a ng-click="telephone('{{data.shipping.tel}}')" class="item item-icon-left">
+                    <a ng-click="telephone('{{data.shipping.tel}}')" class="item item-icon-left tapbuttonNone">
                         <i class="icon ion-ios-telephone"></i> โทร
                     </a>
                 </div>
                 <div class="col">
-                    <a ui-sref="app.tab.map({point:data._id})" class="item item-icon-left">
+                    <!--<a ui-sref="app.tab.map({point:data._id})" class="item item-icon-left">
+                        <i class="icon ion-ios-location"></i> นำทาง
+                    </a>-->
+                     <a ng-click="openMap({{data}})" class="item item-icon-left tapbuttonNone">
                         <i class="icon ion-ios-location"></i> นำทาง
                     </a>
                 </div>

@@ -295,9 +295,9 @@ angular.module('starter.controllers', [])
           $scope.ordersApt = [];
           angular.forEach(orderlist, function (user) {
 
-            if (user.namedeliver) {
+            // if (user.namedeliver) {
 
-              if (user.namedeliver._id === userStore._id) {
+            //   if (user.namedeliver._id === userStore._id) {
 
                 if (user.deliverystatus === 'confirmed' || user.deliverystatus === 'wait deliver') {
                   $scope.orders.push(user);
@@ -305,8 +305,8 @@ angular.module('starter.controllers', [])
                   $scope.ordersApt.push(user);
                 }
 
-              }
-            }
+            //   }
+            // }
 
           })
 

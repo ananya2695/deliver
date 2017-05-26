@@ -285,7 +285,8 @@ angular.module('starter.controllers', [])
       //   $rootScope.countOrderApt = $rootScope.countOrderApt;
       // }
 
-      //$rootScope.countOrder = 0;
+      $rootScope.countOrder = $rootScope.countOrder ? $rootScope.countOrder : 0;
+      $rootScope.countOrderApt = $rootScope.countOrderApt ? $rootScope.countOrderApt : 0;
       AuthService.getOrder()
         .then(function (data) {
 
@@ -293,35 +294,30 @@ angular.module('starter.controllers', [])
           var orderlist = data;
           $scope.orders = [];
           $scope.ordersApt = [];
-          angular.forEach(orderlist, function (user) {
+          orderlist.forEach(function (user) {
 
-            // if (user.namedeliver) {
-
-            //   if (user.namedeliver._id === userStore._id) {
-
-                if (user.deliverystatus === 'confirmed' || user.deliverystatus === 'wait deliver') {
+            if (user.namedeliver) {
+              if (userStore && user.namedeliver._id === userStore._id) {
+                if (user.deliverystatus === 'wait deliver') {
                   $scope.orders.push(user);
                 } else if (user.deliverystatus === 'accept') {
                   $scope.ordersApt.push(user);
                 }
-
-            //   }
-            // }
-
+              }
+            } else {
+              if (user.deliverystatus === 'confirmed') {
+                $scope.orders.push(user);
+              }
+            }
           })
-
-
           if ($scope.orders) {
             $rootScope.countOrder = $scope.orders.length;
           }
           if ($scope.ordersApt) {
             $rootScope.countOrderApt = $scope.ordersApt.length;
           }
-
-          //console.log($scope.orders);
-
-
         });
+
     }
     $scope.$on('onNotification', function (event, args) {
       // do what you want to do
@@ -1060,7 +1056,7 @@ angular.module('starter.controllers', [])
     $scope.apiUrl = config.apiUrl;
 
     $scope.Platform = window.localStorage.adminplatform;
-
+    // alert('more mai?');
     $scope.updateDeliver = false;
 
     $scope.updateProfileDeli = function (user) {
@@ -1688,7 +1684,7 @@ angular.module('starter.controllers', [])
         .then(function (data) {
           $scope.stockdeli = [];
           data.forEach(function (stock) {
-            if ($scope.userStore._id === stock.namedeliver._id) {
+            if (stock.namedeliver && $scope.userStore._id === stock.namedeliver._id) {
               $scope.stockdeli.push(stock);
               $rootScope.countStock = stock.stocks.length;
             }

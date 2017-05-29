@@ -186,9 +186,18 @@ angular.module('starter.controllers', [])
 
       var status = item.deliverystatus;
       status = 'accept';
-      var order = {
-        deliverystatus: status,
-        historystatus: item.historystatus
+      var order = {};
+      if (item.namedeliver) {
+        order = {
+          deliverystatus: status,
+          historystatus: item.historystatus
+        }
+      } else {
+        order = {
+          deliverystatus: status,
+          historystatus: item.historystatus,
+          namedeliver: $scope.userStore
+        }
       }
       var orderId = item._id;
 
@@ -214,7 +223,7 @@ angular.module('starter.controllers', [])
       }
       item.historystatus.push(listApt);
       var order = {
-        namedeliver: namedeli,
+        namedeliver: null,
         deliverystatus: status,
         historystatus: item.historystatus
       }

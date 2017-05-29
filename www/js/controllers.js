@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   // prompt('copy token', token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -307,6 +307,8 @@ angular.module('starter.controllers', [])
             } else {
               if (user.deliverystatus === 'confirmed') {
                 $scope.orders.push(user);
+              } else if (user.deliverystatus === 'reject') {
+                $scope.orders.push(user);
               }
             }
           })
@@ -573,11 +575,20 @@ angular.module('starter.controllers', [])
 
       var status = item.deliverystatus;
       status = 'accept';
-      var order = {
-        deliverystatus: status,
-        historystatus: item.historystatus
-
+      var order = {};
+      if (item.namedeliver) {
+        order = {
+          deliverystatus: status,
+          historystatus: item.historystatus
+        }
+      } else {
+        order = {
+          deliverystatus: status,
+          historystatus: item.historystatus,
+          namedeliver: $scope.userStore
+        }
       }
+
       var orderId = item._id;
 
       AuthService.updateOrder(orderId, order)
@@ -604,10 +615,10 @@ angular.module('starter.controllers', [])
       }
       item.historystatus.push(listApt);
       var order = {
-        namedeliver: namedeli,
+        namedeliver: null,
         deliverystatus: status,
         historystatus: item.historystatus
-      }
+      };
       var orderId = item._id;
 
       AuthService.updateOrder(orderId, order)
@@ -623,6 +634,7 @@ angular.module('starter.controllers', [])
 
       // console.log(item);
     };
+
     $scope.btnGoDetail = function (data) {
       console.log(data);
       $state.go('app.tab.profile-detailnew', { data: JSON.stringify(data) });

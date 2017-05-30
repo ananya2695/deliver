@@ -116,7 +116,7 @@ angular.module('starter.services', [])
   }])
 
   .service('ProductService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://localhost:3000/api';
+    var apiURL = 'http://thamapptest.herokuapp.com/api';
     this.getProduct = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/products').success(function (products) {
@@ -155,7 +155,7 @@ angular.module('starter.services', [])
   }])
 
   .service('RequestService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://localhost:3000/api';
+    var apiURL = 'http://thamapptest.herokuapp.com/api';
     this.getRequests = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/requestorders').success(function (requestorders) {
@@ -179,7 +179,7 @@ angular.module('starter.services', [])
   }])
 
   .service('ReturnService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://localhost:3000/api';
+    var apiURL = 'http://thamapptest.herokuapp.com/api';
     this.getReturns = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/returnorders').success(function (returnorders) {
@@ -199,7 +199,7 @@ angular.module('starter.services', [])
   }])
 
   .service('AccuralService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://localhost:3000/api';
+    var apiURL = 'http://thamapptest.herokuapp.com/api';
     this.getAccurals = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/accuralreceipts').success(function (accuralreceipts) {
@@ -223,7 +223,7 @@ angular.module('starter.services', [])
   }])
 
   .service('StockService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://localhost:3000/api';
+    var apiURL = 'http://thamapptest.herokuapp.com/api';
     this.getStocks = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/stocks').success(function (stocks) {
@@ -236,7 +236,7 @@ angular.module('starter.services', [])
   }])
 
   .service('roomService', function ($http, $q) {
-    var apiURL = 'http://localhost:3000/api';
+    var apiURL = 'http://thamapptest.herokuapp.com/api';
     this.getrooms = function () {
       var dfd = $q.defer();
       var user = (window.localStorage.user) ? JSON.parse(window.localStorage.user) : null;

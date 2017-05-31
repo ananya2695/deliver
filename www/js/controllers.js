@@ -1158,6 +1158,10 @@ angular.module('starter.controllers', [])
         });
     };
 
+    $scope.CancelUpdate = function () {
+      $scope.userStore = AuthService.getUser();
+    };
+
     // alert($scope.Platform);
     // console.log($scope.userStore);
     $scope.products = [];

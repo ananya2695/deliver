@@ -5,10 +5,11 @@
 
     <div class="input-group input-group-sm">
       <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
-      <input type="text" class="form-control" placeholder="ค้นหา..." ng-model="topsearch" aria-describedby="sizing-addon3">
+      <input type="text" class="form-control" placeholder="ค้นหา... (อย่างน้อย 5 ตัวอักษร)" ng-model="topsearch" ng-change="filter(topsearch, orders,limitTo)"
+        aria-describedby="sizing-addon3">
     </div>
     <ion-list>
-      <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in orders | filter:topsearch | orderBy: '-deliverystatus'"
+      <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in orders | limitTo: limitTo | filter:filterText | orderBy: '-created'"
         ng-click="btnGo(data)">
         <img src={{data.user.profileImageURL}}>
         <h2>{{data.user.displayName}}</h2>
@@ -22,6 +23,13 @@
         <ion-option-button class="button-positive" ng-click="acceptDeliver(data)">ยอมรับ</ion-option-button>
       </ion-item>
     </ion-list>
-
+    <div ng-if="showInfiniteNew">
+      <div class="text-center">
+        <ion-spinner icon="spiral"></ion-spinner>
+        <p ng-if="orders.length > 0">มีอีก {{leftMoreNew}}</p>
+      </div>
+      <ion-infinite-scroll on-infinite="loadMoreNew(orders,'new')">
+      </ion-infinite-scroll>
+    </div>
   </ion-content>
 </ion-view>

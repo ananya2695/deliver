@@ -106,7 +106,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu.html',
-        controller: 'MoreCtrl'
+        controller: 'MenuCtrl'
       })
 
       .state('app.tab', {

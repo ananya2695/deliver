@@ -1,10 +1,10 @@
-<ion-view view-title="บิลลอย" ng-init="init()">
+<ion-view view-title="บิลลอย" ng-init="initBl()">
     <ion-nav-buttons side="right">
         <button class="button button-positive button-clear" ng-click="modal.show()">สร้างบิลลอย</button>
     </ion-nav-buttons>
     
     <ion-content>
-        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefreshInitBl()"></ion-refresher>
         <div class="input-group input-group-sm">
             <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
             <input type="text" class="form-control" placeholder="ค้นหา..." ng-model="topsearch" aria-describedby="sizing-addon3">

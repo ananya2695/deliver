@@ -1,25 +1,25 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
+    // var push = new Ionic.Push({
+    //   "debug": true,
+    //   "onNotification": function (notification) {
+    //     console.log(notification);
+    //     $rootScope.$broadcast('onNotification');
+    //     if (notification._raw.additionalData.foreground) {
+    //       //   //alert(notification.message);
 
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
+    //       $rootScope.$broadcast('onNotification');
+    //     }
+    //   }
+    // });
 
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
+    // push.register(function (token) {
+    //   console.log("My Device token:", token.token);
+    //   // prompt('copy token', token.token);
+    //   window.localStorage.token = JSON.stringify(token.token);
+    //   push.saveToken(token);  // persist the token in the Ionic Platform
+    // });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
@@ -32,12 +32,12 @@ angular.module('starter.controllers', [])
       AuthService.saveUserPushNoti(push_usr)
         .then(function (res) {
           $state.go('app.tab.new');
+
         });
     }
     $scope.credentials = {}
 
     $rootScope.$on('userLoggedIn', function (e, response) {
-      // console.log(response);
       if (response.roles[0] === 'deliver') {
         var push_usr = {
           user_id: response._id,
@@ -49,21 +49,13 @@ angular.module('starter.controllers', [])
           .then(function (res) {
             $scope.credentials = {}
             $state.go('app.tab.new');
-            // $rootScope.$broadcast('onLoginSuccess');
             $rootScope.$broadcast('loading:hide');
           });
-        // alert('success');
       } else {
         alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
-        // var alertPopup = $ionicPopup.alert({
-        //   title: 'แจ้งเตือน',
-        //   template: 'คุณไม่มีสิทธิ์เข้าใช้งาน'
-        // });
 
-        // alertPopup.then(function (res) {
-        //   console.log('คุณไม่มีสิทธิ์เข้าใช้งาน');
-        // });
       }
+
     });
     $rootScope.$on('userLoggedInerr', function (e, response) {
       console.log(response);
@@ -158,7 +150,7 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('NewCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $ionicSideMenuDelegate) {
+  .controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $http, $timeout, $state, AuthService, $stateParams, $ionicSideMenuDelegate) {
 
     $rootScope.ordersConfirmed = [];
     $rootScope.ordersWait = [];
@@ -166,13 +158,19 @@ angular.module('starter.controllers', [])
     $rootScope.ordersReject = [];
     $rootScope.ordersCancel = [];
     $rootScope.ordersComplete = [];
+    $scope.limitTo = 20;
+    $scope.leftMoreNew = 0;
+    $scope.leftMoreMe = 0;
+    $scope.showInfiniteNew = true;
+    $scope.showInfiniteMe = true;
+
 
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
     $scope.btnGo = function (data) {
-
       // console.log(data);
+      $rootScope.orders = [];
       $state.go('app.tab.newdetail', { data: JSON.stringify(data) });
     }
 
@@ -184,6 +182,7 @@ angular.module('starter.controllers', [])
     $scope.init = function () {
       $rootScope.readOrder();
     };
+
     $scope.acceptDeliver = function (item) {
       var listApt =
         {
@@ -295,43 +294,82 @@ angular.module('starter.controllers', [])
 
     };
     $rootScope.readOrder = function () {
+      $scope.limitTo = 0;
       $rootScope.orders = [];
+      $rootScope.ordersApt = [];
+      $scope.showInfiniteNew = true;
+      $scope.showInfiniteMe = true;
       AuthService.getOrder()
         .then(function (data) {
-
           var userStore = AuthService.getUser();
-
+          var orders = [];
           $rootScope.ordersConfirmed = data.confirmed;
           $rootScope.ordersWait = data.wait;
           $rootScope.ordersAccept = data.accept;
           $rootScope.ordersReject = data.reject;
           $rootScope.ordersCancel = data.cancel;
           $rootScope.ordersComplete = data.complete;
-          var orders = [];
           orders = orders.concat($rootScope.ordersConfirmed, $rootScope.ordersWait, $rootScope.ordersReject);
           $rootScope.orders = orders;
-
           $rootScope.countOrder = $rootScope.orders.length;
           $rootScope.countOrderApt = $rootScope.ordersAccept.length;
+          $rootScope.ordersApt = $rootScope.ordersAccept;
 
-          // $scope เดิม
-          $scope.ordersApt = $rootScope.ordersAccept;
+          $scope.limitTo = 20;
+          $scope.leftMoreNew = $rootScope.orders.length - $scope.limitTo;
+          $scope.leftMoreMe = $rootScope.ordersAccept.length - $scope.limitTo;
         });
-
     }
+
+    $scope.loadMoreNew = function (orders, tab) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+      if (orders.length > 0) {
+        $scope.limitTo += 20;
+        $scope.leftMoreNew -= 20;
+        $scope.leftMoreMe -= 20;
+
+        if (tab == 'new' && $scope.leftMoreNew <= 0) {
+          $scope.showInfiniteNew = false;
+        } else if (tab == 'me' && $scope.leftMoreMe <= 0) {
+          $scope.showInfiniteMe = false;
+        } else {
+          if (tab == 'new') {
+            $scope.showInfiniteNew = true;
+          } else {
+            $scope.showInfiniteMe = true;
+          }
+        }
+      }
+    };
+
+    $scope.filter = function (filter, orders) {
+      if (filter.length > 4) {
+        $scope.limitTo = orders.length;
+        $scope.filterText = filter;
+        $scope.showInfiniteNew = false;
+        $scope.showInfiniteMe = false;
+      } else {
+        $scope.limitTo = 20;
+        $scope.filterText = "";
+        $scope.showInfiniteNew = true;
+        $scope.showInfiniteMe = true;
+      }
+    }
+
+
     $scope.$on('onNotification', function (event, args) {
       // do what you want to do
       //alert();
       $scope.init();
     });
     $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-      // alert('ok');
-      $scope.init();
+      $scope.limitTo = 20;
     });
 
     $scope.btnGo2 = function (data) {
-
       // console.log(data);
+      $rootScope.ordersApt = [];
       $state.go('app.tab.me-detail', { data: JSON.stringify(data) });
     }
   })
@@ -594,6 +632,7 @@ angular.module('starter.controllers', [])
           //alert('success');
           //$scope.init();
           $state.go('app.tab.new');
+          $rootScope.readOrder();
           $rootScope.$broadcast('onAccept');
         }, function (error) {
           console.log(error);
@@ -624,6 +663,7 @@ angular.module('starter.controllers', [])
           //alert('success');
           //$scope.init();
           $state.go('app.tab.new');
+          $rootScope.readOrder();
           $rootScope.$broadcast('onReject');
         }, function (error) {
           console.log(error);
@@ -700,7 +740,7 @@ angular.module('starter.controllers', [])
     // });
     $scope.readMap = function () {
       // console.log('ok');
-
+      alert('map');
       if ($rootScope.readOrder) {
         $rootScope.readOrder();
       }
@@ -1136,10 +1176,8 @@ angular.module('starter.controllers', [])
           // console.log($scope.products);
         });
       });
-    $scope.init = function () {
-      $scope.Request = true;
-      $scope.Response = false;
-      $scope.Received = false;
+
+    $scope.initBl = function () {
       $scope.order =
         { items: [] };
       $scope.order.discountpromotion = 0;
@@ -1149,22 +1187,79 @@ angular.module('starter.controllers', [])
       } else {
         $scope.order.amount = 0;
       }
+
       $scope.loadData();
-      $scope.mapdetail();
-      $scope.requestorders();
-      $scope.returnorders();
-      $scope.accuralreceipts();
-      $scope.stocks();
-      $scope.centerOnMe();
+
     }
-    // $scope.$on('onLoginSuccess', function (event, args) {
-    //   // do what you want to do
-    //   $scope.init();
-    // });
-    // $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-    //   // alert('ok');
-    //   $scope.init();
-    // });
+
+    $scope.initListReceived = function () {
+
+      $scope.Request = true;
+      $scope.Response = false;
+      $scope.Received = false;
+      $scope.requestorders();
+
+    }
+
+    $scope.initStock = function () {
+      $scope.stocks();
+    }
+
+    $scope.initReturn = function () {
+      $scope.Request = true;
+      $scope.Response = false;
+      $scope.Received = false;
+      $scope.returnorders();
+    }
+
+    $scope.initAr = function () {
+      $scope.Request = true;
+      $scope.Response = false;
+      $scope.Received = false;
+      $scope.accuralreceipts();
+    }
+
+    $scope.doRefreshInitBl = function () {
+      $scope.initBl();
+
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+    $scope.doRefreshInitListReceived = function () {
+      $scope.initListReceived();
+
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+    $scope.doRefreshInitStock = function () {
+      $scope.initStock();
+
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+    $scope.doRefreshInitReturn = function () {
+      $scope.initReturn();
+
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+    $scope.doRefreshInitAr = function () {
+      $scope.initAr();
+
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+
+    $scope.initProfile = function () {
+      $scope.mapdetail();
+      $scope.centerOnMe();
+    };
+    // $scope.init = function () {
+
+    //   $scope.loadData();
+    //   $scope.mapdetail();
+    //   // $scope.requestorders();
+    //   // $scope.returnorders();
+    //   // $scope.accuralreceipts();
+    //   // $scope.stocks();
+    //   $scope.centerOnMe();
+    // }
+
     $scope.calculate = function (item) {
       item.qty = item.qty || 0;
       item.amount = item.product.price * item.qty;
@@ -1246,7 +1341,7 @@ angular.module('starter.controllers', [])
             prod.amount = 0;
           });
           $scope.modal.hide();
-          $scope.init();
+          $scope.initBl();
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -1278,18 +1373,6 @@ angular.module('starter.controllers', [])
       $scope.modal = modal;
     });
 
-    $scope.doLogOut = function () {
-      AuthService.signOut();
-      $state.go('authen');
-    };
-
-    $scope.listbl = function () {
-      $state.go('app.listbl');
-    };
-
-    $scope.listreceived = function () {
-      $state.go('app.listreceived');
-    };
     $scope.detailreceived = function () {
       $state.go('app.detailreceived');
     };
@@ -1298,59 +1381,25 @@ angular.module('starter.controllers', [])
       $state.go('app.listdetail');
     };
 
-    $scope.listReturn = function () {
-      $state.go('app.listReturn');
-    };
     $scope.detailreturn = function () {
       $state.go('app.detailreturn');
     };
 
-    $scope.listAr = function () {
-      $state.go('app.listAr');
-    };
 
     $scope.detailAr = function () {
       $state.go('app.detailAr');
     };
-    $scope.liststock = function () {
-      $state.go('app.liststock');
-    };
 
     $scope.loadData = function () {
       $rootScope.OrdersCpt = [];
+      alert('more');
       if ($rootScope.readOrder) {
         $rootScope.readOrder();
         $rootScope.OrdersCpt = $rootScope.OrdersCpt.concat($rootScope.ordersWait, $rootScope.ordersAccept, $rootScope.ordersComplete);
 
       }
 
-      // AuthService.getOrder()
-      //   .then(function (data) {
-      //     var userStore = AuthService.getUser();
-      //     var orderlist = data;
-      //     $scope.ordersComplete = [];
-      //     angular.forEach(orderlist, function (user) {
-      //       if (user.namedeliver) {
-      //         if (user.user) {
-
-      //           if (user.user._id === user.namedeliver._id) {
-      //             if (userStore._id === user.namedeliver._id) {
-      //               $scope.ordersComplete.push(user);
-      //             }
-      //           }
-      //         }
-      //       }
-      //       // console.log($scope.ordersComplete);
-      // })
-      // });
     }
-    $scope.doRefresh = function () {
-      $scope.init();
-
-      // Stop the ion-refresher from spinning
-      $scope.$broadcast('scroll.refreshComplete');
-
-    };
     $scope.goDetail = function (data) {
       $state.go('app.billdetail', { data: JSON.stringify(data) });
       console.log($stateParams.data);
@@ -2032,12 +2081,177 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('menuCtrl', function ($scope, $ionicHistory, $http, $state, AuthService, $ionicModal, $rootScope, ProductService, RequestService, ReturnService, AccuralService, StockService, $stateParams, $ionicSideMenuDelegate) {
+  .controller('MenuCtrl', function ($scope, $ionicHistory, $http, $state, AuthService, $ionicModal, $rootScope, ProductService, RequestService, ReturnService, AccuralService, StockService, $stateParams, $ionicSideMenuDelegate) {
     $rootScope.userStore = AuthService.getUser();
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
 
+    $rootScope.countAllBadge = 0;
+    $scope.countlistreceiveds = 0;
+    $scope.countStock = 0;
+    $scope.countlistReturned = 0;
+    $scope.countlistAr = 0;
 
+    $scope.getInitBadge = function () {
+
+      $scope.requestorders();
+
+    }
+    // get 1
+    $scope.requestorders = function () {
+      RequestService.getRequests()
+        .then(function (data) {
+
+          $scope.listRequest = [];
+          $scope.listResponse = [];
+          $scope.listReceived = [];
+          data.forEach(function (request) {
+            if ($scope.userStore._id === request.namedeliver._id) {
+              if (request.deliverystatus === 'request') {
+                $scope.listRequest.push(request);
+              }
+              else if (request.deliverystatus === 'response') {
+                $scope.listResponse.push(request);
+              }
+              else if (request.deliverystatus === 'received') {
+                $scope.listReceived.push(request);
+              }
+            }
+          })
+
+          // if ($scope.listRequest) {
+          //   $scope.countlistRequest = $scope.listRequest.length;
+          // }
+          // if ($scope.listResponse) {
+          //   $scope.countlistResponse = $scope.listResponse.length;
+          // }
+          // if ($scope.listReceived) {
+          //   $scope.countlistReceived = $scope.listReceived.length;
+          // }
+
+          $scope.countlistreceiveds = $scope.listRequest.length;
+
+          // get 2
+          $scope.returnorders();
+        });
+    }
+
+    $scope.returnorders = function () {
+      ReturnService.getReturns()
+        .then(function (data) {
+
+          $scope.listReturns = [];
+          $scope.listreturnResponse = [];
+          $scope.listreturnReceived = [];
+          data.forEach(function (ret) {
+            if ($scope.userStore._id === ret.namedeliver._id) {
+              if (ret.deliverystatus === 'return') {
+                $scope.listReturns.push(ret);
+              }
+              else if (ret.deliverystatus === 'response') {
+                $scope.listreturnResponse.push(ret);
+              }
+              else if (ret.deliverystatus === 'received') {
+                $scope.listreturnReceived.push(ret);
+              }
+            }
+          });
+
+          // if ($scope.listReturns) {
+          //   $scope.countlistReturns = $scope.listReturns.length;
+          // }
+          // if ($scope.listreturnResponse) {
+          //   $scope.countlistreturnResponse = $scope.listreturnResponse.length;
+          // }
+          // if ($scope.listreturnReceived) {
+          //   $scope.countlistreturnReceived = $scope.listreturnReceived.length;
+          // }
+
+          $scope.countlistReturned = $scope.listReturns.length;
+
+          // get 3
+          $scope.accuralreceipts();
+        });
+
+    }
+
+    $scope.accuralreceipts = function () {
+      AccuralService.getAccurals()
+        .then(function (data) {
+
+          $scope.listarWait = [];
+          $scope.listarConfirmed = [];
+          $scope.listarReceipt = [];
+          data.forEach(function (ar) {
+            if ($scope.userStore._id === ar.namedeliver._id) {
+              if (ar.arstatus === 'wait for confirmed') {
+                $scope.listarWait.push(ar);
+              }
+              else if (ar.arstatus === 'confirmed') {
+                $scope.listarConfirmed.push(ar);
+              }
+              else if (ar.arstatus === 'receipt') {
+                $scope.listarReceipt.push(ar);
+              }
+            }
+          });
+
+          // if ($scope.listarWait) {
+          //   $scope.countlistarWait = $scope.listarWait.length;
+          // }
+          // if ($scope.listarConfirmed) {
+          //   $scope.countlistarConfirmed = $scope.listarConfirmed.length;
+          // }
+          // if ($scope.listarReceipt) {
+          //   $scope.countlistarReceipt = $scope.listarReceipt.length;
+          // }
+
+          $scope.countlistAr = $scope.listarWait.length;
+
+          // get 4
+          $scope.stocks();
+        });
+    }
+
+    $scope.stocks = function () {
+      // StockService.getStocks()
+      //   .then(function (data) {
+      //     $scope.stockdeli = [];
+      //     data.forEach(function (stock) {
+      //       if (stock.namedeliver && $scope.userStore._id === stock.namedeliver._id) {
+      //         $scope.stockdeli.push(stock);
+      //         $scope.countStock = stock.stocks.length;
+      //       }
+      //     });
+
+      $rootScope.countAllBadge = $scope.countlistreceiveds + $scope.countlistReturned + $scope.countlistAr;
+      // });
+    }
+
+    $scope.listbl = function () {
+      $state.go('app.listbl');
+    };
+
+    $scope.listreceived = function () {
+      $state.go('app.listreceived');
+    };
+
+    $scope.liststock = function () {
+      $state.go('app.liststock');
+    };
+
+    $scope.listReturn = function () {
+      $state.go('app.listReturn');
+    };
+
+    $scope.listAr = function () {
+      $state.go('app.listAr');
+    };
+
+    $scope.doLogOut = function () {
+      AuthService.signOut();
+      $state.go('authen');
+    };
 
   });

@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="false" ng-init="init()">
+<ion-side-menus enable-menu-with-back-views="false" ng-init="getInitBadge()">
     <ion-side-menu-content>
         <ion-nav-bar>
             <ion-nav-back-button id="back">
@@ -6,7 +6,7 @@
             <ion-nav-buttons side="left">
                 <div>
                     <button class="button button-icon ion-navicon" menu-toggle="left">
-                        <span class="badge badge-assertive badge-notify-{{Platform | lowercase}}">{{countlistreceiveds + countStock + countlistReturned + countlistAr || 0}}</span>
+                        <span class="badge badge-assertive badge-notify-{{Platform | lowercase}}">{{countAllBadge}}</span>
                         </button>
                 </div>
             </ion-nav-buttons>
@@ -24,7 +24,7 @@
         <ion-content has-bouncing="false" class="menu-outer left-menu">
             <div class="list">
 
-                <div ng-controller="menuCtrl">
+                <div>
                     <a class="item item-icon-left settings-option" menu-close ui-sref="app.tab.new">
                         <i class="icon ion-ios-home-outline"></i> หน้าแรก
                     </a>
@@ -37,7 +37,7 @@
                     </a>
                     <a class="item item-icon-left settings-option" menu-close ng-click="liststock()">
                         <i class="icon ion-social-buffer-outline"></i> สต๊อก
-                        <span class="badge badge-assertive">{{countStock || 0}}</span>
+                        <!--<span class="badge badge-assertive">{{countStock || 0}}</span>-->
                     </a>
                     <a class="item item-icon-left settings-option" menu-close ng-click="listReturn()">
                         <i class="icon icon ion-ios-list-outline"></i> รายการใบแจ้งคืน

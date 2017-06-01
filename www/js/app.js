@@ -5,8 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
-  .constant('config', {
+var deliverApp = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
+  deliverApp.constant('config', {
     apiUrl: 'https://thamapp.herokuapp.com/',
     redirectUri: 'http://localhost:8100/', // oauth callback url of ionic app example http://localhost:8100/
     facebook: {
@@ -16,7 +16,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     //https://thamapptest.herokuapp.com/  for heroku test
     //http://localhost:3000/              for local
   })
-  .run(function ($ionicPlatform, AuthService) {
+  deliverApp.run(function ($ionicPlatform, AuthService) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -47,7 +47,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     });
   })
 
-  .config(function ($httpProvider) {
+  deliverApp.config(function ($httpProvider) {
     // $httpProvider.interceptors.push(function ($rootScope) {
     //   return {
     //     request: function (config) {
@@ -72,7 +72,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   //   })
   // })
 
-  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  deliverApp.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position("bottom")
     //$authProvider
     // var commonConfig = {
@@ -390,7 +390,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
   })
 
-  .directive('showHideContainer', function () {
+  deliverApp.directive('showHideContainer', function () {
     return {
       scope: {
 
@@ -415,7 +415,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     };
   })
 
-  .directive('showHideInput', function () {
+  deliverApp.directive('showHideInput', function () {
     return {
       scope: {
 

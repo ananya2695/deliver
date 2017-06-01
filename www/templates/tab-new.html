@@ -1,4 +1,7 @@
 <ion-view ng-init="init()" view-title="งานใหม่" cache-view="false">
+    <ion-nav-buttons side="right">
+      <a class="button button-icon icon ion-search" ng-click="openFilter($event)"></a>
+    </ion-nav-buttons>
   <ion-content>
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
     </ion-refresher>
@@ -16,15 +19,15 @@
         <p style="margin-right: 20%">{{data.shipping.tel}}</p>
         <p class="icon ion-right clock  ion-clock" am-time-ago="data.created"></p>
         <p class="icon ion-right amount">{{data.totalamount | number:0}} ฿</p>
-
-        <!--<ion-option-button class="button-assertive" ng-click="rejectDeliver(data)">ปฏิเสธ</ion-option-button>-->
-        <ion-option-button class="button-positive" ng-click="acceptDeliver(data)">ยอมรับ</ion-option-button>
+        <i class="icon font-30 icon-top-30 {{data.deliverystatus == 'wait deliver' ? 'ion-alert-circled color-wait' :''}}"></i>
+        <ion-option-button class="button-assertive" ng-click="rejectDeliver(data)" ng-if="data.deliverystatus === 'wait deliver'" ion-stop-event="click">ปฏิเสธ</ion-option-button>
+        <ion-option-button class="button-positive" ng-click="acceptDeliver(data)" ion-stop-event="click">ยอมรับ</ion-option-button>
       </ion-item>
     </ion-list>
     <div ng-if="showInfiniteNew">
-      <div class="text-center">
+      <div class="text-center margin-top-30">
         <ion-spinner icon="spiral"></ion-spinner>
-        <p ng-if="orders.length > 0">มีอีก {{leftMoreNew}}</p>
+        <p ng-if="leftMoreNew > 0">มีอีก {{leftMoreNew}}</p>
       </div>
       <ion-infinite-scroll on-infinite="loadMoreNew(orders,'new')">
       </ion-infinite-scroll>

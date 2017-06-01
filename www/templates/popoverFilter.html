@@ -8,9 +8,9 @@
                 งานทั้งหมด
                 <i class="icon ion-checkmark-round" ng-show="popoverFilter == ''"></i>
             </a>
-            <a class="item item-icon-right" ng-click="clickFilter('accept')">
+            <a class="item item-icon-right" ng-click="clickFilter('!wait deliver')">
                 งานใหม่
-                <i class="icon ion-checkmark-round" ng-show="popoverFilter == 'accept'"></i>
+                <i class="icon ion-checkmark-round" ng-show="popoverFilter != 'wait deliver' && popoverFilter != ''"></i>
             </a>
             <a class="item item-icon-right" ng-click="clickFilter('wait deliver')">
                 งานด่วน

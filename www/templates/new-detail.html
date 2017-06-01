@@ -39,10 +39,22 @@
                     </a>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="data.deliverystatus !== 'wait deliver'">
                 <div class="col col-100">
                     <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
                         ยอมรับ
+                    </button>
+                </div>
+            </div>
+            <div class="row" ng-if="data.deliverystatus === 'wait deliver'">
+                <div class="col col-50">
+                    <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
+                        ยอมรับ
+                    </button>
+                </div>
+                <div class="col col-50">
+                    <button class="button button-block button-assertive" ng-click="rejectDeliver(data)">
+                        ปฏิเสธ
                     </button>
                 </div>
             </div>

@@ -33,7 +33,7 @@
                     </a>
                     <a class="item item-icon-left settings-option" menu-close ng-click="listreceived()">
                         <i class="icon ion-ios-bookmarks-outline"></i> รายการรับข้าว
-                        <span class="badge badge-assertive">{{countlistreceiveds || 0}}</span>
+                        <span ng-if="countlistreceiveds > 0" class="badge badge-assertive">{{countlistreceiveds}}</span>
                     </a>
                     <a class="item item-icon-left settings-option" menu-close ng-click="liststock()">
                         <i class="icon ion-social-buffer-outline"></i> สต๊อก
@@ -41,11 +41,11 @@
                     </a>
                     <a class="item item-icon-left settings-option" menu-close ng-click="listReturn()">
                         <i class="icon icon ion-ios-list-outline"></i> รายการใบแจ้งคืน
-                        <span ng-if="countlistReturned > 0" class="badge badge-assertive">{{countlistReturned || 0}}</span>
+                        <span ng-if="countlistReturned > 0" class="badge badge-assertive">{{countlistReturned}}</span>
                     </a>
                     <a class="item item-icon-left settings-option" menu-close ng-click="listAr()">
                         <i class="icon icon ion-ios-list-outline"></i> รายการใบแจ้งหนี้
-                        <span ng-if="countlistAr > 0" class="badge badge-assertive">{{countlistAr || 0}}</span>
+                        <span ng-if="countlistAr > 0" class="badge badge-assertive">{{countlistAr}}</span>
                     </a>
                     <!--<a class="item item-icon-left settings-option" menu-close ng-click="listdetail()">
                         <i class="icon ion-ios-contact-outline"></i> ประวัติส่วนตัว

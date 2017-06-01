@@ -155,7 +155,7 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $http, $timeout, $state, AuthService, $stateParams, $ionicSideMenuDelegate, $ionicPopup) {
+  .controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $http, $timeout, $state, AuthService, $stateParams, $ionicSideMenuDelegate, $ionicPopup, $ionicPopover) {
 
     $rootScope.ordersConfirmed = [];
     $rootScope.ordersWait = [];
@@ -168,11 +168,12 @@ angular.module('starter.controllers', [])
     $scope.leftMoreMe = 0;
     $scope.showInfiniteNew = true;
     $scope.showInfiniteMe = true;
-
+    $scope.popoverFilter = "";
 
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
+
     $scope.btnGo = function (data) {
       // console.log(data);
       $ionicLoading.show({ template: 'กรุณารอสักครู่' });
@@ -223,39 +224,55 @@ angular.module('starter.controllers', [])
           $scope.init();
         }, function (error) {
           $ionicLoading.hide();
-          console.log(error);
-          alert('dont success' + " " + error.data.message);
+          if (error.data.message == "order is already accept") {
+            alert('รายการนี้มีผู้รับแล้ว');
+            $state.go('app.tab.new');
+          } else {
+            console.log(error);
+            alert('dont success' + " " + error.data.message);
+          }
         });
 
     };
     $scope.rejectDeliver = function (item) {
-      var namedeli = item.namedeliver;
-      namedeli = null;
-      var status = item.deliverystatus;
-      status = 'reject';
-      var listApt = {
-        status: 'reject',
-        datestatus: new Date()
-      }
-      item.historystatus.push(listApt);
-      var order = {
-        namedeliver: null,
-        deliverystatus: status,
-        historystatus: item.historystatus
-      }
-      var orderId = item._id;
-      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
-      AuthService.updateOrder(orderId, order)
-        .then(function (response) {
-          // alert('success');
-          $scope.init();
-        }, function (error) {
-          $ionicLoading.hide();
-          console.log(error);
-          alert('dont success' + " " + error.data.message);
-        });
+      var remark = prompt("กรุณากรอกเหตุผล", "");
 
-      // console.log(item);
+      if (remark == "") {
+        console.log('error reject');
+        alert('กรุณากรอกเหตุผล');
+      } else if (remark == null) {
+        console.log('cancel reject');
+      } else {
+        // alert(remark);
+        $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+        var namedeli = item.namedeliver;
+        namedeli = null;
+        var status = item.deliverystatus;
+        status = 'reject';
+        var listApt = {
+          status: 'reject',
+          datestatus: new Date(),
+          remark: remark,
+          delivername: $scope.userStore.displayName
+        }
+        item.historystatus.push(listApt);
+        var order = {
+          namedeliver: null,
+          deliverystatus: status,
+          historystatus: item.historystatus
+        }
+        var orderId = item._id;
+        AuthService.updateOrder(orderId, order)
+          .then(function (response) {
+            // alert('success');
+            $scope.init();
+          }, function (error) {
+            $ionicLoading.hide();
+            console.log(error);
+            alert('dont success' + " " + error.data.message);
+          });
+      }
+
     };
     $scope.completeDeliver = function (item) {
       var confirmPopup = $ionicPopup.confirm({
@@ -304,6 +321,8 @@ angular.module('starter.controllers', [])
     };
     $rootScope.readOrder = function () {
       $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+      var orders = [];
+      var ordersAptWait = [];
       $scope.limitTo = 0;
       $rootScope.orders = [];
       $rootScope.ordersApt = [];
@@ -312,22 +331,38 @@ angular.module('starter.controllers', [])
       AuthService.getOrder()
         .then(function (data) {
           var userStore = AuthService.getUser();
-          var orders = [];
           $rootScope.ordersConfirmed = data.confirmed;
           $rootScope.ordersWait = data.wait;
           $rootScope.ordersAccept = data.accept;
           $rootScope.ordersReject = data.reject;
           $rootScope.ordersCancel = data.cancel;
           $rootScope.ordersComplete = data.complete;
-          orders = orders.concat($rootScope.ordersConfirmed, $rootScope.ordersWait, $rootScope.ordersReject);
+          orders = orders.concat($rootScope.ordersConfirmed, $rootScope.ordersReject);
           $rootScope.orders = orders;
+          ordersAptWait = ordersAptWait.concat($rootScope.ordersWait, $rootScope.ordersAccept)
+          $rootScope.ordersAptWait = ordersAptWait;
           $rootScope.countOrder = $rootScope.orders.length;
           $rootScope.countOrderApt = $rootScope.ordersAccept.length;
-          $rootScope.ordersApt = $rootScope.ordersAccept;
 
           $scope.limitTo = 20
-          $scope.leftMoreNew = $rootScope.orders.length > 20 ? $rootScope.orders.length - $scope.limitTo : 0;
-          $scope.leftMoreMe = $rootScope.ordersAccept.length > 20 ? $rootScope.ordersAccept.length - $scope.limitTo : 0;
+          if ($rootScope.orders.length > 20) {
+            $scope.limitTo = 20;
+            $scope.leftMoreNew = $rootScope.orders.length - $scope.limitTo;
+            $scope.showInfiniteNew = true;
+          } else {
+            $scope.limitTo = 20;
+            $scope.leftMoreNew = 0;
+            $scope.showInfiniteNew = false;
+          }
+          if ($rootScope.ordersAptWait.length > 20) {
+            $scope.limitTo = 20;
+            $scope.leftMoreMe = $rootScope.ordersAptWait.length - $scope.limitTo;
+            $scope.showInfiniteMe = true;
+          } else {
+            $scope.limitTo = 20;
+            $scope.leftMoreMe = 0;
+            $scope.showInfiniteMe = false;
+          }
           $rootScope.getInitBadge();
           $ionicLoading.hide();
         });
@@ -371,8 +406,6 @@ angular.module('starter.controllers', [])
 
 
     $scope.$on('onNotification', function (event, args) {
-      // do what you want to do
-      //alert();
       $scope.init();
     });
     $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
@@ -386,6 +419,42 @@ angular.module('starter.controllers', [])
       $state.go('app.tab.me-detail', { data: JSON.stringify(data) });
       $ionicLoading.hide();
     }
+    $scope.openFilter = function ($event) {
+      $ionicPopover.fromTemplateUrl('templates/popoverFilter.html', {
+        scope: $scope
+      }).then(function (popover) {
+        $scope.popover = popover;
+        $scope.popover.show($event);
+      });
+    }
+
+    $scope.clickFilter = function (filter) {
+      setTimeout(function () {
+        $scope.popoverFilter = filter;
+        $scope.filterText = { deliverystatus: filter };
+        $scope.popover.hide();
+        var newFilter = [];
+        if (filter == "accept") {
+          $rootScope.ordersAptWait = $rootScope.ordersAccept;
+        } else if (filter == "wait deliver") {
+          $rootScope.ordersAptWait = $rootScope.ordersWait;
+        } else {
+          $rootScope.ordersAptWait = newFilter.concat($rootScope.ordersWait, $rootScope.ordersAccept)
+        }
+
+        if ($rootScope.ordersAptWait.length > 20) {
+          $scope.limitTo = 20;
+          $scope.leftMoreMe = $rootScope.ordersAptWait.length - $scope.limitTo;
+          $scope.showInfiniteMe = true;
+        } else {
+          $scope.leftMoreMe = 0;
+          $scope.limitTo = $rootScope.ordersAptWait.length
+          $scope.showInfiniteMe = false;
+        }
+      }, 500);
+
+    }
+
   })
 
   .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket, $rootScope, $ionicLoading) {
@@ -458,6 +527,90 @@ angular.module('starter.controllers', [])
           alert('dont success' + " " + error.data.message);
         });
     };
+    $scope.acceptDeliver = function (item) {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+      var listApt =
+        {
+          status: 'accept',
+          datestatus: new Date()
+        };
+      item.historystatus.push(listApt);
+
+      var status = item.deliverystatus;
+      status = 'accept';
+      var order = {};
+      if (item.namedeliver) {
+        order = {
+          deliverystatus: status,
+          historystatus: item.historystatus
+        }
+      } else {
+        order = {
+          deliverystatus: status,
+          historystatus: item.historystatus,
+          namedeliver: $scope.userStore
+        }
+      }
+      var orderId = item._id;
+
+
+      AuthService.updateOrder(orderId, order)
+        .then(function (response) {
+          // alert('success');
+          $state.go('app.tab.me');
+          $ionicLoading.hide();
+
+        }, function (error) {
+          $ionicLoading.hide();
+          console.log(error);
+          alert('dont success' + " " + error.data.message);
+        });
+
+    };
+    $scope.rejectDeliver = function (item) {
+      var remark = prompt("กรุณากรอกเหตุผล", "");
+
+      if (remark == "") {
+        console.log('error reject');
+        alert('กรุณากรอกเหตุผล');
+      } else if (remark == null) {
+        console.log('cancel reject');
+      } else {
+        // alert(remark);
+
+        $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+        var namedeli = item.namedeliver;
+        namedeli = null;
+        var status = item.deliverystatus;
+        status = 'reject';
+        var listApt = {
+          status: 'reject',
+          datestatus: new Date(),
+          remark: remark,
+          delivername: $scope.userStore.displayName
+        }
+        item.historystatus.push(listApt);
+        var order = {
+          namedeliver: null,
+          deliverystatus: status,
+          historystatus: item.historystatus
+        }
+        var orderId = item._id;
+        AuthService.updateOrder(orderId, order)
+          .then(function (response) {
+            // alert('success');
+            $state.go('app.tab.me');
+            $ionicLoading.hide();
+
+          }, function (error) {
+            $ionicLoading.hide();
+            console.log(error);
+            alert('dont success' + " " + error.data.message);
+          });
+      }
+
+    };
+
     $rootScope.chattype = 'Me';
 
     $scope.gotoChat2 = function (user) {
@@ -497,8 +650,6 @@ angular.module('starter.controllers', [])
       });
 
     }
-
-
 
   })
 
@@ -582,6 +733,13 @@ angular.module('starter.controllers', [])
         }, function (error) {
           console.log(error);
           $ionicLoading.hide();
+          if (error.data.message == "order is already accept") {
+            alert('รายการนี้มีผู้รับแล้ว');
+            $state.go('app.tab.new');
+          } else {
+            console.log(error);
+            alert('dont success' + " " + error.data.message);
+          }
           //alert('dont success' + " " + error.data.message);
         });
 

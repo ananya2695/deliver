@@ -1,31 +1,37 @@
-<ion-view view-title="ของฉัน" ng-init="init()" cache-view="false">
+<ion-view ng-init="init()" view-title="ของฉัน" cache-view="false">
+    <ion-nav-buttons side="right">
+      <a class="button button-icon icon ion-search" ng-click="openFilter($event)"></a>
+    </ion-nav-buttons>
   <ion-content>
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
     </ion-refresher>
 
     <div class="input-group input-group-sm">
       <span class="input-group-addon" id="sizing-addon3"><i class="fa fa-search" aria-hidden="true"></i></span>
-      <input type="text" style="width: 100% !important;" class="form-control" placeholder="ค้นหา... (อย่างน้อย 5 ตัวอักษร)" ng-model="topsearch" aria-describedby="sizing-addon3" ng-change="filter(topsearch, ordersApt,limitTo)">
+      <input class="form-control width-100" ng-change="filter(topsearch, ordersAptWait,limitTo)" ng-model="topsearch" type="text" aria-describedby="sizing-addon3" placeholder="ค้นหา... (อย่างน้อย 5 ตัวอักษร)">
     </div>
 
     <ion-list>
-
-      <ion-item class='item item-avatar-left item-icon-right' ng-repeat="data in ordersApt | filter:filterText | limitTo: limitTo"
-        ng-click="btnGo2(data)">
-        <img src={{data.user.profileImageURL}}>
+      <ion-item class="item item-avatar-left item-icon-right" ng-click="btnGo2(data)" ng-repeat="data in ordersAptWait | filter:filterText | limitTo: limitTo">
+        <img src="{{data.user.profileImageURL}}">
         <h2>{{data.user.displayName}}</h2>
         <p style="margin-right: 20%">{{data.shipping.address}} {{data.shipping.subdistrict}}</p>
         <p style="margin-right: 20%">{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
         <p style="margin-right: 20%">{{data.shipping.tel}}</p>
         <p class="icon ion-right clock  ion-clock" am-time-ago="data.created"></p>
         <p class="icon ion-right amount ">{{data.totalamount | number:0}} ฿</p>
-        <ion-option-button class="button-positive" ng-click="completeDeliver(data)">สำเร็จ</ion-option-button>
+        <i class="icon font-30 icon-top-30 {{data.deliverystatus == 'accept' ? 'ion-checkmark-circled color-accept' :'ion-alert-circled color-wait'}}"></i>
+        <ion-option-button class="button-positive" ng-if="data.deliverystatus == 'accept'" ng-click="completeDeliver(data)">ส่งแล้ว</ion-option-button>
+        <ion-option-button class="button-positive" ng-if="data.deliverystatus == 'wait deliver'" ng-click="acceptDeliver(data)">ยอมรับ</ion-option-button>
+        <ion-option-button class="button-assertive" ng-click="rejectDeliver(data)">คืนงาน</ion-option-button>
+        
       </ion-item>
     </ion-list>
+
     <div ng-if="showInfiniteMe">
       <div class="text-center">
         <ion-spinner icon="spiral"></ion-spinner>
-        <p ng-if="ordersApt.length > 0">มีอีก {{leftMoreMe}}</p>
+        <p ng-if="leftMoreMe > 0">มีอีก {{leftMoreMe}}</p>
       </div>
       <ion-infinite-scroll on-infinite="loadMoreNew(orders,'me')">
       </ion-infinite-scroll>

@@ -1,112 +1,117 @@
 /* Empty. Add your own CSS if you like */
-.scroll{
+
+.scroll {
     height: 100%;
 }
-#map{
+
+#map {
     height: 100%;
     width: 100%;
-};
+}
 
+;
 #profile-bg {
-        position: fixed;
-        left: 0;
-        top: 44px;
-        width: 100%;
-        height: 150px;
+    position: fixed;
+    left: 0;
+    top: 44px;
+    width: 100%;
+    height: 150px;
+    /*     background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/94311/bg.jpg') no-repeat transparent;*/
+    background-size: 100%;
+    background-position: 50% 20%;
+    text-align: center;
+}
 
-   /*     background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/94311/bg.jpg') no-repeat transparent;*/
-        background-size: 100%;
-        background-position: 50% 20%;
+#content {
+    position: relative;
+    margin-top: 150px;
+    background-color: white;
+    box-shadow: 0px -1px 10px rgba(0, 0, 0, 0.4);
+    padding-top: 200px;
+}
 
-        text-align: center;
-      }
+#profile-info {
+    position: absolute;
+    top: -95px;
+    width: 100%;
+    z-index: 2;
+    text-align: center;
+}
 
-      #content {
-        position: relative;
-        margin-top: 150px;
-        background-color: white;
-        box-shadow: 0px -1px 10px rgba(0,0,0,0.4);
-        padding-top: 200px;
-      }
+#profile-name {
+    color: #444;
+    font-size: 26px;
+}
 
-      #profile-info {
-        position: absolute;
-        top: -95px;
-        width: 100%;
-        z-index: 2;
-        text-align: center;
-      }
-      #profile-name {
-        color: #444;
-        font-size: 26px;
-      }
-      #profile-description {
-        font-size: 15px;
-        color: #888;
-      }
-      #profile-description a {
-        color: #888;
-      }
+#profile-description {
+    font-size: 15px;
+    color: #888;
+}
 
-      #profile-image {
-        display: block;
-        border-radius: 100px;
-        border: 1px solid #fff;
-        width: 128px;
-        height: 128px;
-        margin: 30px auto 0;
-        box-shadow: 0px 0px 4px rgba(0,0,0,0.7);
-      }
+#profile-description a {
+    color: #888;
+}
 
-      .imagempf {
-        position: absolute;
-        
-        left: 16px;
-        max-width: 100px;
-        max-height: 100px;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-      }
+#profile-image {
+    display: block;
+    border-radius: 100px;
+    border: 1px solid #fff;
+    width: 128px;
+    height: 128px;
+    margin: 30px auto 0;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
+}
 
-      .list-item-content {
-        padding: 5px;
-      }
+.imagempf {
+    position: absolute;
+    left: 16px;
+    max-width: 100px;
+    max-height: 100px;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
 
-      .list-item {
-        color: #666666;
-      }
+.list-item-content {
+    padding: 5px;
+}
 
-      .post {
-        color: #444;
-      }
+.list-item {
+    color: #666666;
+}
 
-      .post-time {
-        position: absolute;
-        right: 5px;
-        top: 5px;
-        font-size: 11px;
-        color: #888;
-      }
+.post {
+    color: #444;
+}
 
-      .post-profile-image {
-        display: inline-block;
-        vertical-align: top;
-        width: 48px;
-        height: 48px;
-        margin-right: 10px;
-      }
-      .post-options {
-        position: absolute;
-        font-size: 16px;
-        right: 5px;
-        bottom: 5px;
-        color: #888;
-      }
+.post-time {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 11px;
+    color: #888;
+}
 
-    /*chat*/
+.post-profile-image {
+    display: inline-block;
+    vertical-align: top;
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+}
 
-      .messages {
+.post-options {
+    position: absolute;
+    font-size: 16px;
+    right: 5px;
+    bottom: 5px;
+    color: #888;
+}
+
+
+/*chat*/
+
+.messages {
     display: -webkit-box !important;
     display: -moz-box !important;
     display: -ms-flexbox !important;
@@ -186,37 +191,43 @@ span1 {
     text-align: left !important;
     max-width: 180px !important;
 }
+
 #back {
     border-color: transparent !important;
     background: none !important;
     box-shadow: none !important;
     color: #000000 !important;
 }
-.badge-buttonnoti{
+
+.badge-buttonnoti {
     margin-top: 15px
 }
-.badge-notify{
-   position: fixed !important;
-   top: 0px !important;
+
+.badge-notify {
+    position: fixed !important;
+    top: 0px !important;
 }
 
-.badge-notify-ios{
-   position: fixed !important;
-   top: 15px !important;
+.badge-notify-ios {
+    position: fixed !important;
+    top: 15px !important;
 }
 
-.badge-notify-android{
-   position: fixed !important;
-   top: 0px !important;
+.badge-notify-android {
+    position: fixed !important;
+    top: 0px !important;
 }
+
+
 /*.amount {
     font-size: smaller !important;
 };*/
-.show-hide-input
-  {
+
+.show-hide-input {
     display: inherit;
     width: 100%;
-  }
+}
+
 .toggle-view-anchor {
     color: #cccccc !important;
     display: block;
@@ -225,25 +236,31 @@ span1 {
     text-align: center;
     font-weight: 500;
 }
+
 .item-detailRight {
     float: right;
     color: #444;
     font-size: 14px;
 }
-.item-fontProfile{
-  font-size: 16px;
+
+.item-fontProfile {
+    font-size: 16px;
 }
-.item-editfontProfile{
-  margin-top: -5px;
-  color: #aaa !important;
+
+.item-editfontProfile {
+    margin-top: -5px;
+    color: #aaa !important;
 }
-.item-iconEditPro{
-  text-align: right;
-  font-size: 30px;
+
+.item-iconEditPro {
+    text-align: right;
+    font-size: 30px;
 }
+
 .item-fontEditDeli {
     font-size: 14px;
 }
+
 .height-100per {
     height: 150px !important;
     width: 150px !important;
@@ -251,24 +268,47 @@ span1 {
     max-height: 145px !important;
     /*max-width: 170px !important;*/
 }
+
 .bg-gray {
     background-color: #e2e2e2 !important;
 }
-.icon-image{
+
+.icon-image {
     color: #aaaaaa !important;
 }
-.position-absolute{
-  position: absolute;
+
+.position-absolute {
+    position: absolute;
 }
+
 .badge-cart {
     margin-left: -10px !important;
 }
+
 .font-30 {
     font-size: 200%;
 }
+
 .listeditPro {
-  margin-top: -30px;
+    margin-top: -30px;
 }
+
 .tapbuttonNone {
     border: none;
+}
+
+.icon-top-30 {
+    top: 30px !important;
+}
+
+.color-accept {
+    color: #2196F3 !important;
+}
+
+.color-wait {
+    color: #FFC107 !important;
+}
+
+.width-100 {
+    width: 100% !important;
 }

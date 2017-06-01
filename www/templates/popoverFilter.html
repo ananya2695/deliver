@@ -1,0 +1,33 @@
+      <ion-popover-view>
+        <ion-content>
+          <div class="list">
+            <a class="item">
+              <b>ค้นหาจาก</b>
+            </a>
+            <a class="item item-icon-right" ng-click="clickFilter('')">
+                งานทั้งหมด
+                <i class="icon ion-checkmark-round" ng-show="popoverFilter == ''"></i>
+            </a>
+            <a class="item item-icon-right" ng-click="clickFilter('accept')">
+                งานใหม่
+                <i class="icon ion-checkmark-round" ng-show="popoverFilter == 'accept'"></i>
+            </a>
+            <a class="item item-icon-right" ng-click="clickFilter('wait deliver')">
+                งานด่วน
+                <i class="icon ion-checkmark-round" ng-show="popoverFilter == 'wait deliver'"></i>
+            </a>
+            <!--<a class="item" ng-click="clickFilter('')">
+            <i class="icon font-30 icon-top-30 ion-checkmark-round" ng-show="popoverFilter == ''"></i>
+              งานทั้งหมด
+            </a>
+            <a class="item" ng-click="clickFilter('accept')">
+            <i class="icon font-30 icon-top-30 ion-checkmark-round" ng-show="popoverFilter == 'accept'"></i>
+              งานใหม่
+            </a>
+            <a class="item" ng-click="clickFilter('wait deliver')">
+            <i class="icon font-30 icon-top-30 ion-checkmark-round" ng-show="popoverFilter == 'wait deliver'"></i>
+              งานด่วน
+            </a>-->
+          </div>
+        </ion-content>
+      </ion-popover-view>

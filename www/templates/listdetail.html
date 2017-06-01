@@ -8,8 +8,8 @@
     </ion-nav-bar>-->
 
     <ion-content>
-        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
-        </ion-refresher>
+        <!--<ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
+        </ion-refresher>-->
         <!---->
         <div class="form-fields-outer list list-inset">
             <div class="row slide-content">
@@ -21,12 +21,11 @@
                             <img class="user-image height-100per text-center" id="myImage" ng-src="{{userStore.profileImageURL}}" spinner-on-load>
                         </pre-img>
                     </div>
-                    <span class="badge badge-assertive icon-image bg-gray badge-cart position-absolute" ng-click="changeImageProfile()">
-                                <i class="icon ion-ios-camera-outline font-30" ></i></span>
-                    <!--<h3 class="user-name text-center">แก้ไขรูป</h3>-->
                     <div align="center">
+                        <span class="badge badge-assertive icon-image bg-gray badge-cart position-absolute" ng-click="changeImageProfile()">
+                                <i class="icon ion-ios-camera-outline font-30" ></i></span>
+                        <br><br>
                         <h4 class="text-center">{{userStore.displayName}}</h4>
-                        <!--<p align="center">{{userStore.address.tel}}</p>-->
                     </div>
                 </div>
                 <div class="col col-20"></div>

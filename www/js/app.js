@@ -48,29 +48,29 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   })
 
   .config(function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($rootScope) {
-      return {
-        request: function (config) {
-          $rootScope.$broadcast('loading:show')
-          return config
-        },
-        response: function (response) {
-          $rootScope.$broadcast('loading:hide')
-          return response
-        }
-      }
-    })
+    // $httpProvider.interceptors.push(function ($rootScope) {
+    //   return {
+    //     request: function (config) {
+    //       $rootScope.$broadcast('loading:show')
+    //       return config
+    //     },
+    //     response: function (response) {
+    //       $rootScope.$broadcast('loading:hide')
+    //       return response
+    //     }
+    //   }
+    // })
   })
 
-  .run(function ($rootScope, $ionicLoading) {
-    $rootScope.$on('loading:show', function () {
-      $ionicLoading.show({ template: 'กรุณารอสักครู่' })
-    })
+  // .run(function ($rootScope, $ionicLoading) {
+  //   $rootScope.$on('loading:show', function () {
+  //     $ionicLoading.show({ template: 'กรุณารอสักครู่' })
+  //   })
 
-    $rootScope.$on('loading:hide', function () {
-      $ionicLoading.hide()
-    })
-  })
+  //   $rootScope.$on('loading:hide', function () {
+  //     $ionicLoading.hide()
+  //   })
+  // })
 
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position("bottom")
@@ -361,6 +361,26 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
           'menuContent': {
             templateUrl: 'templates/liststock.html',
             controller: 'MoreCtrl'
+          }
+        }
+      })
+
+      .state('app.tab.newdetailformmap', {
+        url: '/map/:{data}',
+        views: {
+          'tab-map': {
+            templateUrl: 'templates/new-detail.html',
+            controller: 'NewDetailCtrl'
+          }
+        }
+      })
+
+      .state('app.tab.me-detailformmap', {
+        url: '/map/:{data}',
+        views: {
+          'tab-map': {
+            templateUrl: 'templates/me-detail.html',
+            controller: 'MeDetailCtrl'
           }
         }
       });

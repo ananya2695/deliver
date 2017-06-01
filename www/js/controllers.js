@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-  .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope) {
+  .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope, $ionicLoading) {
     var push = new Ionic.Push({
       "debug": true,
       "onNotification": function (notification) {
@@ -23,6 +23,7 @@ angular.module('starter.controllers', [])
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       var push_usr = {
         user_id: $scope.userStore._id,
         user_name: $scope.userStore.username,
@@ -31,6 +32,7 @@ angular.module('starter.controllers', [])
       };
       AuthService.saveUserPushNoti(push_usr)
         .then(function (res) {
+          $ionicLoading.hide();
           $state.go('app.tab.new');
 
         });
@@ -49,7 +51,8 @@ angular.module('starter.controllers', [])
           .then(function (res) {
             $scope.credentials = {}
             $state.go('app.tab.new');
-            $rootScope.$broadcast('loading:hide');
+            // $rootScope.$broadcast('loading:hide');
+            $ionicLoading.hide();
           });
       } else {
         alert('คุณไม่มีสิทธิ์เข้าใช้งาน');
@@ -63,7 +66,7 @@ angular.module('starter.controllers', [])
         // $scope.credentials = {}
         $scope.credentials.password = '';
         alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
-        $rootScope.$broadcast('loading:hide');
+        // $rootScope.$broadcast('loading:hide');
         // var alertPopup = $ionicPopup.alert({
         //   title: 'แจ้งเตือน',
         //   template: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
@@ -74,6 +77,7 @@ angular.module('starter.controllers', [])
         // });
 
       }
+      $ionicLoading.hide();
       // console.log(error);
     });
     $rootScope.$on('userResume', function (e, response) {
@@ -100,6 +104,7 @@ angular.module('starter.controllers', [])
         username: credentials.username,
         password: credentials.password
       }
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       AuthService.loginUser(login);
       //   .then(function (response) {
       //   console.log(response);
@@ -150,7 +155,7 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $http, $timeout, $state, AuthService, $stateParams, $ionicSideMenuDelegate) {
+  .controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $http, $timeout, $state, AuthService, $stateParams, $ionicSideMenuDelegate, $ionicPopup) {
 
     $rootScope.ordersConfirmed = [];
     $rootScope.ordersWait = [];
@@ -170,8 +175,10 @@ angular.module('starter.controllers', [])
     });
     $scope.btnGo = function (data) {
       // console.log(data);
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       $rootScope.orders = [];
       $state.go('app.tab.newdetail', { data: JSON.stringify(data) });
+      $ionicLoading.hide();
     }
 
     var orderId = $stateParams.orderId;
@@ -184,6 +191,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.acceptDeliver = function (item) {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       var listApt =
         {
           status: 'accept',
@@ -214,6 +222,7 @@ angular.module('starter.controllers', [])
           // alert('success');
           $scope.init();
         }, function (error) {
+          $ionicLoading.hide();
           console.log(error);
           alert('dont success' + " " + error.data.message);
         });
@@ -235,12 +244,13 @@ angular.module('starter.controllers', [])
         historystatus: item.historystatus
       }
       var orderId = item._id;
-
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       AuthService.updateOrder(orderId, order)
         .then(function (response) {
           // alert('success');
           $scope.init();
         }, function (error) {
+          $ionicLoading.hide();
           console.log(error);
           alert('dont success' + " " + error.data.message);
         });
@@ -266,19 +276,18 @@ angular.module('starter.controllers', [])
             historystatus: item.historystatus
           }
           var orderId = item._id;
+          $ionicLoading.show({ template: 'กรุณารอสักครู่' });
 
           AuthService.updateOrder(orderId, order)
             .then(function (response) {
               // alert('อัพเดต');
               $scope.init();
             }, function (error) {
+              $ionicLoading.hide();
               console.log(error);
               alert('dont success' + " " + error.data.message);
             });
 
-        } else {
-          // alert('Cancel');
-          $scope.init();
         }
       });
 
@@ -294,6 +303,7 @@ angular.module('starter.controllers', [])
 
     };
     $rootScope.readOrder = function () {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       $scope.limitTo = 0;
       $rootScope.orders = [];
       $rootScope.ordersApt = [];
@@ -315,9 +325,11 @@ angular.module('starter.controllers', [])
           $rootScope.countOrderApt = $rootScope.ordersAccept.length;
           $rootScope.ordersApt = $rootScope.ordersAccept;
 
-          $scope.limitTo = 20;
-          $scope.leftMoreNew = $rootScope.orders.length - $scope.limitTo;
-          $scope.leftMoreMe = $rootScope.ordersAccept.length - $scope.limitTo;
+          $scope.limitTo = 20
+          $scope.leftMoreNew = $rootScope.orders.length > 20 ? $rootScope.orders.length - $scope.limitTo : 0;
+          $scope.leftMoreMe = $rootScope.ordersAccept.length > 20 ? $rootScope.ordersAccept.length - $scope.limitTo : 0;
+          $rootScope.getInitBadge();
+          $ionicLoading.hide();
         });
     }
 
@@ -369,12 +381,14 @@ angular.module('starter.controllers', [])
 
     $scope.btnGo2 = function (data) {
       // console.log(data);
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       $rootScope.ordersApt = [];
       $state.go('app.tab.me-detail', { data: JSON.stringify(data) });
+      $ionicLoading.hide();
     }
   })
 
-  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket, $rootScope) {
+  .controller('MeDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicPopup, $cordovaGeolocation, $ionicSideMenuDelegate, Socket, $rootScope, $ionicLoading) {
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
@@ -422,72 +436,7 @@ angular.module('starter.controllers', [])
       window.localStorage.point = $stateParams.data;
     }
     $scope.completeDeliver = function (item) {
-      // var confirmPopup = $ionicPopup.confirm({
-      //   title: 'แจ้งเตือน',
-      //   template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่',
-      // });
-      // confirmPopup.then(function (res) {
-      // if (res) {
-      //   var posOptions = { timeout: 10000, enableHighAccuracy: false };
-
-      //   $cordovaGeolocation
-      //     .getCurrentPosition(posOptions)
-      //     .then(function (position) {
-
-      //       var lat = position.coords.latitude
-      //       var long = position.coords.longitude
-      //       // 
-      //       // alert(lat + '\n' + long);
-      //       // var map = new google.maps.Map(document.getElementById('map'), {
-      //       //   zoom: 15,
-      //       //   center: new google.maps.LatLng(lat, long),
-      //       //   mapTypeId: google.maps.MapTypeId.ROADMAP
-      //       // });
-      //       // $scope.map = map;
-
-      //       var location = {
-      //         latitude: lat,
-      //         longitude: long
-      //       }
-      //       var status = item.deliverystatus;
-      //       status = 'complete';
-      //       var listApt = {
-      //         status: 'complete',
-      //         datestatus: new Date()
-      //       }
-      //       item.historystatus.push(listApt);
-      //       var order = {
-      //         deliverystatus: status,
-      //         historystatus: item.historystatus,
-      //         shipping: {
-      //           sharelocation: location,
-      //           tel: item.shipping.tel,
-      //           email: item.shipping.email,
-      //           firstname: item.shipping.firstname,
-      //           lastname: item.shipping.lastname,
-      //           address: item.shipping.address,
-      //           postcode: item.shipping.postcode,
-      //           subdistrict: item.shipping.subdistrict,
-      //           province: item.shipping.province,
-      //           district: item.shipping.district
-      //         }
-      //       }
-      //       var orderId = item._id;
-
-      //       AuthService.updateOrder(orderId, order)
-      //         .then(function (response) {
-      //           $state.go('app.tab.me');
-      //           $rootScope.$broadcast('onComplete');
-      //         }, function (error) {
-      //           console.log(error);
-      //           alert('dont success' + " " + error.data.message);
-      //         });
-
-      //     }, function (err) {
-      //     });
-
-
-      // } else {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       var status = item.deliverystatus;
       status = 'complete';
       var listApt = {
@@ -500,19 +449,14 @@ angular.module('starter.controllers', [])
         historystatus: item.historystatus
       }
       var orderId = item._id;
-
       AuthService.updateOrder(orderId, order)
         .then(function (response) {
           $state.go('app.tab.me');
-          $rootScope.$broadcast('onComplete');
+          $ionicLoading.hide();
         }, function (error) {
-          console.log(error);
+          $ionicLoading.hide();
           alert('dont success' + " " + error.data.message);
         });
-      $scope.init();
-      // }
-      // });
-      // console.log(item);
     };
     $rootScope.chattype = 'Me';
 
@@ -558,7 +502,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket, $rootScope) {
+  .controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, Socket, $rootScope, $ionicLoading) {
     $scope.$on('$ionicView.enter', function () {
       $ionicSideMenuDelegate.canDragContent(true);
     });
@@ -602,6 +546,7 @@ angular.module('starter.controllers', [])
       window.localStorage.point = $stateParams.data;
     }
     $scope.acceptDeliver = function (item) {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       var listApt =
         {
           status: 'accept',
@@ -633,15 +578,17 @@ angular.module('starter.controllers', [])
           //$scope.init();
           $state.go('app.tab.new');
           $rootScope.readOrder();
-          $rootScope.$broadcast('onAccept');
+          // $rootScope.$broadcast('onAccept');
         }, function (error) {
           console.log(error);
+          $ionicLoading.hide();
           //alert('dont success' + " " + error.data.message);
         });
 
 
     };
     $scope.rejectDeliver = function (item) {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       var namedeli = item.namedeliver;
       namedeli = null;
       var status = item.deliverystatus;
@@ -664,9 +611,9 @@ angular.module('starter.controllers', [])
           //$scope.init();
           $state.go('app.tab.new');
           $rootScope.readOrder();
-          $rootScope.$broadcast('onReject');
+          // $rootScope.$broadcast('onReject');
         }, function (error) {
-          console.log(error);
+          $ionicLoading.hide();
           alert('dont success' + " " + error.data.message);
         });
 
@@ -715,7 +662,7 @@ angular.module('starter.controllers', [])
 
   .controller('MapCtrl', function ($scope, $rootScope, $http, $state, AuthService, $stateParams, $cordovaGeolocation, $compile, $ionicLoading, $ionicSideMenuDelegate, $ionicHistory) {
     $scope.$on('$ionicView.enter', function () {
-      $ionicHistory.clearHistory();
+      // $ionicHistory.clearHistory();
       $ionicSideMenuDelegate.canDragContent(false);
     });
 
@@ -812,6 +759,7 @@ angular.module('starter.controllers', [])
                 + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                 + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
                 + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="openMap(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> นำทาง </button>'
+                + '<button class="button button-block button-outline button-positive" ng-click="openDetailWait(\'' + locations._id + '\')"> รายละเอียด </button>'
                 + '</div>')($scope);
               var location = locations.shipping.sharelocation;
               // console.log($scope.locationConfirmed.length);
@@ -857,6 +805,7 @@ angular.module('starter.controllers', [])
                 + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
                 + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
                 + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="openMap(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> นำทาง </button>'
+                + '<button class="button button-block button-outline button-positive" ng-click="openDetailAccept(\'' + locations._id + '\')"> รายละเอียด </button>'
                 + '</div>')($scope);
               // console.log(locations);
               var location = locations.shipping.sharelocation;
@@ -929,6 +878,24 @@ angular.module('starter.controllers', [])
       return;
 
     }
+
+    $scope.openDetailWait = function (dataId) {
+      $scope.dataOrdersWait = $rootScope.ordersWait;
+      $scope.dataOrdersWait.forEach(function (data) {
+        if (data._id === dataId) {
+          $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
+        }
+      });
+    };
+
+    $scope.openDetailAccept = function (dataId) {
+      $scope.dataOrdersAccept = $rootScope.ordersAccept;
+      $scope.dataOrdersAccept.forEach(function (data) {
+        if (data._id === dataId) {
+          $state.go('app.tab.me-detailformmap', { data: JSON.stringify(data) });
+        }
+      });
+    };
 
     $scope.openMap = function (la, long) {
       $scope.Platform = window.localStorage.adminplatform;
@@ -1021,7 +988,7 @@ angular.module('starter.controllers', [])
       RequestService.updateRequestOrder(requestorderId, requestorder)
         .then(function (response) {
           // alert('success');
-          $state.go('app.s');
+          $state.go('app.listreceived');
         }, function (error) {
           console.log(error);
           alert('dont success' + " " + error.data.message);
@@ -1092,10 +1059,39 @@ angular.module('starter.controllers', [])
     });
     $scope.userStore = AuthService.getUser();
     $scope.apiUrl = config.apiUrl;
-
+    $scope.limitTo = 0;
+    $scope.leftMoreBl = 0;
+    $scope.showInfiniteBl = true;
     $scope.Platform = window.localStorage.adminplatform;
     // alert('more mai?');
     $scope.updateDeliver = false;
+
+    $scope.loadMoreBl = function (orders) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+      if (orders.length > 0) {
+        $scope.limitTo += 20;
+        $scope.leftMoreBl -= 20;
+
+        if ($scope.leftMoreBl <= 0) {
+          $scope.showInfiniteBl = false;
+        } else {
+          $scope.showInfiniteBl = true;
+        }
+      }
+    };
+
+    $scope.filter = function (filter, orders) {
+      if (filter.length > 4) {
+        $scope.limitTo = orders.length;
+        $scope.filterText = filter;
+        $scope.showInfiniteBl = false;
+      } else {
+        $scope.limitTo = 20;
+        $scope.filterText = "";
+        $scope.showInfiniteBl = true;
+      }
+    }
 
     $scope.updateProfileDeli = function (user) {
       var userX = $scope.userStore
@@ -1161,7 +1157,16 @@ angular.module('starter.controllers', [])
     $scope.CancelUpdate = function () {
       $scope.userStore = AuthService.getUser();
     };
-
+    $scope.$on('onNotification', function (event, args) {
+      $rootScope.getInitBadge();
+      if ($state.current.name == 'app.listAr') {
+        $scope.initAr();
+      } else if ($state.current.name == 'app.listreceived') {
+        $scope.initListReceived();
+      } else if ($state.current.name == 'app.listReturn') {
+        $scope.initReturn();
+      };
+    });
     // alert($scope.Platform);
     // console.log($scope.userStore);
     $scope.products = [];
@@ -1305,6 +1310,8 @@ angular.module('starter.controllers', [])
       }
     }
     $scope.saveOrder = function () {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+
       if (!$scope.order._id && $scope.userStore.roles[0] === 'deliver') {
         $scope.order = {
           docdate: new Date(),
@@ -1347,7 +1354,7 @@ angular.module('starter.controllers', [])
           $scope.modal.hide();
           $scope.initBl();
         }, function (error) {
-          console.log(error);
+          $ionicLoading.hide();
           alert('dont success' + " " + error.data.message);
         });
     }
@@ -1400,7 +1407,14 @@ angular.module('starter.controllers', [])
       if ($rootScope.readOrder) {
         $rootScope.readOrder();
         $rootScope.OrdersCpt = $rootScope.OrdersCpt.concat($rootScope.ordersWait, $rootScope.ordersAccept, $rootScope.ordersComplete);
-
+        if ($rootScope.OrdersCpt.length > 20) {
+          $scope.limitTo = 20;
+          $scope.showInfiniteBl = true;
+        } else {
+          $scope.limitTo = $rootScope.OrdersCpt.length;
+          $scope.showInfiniteBl = false;
+        }
+        $scope.leftMoreBl = $rootScope.OrdersCpt.length > 20 ? $rootScope.OrdersCpt.length - $scope.limitTo : 0;
       }
 
     }
@@ -1622,6 +1636,7 @@ angular.module('starter.controllers', [])
     };
 
     $scope.requestorders = function () {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       RequestService.getRequests()
         .then(function (data) {
           $scope.listRequest = [];
@@ -1656,10 +1671,12 @@ angular.module('starter.controllers', [])
           // console.log($scope.listRequest.length);
           // console.log($scope.listResponse.length);
           // console.log($scope.listReceived.length);
+          $ionicLoading.hide();
         });
     }
 
     $scope.returnorders = function () {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       ReturnService.getReturns()
         .then(function (data) {
           $scope.listReturns = [];
@@ -1693,11 +1710,13 @@ angular.module('starter.controllers', [])
           }
 
           $rootScope.countlistReturned = $scope.listreturnReceived.length + $scope.listreturnResponse.length + $scope.listReturns.length;
+          $ionicLoading.hide();
         });
 
     }
 
     $scope.accuralreceipts = function () {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       AccuralService.getAccurals()
         .then(function (data) {
           $scope.listarWait = [];
@@ -1728,13 +1747,12 @@ angular.module('starter.controllers', [])
           }
 
           $rootScope.countlistAr = $scope.listarReceipt.length + $scope.listarConfirmed.length + $scope.listarWait.length;
-          // console.log($scope.listarWait.length);
-          // console.log($scope.listarConfirmed.length);
-          // console.log($scope.listarReceipt.length);
+          $ionicLoading.hide();
         });
     }
 
     $scope.stocks = function () {
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       StockService.getStocks()
         .then(function (data) {
           $scope.stockdeli = [];
@@ -1744,6 +1762,7 @@ angular.module('starter.controllers', [])
               $rootScope.countStock = stock.stocks.length;
             }
           });
+          $ionicLoading.hide();
         });
     }
 
@@ -1873,7 +1892,7 @@ angular.module('starter.controllers', [])
     $scope.user = AuthService.getUser();
     //  alert(JSON.stringify($scope.user));
     $scope.listRoom = function () {
-      $ionicLoading.show({ template: '<ion-spinner icon="android"></ion-spinner><p style="margin: 5px 0 0 0;">กรุณารอสักครู่</p>' });
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       roomService.getrooms().then(function (res) {
         // alert(JSON.stringify(res));
         $scope.chats = res;
@@ -1886,7 +1905,7 @@ angular.module('starter.controllers', [])
     };
     $scope.listRoom();
     $scope.createRoom = function (data) {
-      $ionicLoading.show({ template: '<ion-spinner icon="android"></ion-spinner><p style="margin: 5px 0 0 0;">กรุณารอสักครู่</p>' });
+      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
       roomService.createRoom(data).then(function (res) {
         $scope.listRoom();
         $ionicLoading.hide();
@@ -2097,7 +2116,7 @@ angular.module('starter.controllers', [])
     $scope.countlistReturned = 0;
     $scope.countlistAr = 0;
 
-    $scope.getInitBadge = function () {
+    $rootScope.getInitBadge = function () {
 
       $scope.requestorders();
 

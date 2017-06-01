@@ -1,6 +1,6 @@
-<ion-view view-title="ลงชื่อเข้าใช้" name="login-view">
+<ion-view view-title="ลงชื่อเข้าใช้" name="login-view" cache-view="false">
   <ion-content class="padding">
-    <form name="login_form" class="" novalidate>
+    <form name="login_form" class="" novalidate ng-if="!userStore">
       <div class="form-fields-outer list list-inset">
         <label class="item item-input">
               <input type="text" placeholder="ชื่อผู้ใช้" name="username" ng-model="credentials.username" required>

@@ -116,38 +116,27 @@ deliverApp.controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $h
         }
     };
     $scope.completeDeliver = function (item) {
-        var confirmPopup = $ionicPopup.confirm({
-            title: 'แจ้งเตือน',
-            template: 'คุณต้องการอัพเดตพิกัดนี้หรือไม่'
-        });
-        confirmPopup.then(function (res) {
-            if (res) {
-                var status = item.deliverystatus;
-                status = 'complete';
-                var listApt = {
-                    status: 'complete',
-                    datestatus: new Date()
-                }
-                item.historystatus.push(listApt);
-                var order = {
-                    deliverystatus: status,
-                    historystatus: item.historystatus
-                }
-                var orderId = item._id;
-                $ionicLoading.show({ template: 'กรุณารอสักครู่' });
-
-                AuthService.updateOrder(orderId, order)
-                    .then(function (response) {
-                        resetLeftMore()
-                        $scope.init();
-                    }, function (error) {
-                        $ionicLoading.hide();
-                        console.log(error);
-                        alert('dont success' + " " + error.data.message);
-                    });
-
-            }
-        });
+        $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+        var status = item.deliverystatus;
+        status = 'complete';
+        var listApt = {
+            status: 'complete',
+            datestatus: new Date()
+        }
+        item.historystatus.push(listApt);
+        var order = {
+            deliverystatus: status,
+            historystatus: item.historystatus
+        }
+        var orderId = item._id;
+        AuthService.updateOrder(orderId, order)
+            .then(function (response) {
+                $state.go('app.tab.me');
+                $ionicLoading.hide();
+            }, function (error) {
+                $ionicLoading.hide();
+                alert('dont success' + " " + error.data.message);
+            });
     };
     $scope.doRefresh = function () {
         $scope.init();

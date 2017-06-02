@@ -6,438 +6,438 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 var deliverApp = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
-  deliverApp.constant('config', {
-    apiUrl: 'https://thamapp.herokuapp.com/',
-    redirectUri: 'http://localhost:8100/', // oauth callback url of ionic app example http://localhost:8100/
-    facebook: {
-      clientId: '414384685598077' // your client id from facebook console example 
-    },
-    //https://thamapp.herokuapp.com/      for production
-    //https://thamapptest.herokuapp.com/  for heroku test
-    //http://localhost:3000/              for local
-  })
-  deliverApp.run(function ($ionicPlatform, AuthService) {
-    $ionicPlatform.ready(function () {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
-      var devicePlatform = device.platform;
-      window.localStorage.adminplatform = devicePlatform;
+deliverApp.constant('config', {
+  apiUrl: 'https://thamapptest.herokuapp.com/',
+  redirectUri: 'http://localhost:8100/', // oauth callback url of ionic app example http://localhost:8100/
+  facebook: {
+    clientId: '414384685598077' // your client id from facebook console example 
+  },
+  //https://thamapp.herokuapp.com/      for production
+  //https://thamapptest.herokuapp.com/  for heroku test
+  //http://localhost:3000/              for local
+})
+deliverApp.run(function ($ionicPlatform, AuthService) {
+  $ionicPlatform.ready(function () {
+    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+    // for form inputs)
+    var devicePlatform = device.platform;
+    window.localStorage.adminplatform = devicePlatform;
 
-      if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        // cordova.plugins.Keyboard.disableScroll(true);
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      // cordova.plugins.Keyboard.disableScroll(true);
 
-      }
-      if (window.StatusBar) {
-        // org.apache.cordova.statusbar required
-        StatusBar.styleDefault();
-      }
-      if (window.localStorage.credential) {
-        var user = JSON.parse(window.localStorage.credential);
-        AuthService.loginUser(user);
-      }
-    });
-    $ionicPlatform.on("resume", function (event) {
-      // user opened the app from the background
-      if (window.localStorage.credential) {
-        var user = JSON.parse(window.localStorage.credential);
-        // AuthService.loginUser(user);
-        AuthService.loginResume(user);
-      }
-    });
-  })
+    }
+    if (window.StatusBar) {
+      // org.apache.cordova.statusbar required
+      StatusBar.styleDefault();
+    }
+    if (window.localStorage.credential) {
+      var user = JSON.parse(window.localStorage.credential);
+      AuthService.loginUser(user);
+    }
+  });
+  $ionicPlatform.on("resume", function (event) {
+    // user opened the app from the background
+    if (window.localStorage.credential) {
+      var user = JSON.parse(window.localStorage.credential);
+      // AuthService.loginUser(user);
+      AuthService.loginResume(user);
+    }
+  });
+})
 
-  deliverApp.config(function ($httpProvider) {
-    // $httpProvider.interceptors.push(function ($rootScope) {
-    //   return {
-    //     request: function (config) {
-    //       $rootScope.$broadcast('loading:show')
-    //       return config
-    //     },
-    //     response: function (response) {
-    //       $rootScope.$broadcast('loading:hide')
-    //       return response
+deliverApp.config(function ($httpProvider) {
+  // $httpProvider.interceptors.push(function ($rootScope) {
+  //   return {
+  //     request: function (config) {
+  //       $rootScope.$broadcast('loading:show')
+  //       return config
+  //     },
+  //     response: function (response) {
+  //       $rootScope.$broadcast('loading:hide')
+  //       return response
+  //     }
+  //   }
+  // })
+})
+
+// .run(function ($rootScope, $ionicLoading) {
+//   $rootScope.$on('loading:show', function () {
+//     $ionicLoading.show({ template: 'กรุณารอสักครู่' })
+//   })
+
+//   $rootScope.$on('loading:hide', function () {
+//     $ionicLoading.hide()
+//   })
+// })
+
+deliverApp.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.tabs.position("bottom")
+  //$authProvider
+  // var commonConfig = {
+  //   popupOptions: {
+  //     location: 'no',
+  //     toolbar: 'yes',
+  //     width: window.screen.width,
+  //     height: window.screen.height
+  //   }
+  // };
+
+  // if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+  //   commonConfig.redirectUri = 'https://thamapp.herokuapp.com/';
+  // }
+
+  // Ionic uses AngularUI Router which uses the concept of states
+  // Learn more here: https://github.com/angular-ui/ui-router
+  // Set up the various states which the app can be in.
+  // Each state's controller can be found in controllers.js
+  $stateProvider
+
+    // setup an abstract state for the tabs directive
+    // .state('tab', {
+    //   url: '/tab',
+    //   abstract: true,
+    //   templateUrl: 'templates/tabs.html'
+    // })
+
+    //side menu
+    .state('app', {
+      url: '/app',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'MenuCtrl'
+    })
+
+    .state('app.tab', {
+      url: "/tab",
+      abstract: true,
+      views: {
+        'menuContent': {
+          templateUrl: "templates/tabs.html",
+        }
+      }
+    })
+    // Each tab has its own nav history stack:
+
+    .state('authen', {
+      url: '/authen',
+      templateUrl: 'templates/authentication.html',
+      controller: 'LogInCtrl'
+    })
+
+    .state('app.tab.new', {
+      url: '/new',
+      views: {
+        'tab-new': {
+          templateUrl: 'templates/tab-new.html',
+          controller: 'NewCtrl'
+        }
+      }
+    })
+
+    .state('app.tab.profile-detailnew', {
+      url: '/profile-detailnew/:{data}',
+      views: {
+        'tab-new': {
+          templateUrl: 'templates/user-profile-detailnew.html',
+          controller: 'ProfileDetailNewCtrl'
+        }
+      }
+    })
+
+    .state('app.tab.profile-detailme', {
+      url: '/profile-detailme/:{data}',
+      views: {
+        'tab-me': {
+          templateUrl: 'templates/user-profile-detailme.html',
+          controller: 'ProfileDetailMeCtrl'
+        }
+      }
+    })
+
+    .state('app.tab.chat', {
+      url: "/chat",
+      views: {
+        'tab-chat': {
+          templateUrl: "templates/tab-chat.html",
+          controller: 'ChatCtrl'
+        }
+      }
+    })
+
+    .state('app.tab.chat-detail', {
+      url: "/chat/:chatId",
+      views: {
+        'tab-chat': {
+          templateUrl: "templates/chat-detail.html",
+          controller: 'ChatDetailCtrl'
+        }
+      }
+    })
+    // 
+    .state('app.tab.chat-detailMe', {
+      url: "/me/:chatId",
+      views: {
+        'tab-me': {
+          templateUrl: "templates/chat-detail.html",
+          controller: 'ChatDetailCtrl'
+        }
+      }
+    })
+    .state('app.tab.chat-detailNew', {
+      url: "/newdetail/:chatId",
+      views: {
+        'tab-new': {
+          templateUrl: "templates/chat-detail.html",
+          controller: 'ChatDetailCtrl'
+        }
+      }
+    })
+    .state('app.tab.chat-detailprome', {
+      url: "/profile-detailme/:chatId",
+      views: {
+        'tab-me': {
+          templateUrl: "templates/chat-detail.html",
+          controller: 'ChatDetailCtrl'
+        }
+      }
+    })
+    .state('app.tab.chat-detailpronew', {
+      url: "/profile-detailnew/:chatId",
+      views: {
+        'tab-new': {
+          templateUrl: "templates/chat-detail.html",
+          controller: 'ChatDetailCtrl'
+        }
+      }
+    })
+    // 
+    .state('app.tab.listfriend', {
+      url: "/listfriend",
+      views: {
+        'tab-chat': {
+          templateUrl: "templates/listfriend.html",
+          controller: 'FriendsCtrl'
+        }
+      }
+    })
+
+    .state('app.tab.newdetail', {
+      url: '/newdetail/:{data}',
+      views: {
+        'tab-new': {
+          templateUrl: 'templates/new-detail.html',
+          controller: 'NewDetailCtrl'
+        }
+      }
+    })
+
+
+    .state('app.tab.me', {
+      url: '/me',
+      views: {
+        'tab-me': {
+          templateUrl: 'templates/tab-me.html',
+          controller: 'NewCtrl'
+        }
+      }
+    })
+
+    .state('app.tab.me-detail', {
+      url: '/me/:{data}',
+      views: {
+        'tab-me': {
+          templateUrl: 'templates/me-detail.html',
+          controller: 'MeDetailCtrl'
+        }
+      }
+    })
+    .state('app.tab.map', {
+      url: '/map',
+      views: {
+        'tab-map': {
+          templateUrl: 'templates/tab-map.html',
+          controller: 'MapCtrl'
+        }
+      }
+    })
+
+    // .state('app.tab.more', {
+    //   url: '/more',
+    //   views: {
+    //     'tab-more': {
+    //       templateUrl: 'templates/tab-more.html',
+    //       controller: 'MoreCtrl'
     //     }
     //   }
     // })
-  })
+    .state('app.tab.listdetail', {
+      url: '/listdetail',
+      views: {
+        'tab-more': {
+          templateUrl: 'templates/listdetail.html',
+          controller: 'MoreCtrl'
 
-  // .run(function ($rootScope, $ionicLoading) {
-  //   $rootScope.$on('loading:show', function () {
-  //     $ionicLoading.show({ template: 'กรุณารอสักครู่' })
-  //   })
+        }
+      }
+    })
+    .state('app.listbl', {
+      url: '/listbl',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/listbl.html',
+          controller: 'MoreCtrl'
+        }
+      }
+    })
+    .state('app.billdetail', {
+      url: '/billdetail/:{data}',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/billdetail.html',
+          controller: 'MoreDetailCtrl'
 
-  //   $rootScope.$on('loading:hide', function () {
-  //     $ionicLoading.hide()
-  //   })
-  // })
+        }
+      }
+    })
+    .state('app.listreceived', {
+      url: '/listreceived',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/listreceived.html',
+          controller: 'MoreCtrl'
+        }
+      }
+    })
+    .state('app.detailreceived', {
+      url: '/detailreceived/:{data}',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/detailreceived.html',
+          controller: 'MoreDetailCtrl'
+        }
+      }
+    })
+    .state('app.listReturn', {
+      url: '/listReturn',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/listReturn.html',
+          controller: 'MoreCtrl'
+        }
+      }
+    })
+    .state('app.detailreturn', {
+      url: '/detailreturn/:{data}',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/detailreturn.html',
+          controller: 'MoreDetailCtrl'
+        }
+      }
+    })
+    .state('app.listAr', {
+      url: '/listAr',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/listAr.html',
+          controller: 'MoreCtrl'
+        }
+      }
+    })
+    .state('app.detailAr', {
+      url: '/detailAr/:{data}',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/detailAr.html',
+          controller: 'MoreDetailCtrl'
+        }
+      }
+    })
+    .state('app.liststock', {
+      url: '/liststock',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/liststock.html',
+          controller: 'MoreCtrl'
+        }
+      }
+    })
 
-  deliverApp.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-    $ionicConfigProvider.tabs.position("bottom")
-    //$authProvider
-    // var commonConfig = {
-    //   popupOptions: {
-    //     location: 'no',
-    //     toolbar: 'yes',
-    //     width: window.screen.width,
-    //     height: window.screen.height
-    //   }
-    // };
+    .state('app.tab.newdetailformmap', {
+      url: '/map/:{data}',
+      views: {
+        'tab-map': {
+          templateUrl: 'templates/new-detail.html',
+          controller: 'NewDetailCtrl'
+        }
+      }
+    })
 
-    // if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-    //   commonConfig.redirectUri = 'https://thamapp.herokuapp.com/';
-    // }
+    .state('app.tab.me-detailformmap', {
+      url: '/map/:{data}',
+      views: {
+        'tab-map': {
+          templateUrl: 'templates/me-detail.html',
+          controller: 'MeDetailCtrl'
+        }
+      }
+    });
 
-    // Ionic uses AngularUI Router which uses the concept of states
-    // Learn more here: https://github.com/angular-ui/ui-router
-    // Set up the various states which the app can be in.
-    // Each state's controller can be found in controllers.js
-    $stateProvider
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/authen');
 
-      // setup an abstract state for the tabs directive
-      // .state('tab', {
-      //   url: '/tab',
-      //   abstract: true,
-      //   templateUrl: 'templates/tabs.html'
-      // })
+})
 
-      //side menu
-      .state('app', {
-        url: '/app',
-        abstract: true,
-        templateUrl: 'templates/menu.html',
-        controller: 'MenuCtrl'
-      })
+deliverApp.directive('showHideContainer', function () {
+  return {
+    scope: {
 
-      .state('app.tab', {
-        url: "/tab",
-        abstract: true,
-        views: {
-          'menuContent': {
-            templateUrl: "templates/tabs.html",
-          }
-        }
-      })
-      // Each tab has its own nav history stack:
+    },
+    controller: function ($scope, $element, $attrs) {
+      $scope.show = false;
 
-      .state('authen', {
-        url: '/authen',
-        templateUrl: 'templates/authentication.html',
-        controller: 'LogInCtrl'
-      })
+      $scope.toggleType = function ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
 
-      .state('app.tab.new', {
-        url: '/new',
-        views: {
-          'tab-new': {
-            templateUrl: 'templates/tab-new.html',
-            controller: 'NewCtrl'
-          }
-        }
-      })
+        $scope.show = !$scope.show;
 
-      .state('app.tab.profile-detailnew', {
-        url: '/profile-detailnew/:{data}',
-        views: {
-          'tab-new': {
-            templateUrl: 'templates/user-profile-detailnew.html',
-            controller: 'ProfileDetailNewCtrl'
-          }
-        }
-      })
+        // Emit event
+        $scope.$broadcast("toggle-type", $scope.show);
+      };
+    },
+    templateUrl: 'templates/show-hide-password.html',
+    restrict: 'A',
+    replace: false,
+    transclude: true
+  };
+})
 
-      .state('app.tab.profile-detailme', {
-        url: '/profile-detailme/:{data}',
-        views: {
-          'tab-me': {
-            templateUrl: 'templates/user-profile-detailme.html',
-            controller: 'ProfileDetailMeCtrl'
-          }
-        }
-      })
+deliverApp.directive('showHideInput', function () {
+  return {
+    scope: {
 
-      .state('app.tab.chat', {
-        url: "/chat",
-        views: {
-          'tab-chat': {
-            templateUrl: "templates/tab-chat.html",
-            controller: 'ChatCtrl'
-          }
-        }
-      })
+    },
+    link: function (scope, element, attrs) {
+      // listen to event
+      scope.$on("toggle-type", function (event, show) {
+        var password_input = element[0],
+          input_type = password_input.getAttribute('type');
 
-      .state('app.tab.chat-detail', {
-        url: "/chat/:chatId",
-        views: {
-          'tab-chat': {
-            templateUrl: "templates/chat-detail.html",
-            controller: 'ChatDetailCtrl'
-          }
+        if (!show) {
+          password_input.setAttribute('type', 'password');
         }
-      })
-      // 
-      .state('app.tab.chat-detailMe', {
-        url: "/me/:chatId",
-        views: {
-          'tab-me': {
-            templateUrl: "templates/chat-detail.html",
-            controller: 'ChatDetailCtrl'
-          }
-        }
-      })
-      .state('app.tab.chat-detailNew', {
-        url: "/newdetail/:chatId",
-        views: {
-          'tab-new': {
-            templateUrl: "templates/chat-detail.html",
-            controller: 'ChatDetailCtrl'
-          }
-        }
-      })
-      .state('app.tab.chat-detailprome', {
-        url: "/profile-detailme/:chatId",
-        views: {
-          'tab-me': {
-            templateUrl: "templates/chat-detail.html",
-            controller: 'ChatDetailCtrl'
-          }
-        }
-      })
-      .state('app.tab.chat-detailpronew', {
-        url: "/profile-detailnew/:chatId",
-        views: {
-          'tab-new': {
-            templateUrl: "templates/chat-detail.html",
-            controller: 'ChatDetailCtrl'
-          }
-        }
-      })
-      // 
-      .state('app.tab.listfriend', {
-        url: "/listfriend",
-        views: {
-          'tab-chat': {
-            templateUrl: "templates/listfriend.html",
-            controller: 'FriendsCtrl'
-          }
-        }
-      })
 
-      .state('app.tab.newdetail', {
-        url: '/newdetail/:{data}',
-        views: {
-          'tab-new': {
-            templateUrl: 'templates/new-detail.html',
-            controller: 'NewDetailCtrl'
-          }
-        }
-      })
-
-
-      .state('app.tab.me', {
-        url: '/me',
-        views: {
-          'tab-me': {
-            templateUrl: 'templates/tab-me.html',
-            controller: 'NewCtrl'
-          }
-        }
-      })
-
-      .state('app.tab.me-detail', {
-        url: '/me/:{data}',
-        views: {
-          'tab-me': {
-            templateUrl: 'templates/me-detail.html',
-            controller: 'MeDetailCtrl'
-          }
-        }
-      })
-      .state('app.tab.map', {
-        url: '/map',
-        views: {
-          'tab-map': {
-            templateUrl: 'templates/tab-map.html',
-            controller: 'MapCtrl'
-          }
-        }
-      })
-
-      // .state('app.tab.more', {
-      //   url: '/more',
-      //   views: {
-      //     'tab-more': {
-      //       templateUrl: 'templates/tab-more.html',
-      //       controller: 'MoreCtrl'
-      //     }
-      //   }
-      // })
-      .state('app.tab.listdetail', {
-        url: '/listdetail',
-        views: {
-          'tab-more': {
-            templateUrl: 'templates/listdetail.html',
-            controller: 'MoreCtrl'
-
-          }
-        }
-      })
-      .state('app.listbl', {
-        url: '/listbl',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/listbl.html',
-            controller: 'MoreCtrl'
-          }
-        }
-      })
-      .state('app.billdetail', {
-        url: '/billdetail/:{data}',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/billdetail.html',
-            controller: 'MoreDetailCtrl'
-
-          }
-        }
-      })
-      .state('app.listreceived', {
-        url: '/listreceived',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/listreceived.html',
-            controller: 'MoreCtrl'
-          }
-        }
-      })
-      .state('app.detailreceived', {
-        url: '/detailreceived/:{data}',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/detailreceived.html',
-            controller: 'MoreDetailCtrl'
-          }
-        }
-      })
-      .state('app.listReturn', {
-        url: '/listReturn',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/listReturn.html',
-            controller: 'MoreCtrl'
-          }
-        }
-      })
-      .state('app.detailreturn', {
-        url: '/detailreturn/:{data}',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/detailreturn.html',
-            controller: 'MoreDetailCtrl'
-          }
-        }
-      })
-      .state('app.listAr', {
-        url: '/listAr',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/listAr.html',
-            controller: 'MoreCtrl'
-          }
-        }
-      })
-      .state('app.detailAr', {
-        url: '/detailAr/:{data}',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/detailAr.html',
-            controller: 'MoreDetailCtrl'
-          }
-        }
-      })
-      .state('app.liststock', {
-        url: '/liststock',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/liststock.html',
-            controller: 'MoreCtrl'
-          }
-        }
-      })
-
-      .state('app.tab.newdetailformmap', {
-        url: '/map/:{data}',
-        views: {
-          'tab-map': {
-            templateUrl: 'templates/new-detail.html',
-            controller: 'NewDetailCtrl'
-          }
-        }
-      })
-
-      .state('app.tab.me-detailformmap', {
-        url: '/map/:{data}',
-        views: {
-          'tab-map': {
-            templateUrl: 'templates/me-detail.html',
-            controller: 'MeDetailCtrl'
-          }
+        if (show) {
+          password_input.setAttribute('type', 'text');
         }
       });
-
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/authen');
-
-  })
-
-  deliverApp.directive('showHideContainer', function () {
-    return {
-      scope: {
-
-      },
-      controller: function ($scope, $element, $attrs) {
-        $scope.show = false;
-
-        $scope.toggleType = function ($event) {
-          $event.stopPropagation();
-          $event.preventDefault();
-
-          $scope.show = !$scope.show;
-
-          // Emit event
-          $scope.$broadcast("toggle-type", $scope.show);
-        };
-      },
-      templateUrl: 'templates/show-hide-password.html',
-      restrict: 'A',
-      replace: false,
-      transclude: true
-    };
-  })
-
-  deliverApp.directive('showHideInput', function () {
-    return {
-      scope: {
-
-      },
-      link: function (scope, element, attrs) {
-        // listen to event
-        scope.$on("toggle-type", function (event, show) {
-          var password_input = element[0],
-            input_type = password_input.getAttribute('type');
-
-          if (!show) {
-            password_input.setAttribute('type', 'password');
-          }
-
-          if (show) {
-            password_input.setAttribute('type', 'text');
-          }
-        });
-      },
-      require: '^showHideContainer',
-      restrict: 'A',
-      replace: false,
-      transclude: false
-    };
-  });
+    },
+    require: '^showHideContainer',
+    restrict: 'A',
+    replace: false,
+    transclude: false
+  };
+});

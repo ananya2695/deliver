@@ -30,8 +30,11 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
             $rootScope.readOrder();
         }
 
-        $scope.locationOrders = [];
+        $scope.locationOrdersWait = [];
         $scope.locationOrdersApt = [];
+        $scope.locationOrdersComf = [];
+        $scope.locationOrdersRej = [];
+
 
         var posOptions = { timeout: 10000, enableHighAccuracy: false };
         $cordovaGeolocation
@@ -76,11 +79,106 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
 
                 if (!window.localStorage.point || window.localStorage.point === "") {
 
-                    $scope.locationOrders = $rootScope.ordersWait;
+                    $scope.locationOrdersWait = $rootScope.ordersWait;
                     $scope.locationOrdersApt = $rootScope.ordersAccept;
+                    $scope.locationOrdersComf = $rootScope.ordersConfirmed;
+                    $scope.locationOrdersRej = $rootScope.ordersReject;
+                    // alert(JSON.stringify($scope.locationOrdersComf));
+                    // alert(JSON.stringify($scope.locationOrdersRej));
 
+                    $scope.locationOrdersComf.forEach(function (locations) {
+                        var product = '';
+                        var price = null;
+                        locations.items.forEach(function (pro) {
+                            if (pro.product) {
+                                product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
+                            }
+                        })
+                        var contentString = $compile('<div>'
+                            + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
+                            + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
+                            + '<p>' + product + '</p>'
+                            + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
+                            + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
+                            + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
+                            + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
+                            + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="openMap(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> นำทาง </button>'
+                            + '<button class="button button-block button-outline button-positive" ng-click="openDetailComf(\'' + locations._id + '\')"> รายละเอียด </button>'
+                            + '</div>')($scope);
+                        var location = locations.shipping.sharelocation;
+                        // console.log($scope.locationConfirmed.length);
+                        if (location) {
+                            var marker = new google.maps.Marker({
+                                icon: {
+                                    url: ' http://res.cloudinary.com/hpipugeai/image/upload/v1496373961/som_iuw9au.png',
+                                    scaledSize: new google.maps.Size(32, 51),
+                                    // The origin for this image is (0, 0). 
+                                    origin: new google.maps.Point(0, 0),
+                                    // The anchor for this image is the base of the flagpole at (0, 32). 
+                                    //anchor: new google.maps.Point(0, 32)
+                                },
+                                position: new google.maps.LatLng(location.latitude, location.longitude),
+                                map: map
+                            });
 
-                    $scope.locationOrders.forEach(function (locations) {
+                            var infowindow = new google.maps.InfoWindow({
+                                content: contentString[0]
+                            });
+                            marker.addListener('click', function () {
+                                // console.log('click');
+                                infowindow.open($scope.map, this);
+                            });
+                        }
+
+                    });
+
+                    $scope.locationOrdersRej.forEach(function (locations) {
+                        var product = '';
+                        var price = null;
+                        locations.items.forEach(function (pro) {
+                            if (pro.product) {
+                                product += 'ชื่อสินค้า : ' + pro.product.name + '<br> ราคา : ' + pro.product.price + ' บาท จำนวน : ' + pro.qty + ' ชิ้น<br>';
+                            }
+                        })
+                        var contentString = $compile('<div>'
+                            + '<label>' + locations.shipping.firstname + ' ' + locations.shipping.lastname + '</label><br>'
+                            + '<p>' + locations.shipping.address + ' ' + locations.shipping.subdistrict + ' ' + locations.shipping.district + ' ' + locations.shipping.province + ' ' + locations.shipping.postcode + '<br>โทร : ' + '<a href="tel:' + locations.shipping.tel + '">' + locations.shipping.tel + '</a>' + '</p>'
+                            + '<p>' + product + '</p>'
+                            + '<label>' + 'ราคารวม : ' + locations.amount + ' บาท' + '</label><br>'
+                            + '<label>' + 'ค่าจัดส่ง : ' + locations.deliveryamount + ' บาท' + '</label><br>'
+                            + '<label>' + 'ส่วนลด : ' + locations.discountpromotion + ' บาท' + '</label><br>'
+                            + '<label>' + 'รวมสุทธิ : ' + locations.totalamount + ' บาท' + '</label>'
+                            + '<button class="button button-block button-outline button-positive icon-left ion-ios-location" ng-click="openMap(' + locations.shipping.sharelocation.latitude + ',' + locations.shipping.sharelocation.longitude + ')"> นำทาง </button>'
+                            + '<button class="button button-block button-outline button-positive" ng-click="openDetailRej(\'' + locations._id + '\')"> รายละเอียด </button>'
+                            + '</div>')($scope);
+                        var location = locations.shipping.sharelocation;
+                        // console.log($scope.locationConfirmed.length);
+                        if (location) {
+                            var marker = new google.maps.Marker({
+                                icon: {
+                                    url: 'http://res.cloudinary.com/hpipugeai/image/upload/v1496373894/dang_bi1wxc.png',
+                                    scaledSize: new google.maps.Size(32, 51),
+                                    // The origin for this image is (0, 0). 
+                                    origin: new google.maps.Point(0, 0),
+                                    // The anchor for this image is the base of the flagpole at (0, 32). 
+                                    //anchor: new google.maps.Point(0, 32)
+                                },
+                                position: new google.maps.LatLng(location.latitude, location.longitude),
+                                map: map
+                            });
+
+                            var infowindow = new google.maps.InfoWindow({
+                                content: contentString[0]
+                            });
+                            marker.addListener('click', function () {
+                                // console.log('click');
+                                infowindow.open($scope.map, this);
+                            });
+                        }
+
+                    });
+
+                    $scope.locationOrdersWait.forEach(function (locations) {
                         var product = '';
                         var price = null;
                         locations.items.forEach(function (pro) {
@@ -171,6 +269,7 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
                             });
                         }
                     });
+
                 } else {
                     var pointStart = {
                         lat: parseFloat(lat),
@@ -220,6 +319,24 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
     $scope.openDetailWait = function (dataId) {
         $scope.dataOrdersWait = $rootScope.ordersWait;
         $scope.dataOrdersWait.forEach(function (data) {
+            if (data._id === dataId) {
+                $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
+            }
+        });
+    };
+
+    $scope.openDetailComf = function (dataId) {
+        $scope.locationOrdersComf = $rootScope.ordersConfirmed;
+        $scope.locationOrdersComf.forEach(function (data) {
+            if (data._id === dataId) {
+                $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
+            }
+        });
+    };
+
+    $scope.openDetailRej = function (dataId) {
+        $scope.locationOrdersRej = $rootScope.ordersReject;
+        $scope.locationOrdersRej.forEach(function (data) {
             if (data._id === dataId) {
                 $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
             }

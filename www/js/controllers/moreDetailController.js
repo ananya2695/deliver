@@ -106,6 +106,7 @@ deliverApp.controller('MoreDetailCtrl', function ($scope, $state, $stateParams, 
         AccuralService.updateAccuralOrder(accuralreceiptsId, accuralreceipt)
             .then(function (response) {
                 $state.go('app.listAr');
+                $rootScope.getInitBadge();
             }, function (error) {
                 console.log(error);
                 alert('dont success' + " " + error.data.message);

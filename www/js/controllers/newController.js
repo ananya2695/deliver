@@ -143,6 +143,7 @@ deliverApp.controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $h
         $scope.$broadcast('scroll.refreshComplete');
     };
     $rootScope.readOrder = function () {
+        resetLeftMore()
         $ionicLoading.show({ template: 'กรุณารอสักครู่' });
         var orders = [];
         $scope.limitTo = 0;

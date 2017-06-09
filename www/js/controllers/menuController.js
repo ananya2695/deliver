@@ -17,6 +17,7 @@ deliverApp.controller('MenuCtrl', function ($scope, $ionicHistory, $http, $state
     }
     // get 1
     $scope.requestorders = function () {
+        $rootScope.userStore = AuthService.getUser();
         RequestService.getRequests()
             .then(function (data) {
 
@@ -24,7 +25,7 @@ deliverApp.controller('MenuCtrl', function ($scope, $ionicHistory, $http, $state
                 $scope.listResponse = [];
                 $scope.listReceived = [];
                 data.forEach(function (request) {
-                    if ($scope.userStore._id === request.namedeliver._id) {
+                    if ($rootScope.userStore && request.namedeliver && $rootScope.userStore._id === request.namedeliver._id) {
                         if (request.deliverystatus === 'request') {
                             $scope.listRequest.push(request);
                         }
@@ -62,7 +63,7 @@ deliverApp.controller('MenuCtrl', function ($scope, $ionicHistory, $http, $state
                 $scope.listreturnResponse = [];
                 $scope.listreturnReceived = [];
                 data.forEach(function (ret) {
-                    if ($scope.userStore._id === ret.namedeliver._id) {
+                    if ($rootScope.userStore && ret.namedeliver && $rootScope.userStore._id === ret.namedeliver._id) {
                         if (ret.deliverystatus === 'return') {
                             $scope.listReturns.push(ret);
                         }
@@ -101,7 +102,7 @@ deliverApp.controller('MenuCtrl', function ($scope, $ionicHistory, $http, $state
                 $scope.listarConfirmed = [];
                 $scope.listarReceipt = [];
                 data.forEach(function (ar) {
-                    if ($scope.userStore._id === ar.namedeliver._id) {
+                    if ($rootScope.userStore && ar.namedeliver && $rootScope.userStore._id === ar.namedeliver._id) {
                         if (ar.arstatus === 'wait for confirmed') {
                             $scope.listarWait.push(ar);
                         }

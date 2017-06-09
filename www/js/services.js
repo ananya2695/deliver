@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
-  .service('AuthService', ['$http', '$q', '$rootScope', '$auth', function ($http, $q, $rootScope, $auth) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('AuthService', ['$http', '$q', '$rootScope', '$auth', 'config', function ($http, $q, $rootScope, $auth, config) {
+    var apiURL = config.apiServiceUrl;
     this.saveUser = function (user) {
       return $http.post(apiURL + '/auth/signup', user);
 
@@ -115,8 +115,8 @@ angular.module('starter.services', [])
     };
   }])
 
-  .service('ProductService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('ProductService', ['$http', '$q', 'config', function ($http, $q, config) {
+    var apiURL = config.apiServiceUrl;
     this.getProduct = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/products').success(function (products) {
@@ -154,8 +154,8 @@ angular.module('starter.services', [])
 
   }])
 
-  .service('RequestService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('RequestService', ['$http', '$q', 'config', function ($http, $q, config) {
+    var apiURL = config.apiServiceUrl;
     this.getRequests = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/requestorders').success(function (requestorders) {
@@ -178,8 +178,8 @@ angular.module('starter.services', [])
     };
   }])
 
-  .service('ReturnService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('ReturnService', ['$http', '$q', 'config', function ($http, $q, config) {
+    var apiURL = config.apiServiceUrl;
     this.getReturns = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/returnorders').success(function (returnorders) {
@@ -198,8 +198,8 @@ angular.module('starter.services', [])
     };
   }])
 
-  .service('AccuralService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('AccuralService', ['$http', '$q', 'config', function ($http, $q, config) {
+    var apiURL = config.apiServiceUrl;
     this.getAccurals = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/accuralreceipts').success(function (accuralreceipts) {
@@ -222,8 +222,8 @@ angular.module('starter.services', [])
     };
   }])
 
-  .service('StockService', ['$http', '$q', function ($http, $q) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('StockService', ['$http', '$q', 'config', function ($http, $q, config) {
+    var apiURL = config.apiServiceUrl;
     this.getStocks = function () {
       var dfd = $q.defer();
       $http.get(apiURL + '/stocks').success(function (stocks) {
@@ -235,8 +235,8 @@ angular.module('starter.services', [])
 
   }])
 
-  .service('roomService', function ($http, $q) {
-    var apiURL = 'http://thamapp.herokuapp.com/api';
+  .service('roomService', function ($http, $q, config) {
+    var apiURL = config.apiServiceUrl;
     this.getrooms = function () {
       var dfd = $q.defer();
       var user = (window.localStorage.user) ? JSON.parse(window.localStorage.user) : null;
@@ -268,9 +268,9 @@ angular.module('starter.services', [])
     };
   })
 
-  .factory('Socket', function ($rootScope) {
-
-    var url = 'https://thamapp.herokuapp.com/';
+  .factory('Socket', function ($rootScope, config) {
+    var apiURL = config.apiServiceUrl;
+    var url = 'https://thamapptest.herokuapp.com/';
     var socket = io.connect(url);
     return {
       connect: function () {

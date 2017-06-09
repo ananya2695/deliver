@@ -61,7 +61,6 @@ angular.module('starter.controllers', [])
 
     });
     $rootScope.$on('userLoggedInerr', function (e, response) {
-      console.log(response);
       if (response["message"]) {
         // $scope.credentials = {}
         $scope.credentials.password = '';
@@ -155,26 +154,26 @@ angular.module('starter.controllers', [])
     };
   })
 
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 
 
 
 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

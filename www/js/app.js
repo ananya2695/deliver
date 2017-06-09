@@ -7,7 +7,8 @@
 // 'starter.controllers' is found in controllers.js
 var deliverApp = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
 deliverApp.constant('config', {
-  apiUrl: 'https://thamapp.herokuapp.com/',
+  apiUrl: 'https://thamapptest.herokuapp.com/',
+  apiServiceUrl: 'https://thamapptest.herokuapp.com/api',
   redirectUri: 'http://localhost:8100/', // oauth callback url of ionic app example http://localhost:8100/
   facebook: {
     clientId: '414384685598077' // your client id from facebook console example 

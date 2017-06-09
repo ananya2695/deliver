@@ -142,7 +142,7 @@ deliverApp.controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $h
         $scope.init();
         $scope.$broadcast('scroll.refreshComplete');
     };
-    $rootScope.readOrder = function () {
+    $rootScope.readOrder = function (bl) {
         resetLeftMore()
         $ionicLoading.show({ template: 'กรุณารอสักครู่' });
         var orders = [];
@@ -186,7 +186,9 @@ deliverApp.controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $h
                     $scope.showInfiniteMe = false;
                 }
                 $rootScope.getInitBadge();
-                $rootScope.setDataBl();
+                if (bl) {
+                    $rootScope.setDataBl();
+                }
                 $ionicLoading.hide();
             });
     }

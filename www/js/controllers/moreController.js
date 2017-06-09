@@ -353,7 +353,7 @@ deliverApp.controller('MoreCtrl', function ($scope, $http, $state, config, AuthS
 
   $scope.loadData = function () {
     // alert('more');
-    $rootScope.readOrder();
+    $rootScope.readOrder('bl');
     // if ($rootScope.ordersComplete.length > 0) {
     //   $rootScope.ordersComplete.forEach(function (order) {
     //     if (order.namedeliver && $scope.userStore && order.namedeliver._id === $scope.userStore._id) {

@@ -1,4 +1,4 @@
-deliverApp.controller('MoreCtrl', function ($scope, $http, $state, config, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService, $ionicSideMenuDelegate, $cordovaImagePicker, $cordovaFileTransfer, $ionicLoading) {
+deliverApp.controller('MoreCtrl', function ($scope, $http, $state, config, AuthService, $stateParams, $cordovaGeolocation, $ionicModal, ProductService, $ionicPopup, $rootScope, RequestService, ReturnService, AccuralService, StockService, $ionicSideMenuDelegate, $cordovaImagePicker, $cordovaFileTransfer, $ionicLoading, $timeout) {
   $scope.$on('$ionicView.enter', function () {
     $ionicSideMenuDelegate.canDragContent(true);
   });
@@ -135,6 +135,7 @@ deliverApp.controller('MoreCtrl', function ($scope, $http, $state, config, AuthS
     });
 
   $scope.initBl = function () {
+    // alert("initbl");
     $scope.order =
       { items: [] };
     $scope.order.discountpromotion = 0;
@@ -301,6 +302,7 @@ deliverApp.controller('MoreCtrl', function ($scope, $http, $state, config, AuthS
         });
         $scope.modal.hide();
         $scope.initBl();
+
       }, function (error) {
         $ionicLoading.hide();
         alert('dont success' + " " + error.data.message);
@@ -350,21 +352,30 @@ deliverApp.controller('MoreCtrl', function ($scope, $http, $state, config, AuthS
   };
 
   $scope.loadData = function () {
-    $rootScope.OrdersCpt = [];
     // alert('more');
-    if ($rootScope.readOrder) {
-      $rootScope.readOrder();
-      $rootScope.OrdersCpt = $rootScope.OrdersCpt.concat($rootScope.ordersWait, $rootScope.ordersAccept, $rootScope.ordersComplete);
-      if ($rootScope.OrdersCpt.length > 20) {
-        $scope.limitTo = 20;
-        $scope.showInfiniteBl = true;
-      } else {
-        $scope.limitTo = $rootScope.OrdersCpt.length;
-        $scope.showInfiniteBl = false;
-      }
-      $scope.leftMoreBl = $rootScope.OrdersCpt.length > 20 ? $rootScope.OrdersCpt.length - $scope.limitTo : 0;
-    }
+    $rootScope.readOrder();
+    // if ($rootScope.ordersComplete.length > 0) {
+    //   $rootScope.ordersComplete.forEach(function (order) {
+    //     if (order.namedeliver && $scope.userStore && order.namedeliver._id === $scope.userStore._id) {
+    //       $rootScope.OrdersCpt.push(order);
+    //     }
+    //   });
+    // }
 
+
+  }
+  $rootScope.setDataBl = function () {
+    $rootScope.OrdersCpt = [];
+    $rootScope.OrdersCpt = $rootScope.ordersComplete;
+    if ($rootScope.OrdersCpt.length > 20) {
+      $scope.limitTo = 20;
+      $scope.showInfiniteBl = true;
+    } else {
+      $scope.limitTo = $rootScope.OrdersCpt.length;
+      $scope.showInfiniteBl = false;
+    }
+    $scope.leftMoreBl = $rootScope.OrdersCpt.length > 20 ? $rootScope.OrdersCpt.length - $scope.limitTo : 0;
+    // alert($rootScope.OrdersCpt.length);
   }
   $scope.goDetail = function (data) {
     $state.go('app.billdetail', { data: JSON.stringify(data) });

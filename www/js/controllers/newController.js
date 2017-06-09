@@ -186,6 +186,7 @@ deliverApp.controller('NewCtrl', function ($scope, $rootScope, $ionicLoading, $h
                     $scope.showInfiniteMe = false;
                 }
                 $rootScope.getInitBadge();
+                $rootScope.setDataBl();
                 $ionicLoading.hide();
             });
     }

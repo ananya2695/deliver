@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-var deliverApp = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer', 'btford.socket-io'])
+var deliverApp = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer'])
 deliverApp.constant('config', {
   apiUrl: 'https://thamapp.herokuapp.com/',
   apiServiceUrl: 'https://thamapp.herokuapp.com/api',

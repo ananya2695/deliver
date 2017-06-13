@@ -1,72 +1,74 @@
 {
-    "name": "deliver",
-    "version": "1.1.1",
-    "description": "deliver: ยักษ์ จับมือ โจร ส่งถึงบ้าน",
-    "dependencies": {
-        "cordova-android": "^6.2.3",
-        "cordova-ios": "^4.4.0",
-        "cordova-plugin-compat": "^1.1.0",
-        "cordova-plugin-console": "^1.0.7",
-        "cordova-plugin-device": "^1.1.6",
-        "cordova-plugin-file": "~4.3.3",
-        "cordova-plugin-file-transfer": "~1.6.3",
-        "cordova-plugin-geolocation": "^2.4.3",
-        "cordova-plugin-image-picker": "https://github.com/wymsee/cordova-imagePicker.git",
-        "cordova-plugin-splashscreen": "^4.0.3",
-        "cordova-plugin-statusbar": "^2.2.3",
-        "cordova-plugin-whitelist": "^1.3.2",
-        "gulp": "^3.5.6",
-        "gulp-concat": "^2.2.0",
-        "gulp-minify-css": "^0.3.0",
-        "gulp-rename": "^1.2.0",
-        "gulp-sass": "^2.0.4",
-        "ionic-plugin-keyboard": "^2.2.1",
-        "phonegap-plugin-push": "^1.10.4"
-    },
-    "devDependencies": {
-        "bower": "^1.3.3",
-        "gulp-util": "^2.2.14",
-        "shelljs": "^0.3.0"
-    },
-    "cordovaPlugins": [
-        "cordova-plugin-whitelist",
-        "cordova-plugin-console",
-        "cordova-plugin-statusbar",
-        "cordova-plugin-device",
-        "cordova-plugin-splashscreen",
-        "ionic-plugin-keyboard"
-    ],
-    "cordovaPlatforms": [
-        "ios",
-        {
-            "platform": "ios",
-            "version": "",
-            "locator": "ios"
-        }
-    ],
-    "cordova": {
-        "plugins": {
-            "cordova-plugin-console": {},
-            "cordova-plugin-device": {},
-            "cordova-plugin-geolocation": {
-                "GEOLOCATION_USAGE_DESCRIPTION": " "
-            },
-            "cordova-plugin-splashscreen": {},
-            "cordova-plugin-statusbar": {},
-            "cordova-plugin-whitelist": {},
-            "ionic-plugin-keyboard": {},
-            "phonegap-plugin-push": {
-                "SENDER_ID": "816604195373"
-            },
-            "cordova-plugin-file": {},
-            "cordova-plugin-file-transfer": {},
-            "cordova-plugin-image-picker": {
-                "PHOTO_LIBRARY_USAGE_DESCRIPTION": " "
-            }
-        },
-        "platforms": [
-            "android",
-            "ios"
-        ]
+  "name": "deliver",
+  "version": "1.1.1",
+  "description": "deliver: ยักษ์ จับมือ โจร ส่งถึงบ้าน",
+  "dependencies": {
+    "cordova-android": "^6.2.3",
+    "cordova-ios": "^4.4.0",
+    "cordova-plugin-compat": "^1.1.0",
+    "cordova-plugin-console": "^1.0.7",
+    "cordova-plugin-device": "^1.1.6",
+    "cordova-plugin-file": "~4.3.3",
+    "cordova-plugin-file-transfer": "~1.6.3",
+    "cordova-plugin-geolocation": "^2.4.3",
+    "cordova-plugin-image-picker": "https://github.com/wymsee/cordova-imagePicker.git",
+    "cordova-plugin-splashscreen": "^4.0.3",
+    "cordova-plugin-statusbar": "^2.2.3",
+    "cordova-plugin-whitelist": "^1.3.2",
+    "gulp": "^3.5.6",
+    "gulp-concat": "^2.2.0",
+    "gulp-minify-css": "^0.3.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^2.0.4",
+    "ionic-plugin-keyboard": "^2.2.1",
+    "phonegap-plugin-push": "^1.10.4"
+  },
+  "devDependencies": {
+    "@ionic/cli-plugin-gulp": "1.0.1",
+    "@ionic/cli-plugin-ionic1": "2.0.0",
+    "bower": "^1.3.3",
+    "gulp-util": "^2.2.14",
+    "shelljs": "^0.3.0"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-whitelist",
+    "cordova-plugin-console",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "ionic-plugin-keyboard"
+  ],
+  "cordovaPlatforms": [
+    "ios",
+    {
+      "platform": "ios",
+      "version": "",
+      "locator": "ios"
     }
+  ],
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-console": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": " "
+      },
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-whitelist": {},
+      "ionic-plugin-keyboard": {},
+      "phonegap-plugin-push": {
+        "SENDER_ID": "816604195373"
+      },
+      "cordova-plugin-file": {},
+      "cordova-plugin-file-transfer": {},
+      "cordova-plugin-image-picker": {
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": " "
+      }
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
 }

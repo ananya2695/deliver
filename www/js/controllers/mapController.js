@@ -11,7 +11,16 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
     var directionsService = new google.maps.DirectionsService();
 
     $scope.init = function () {
-        $scope.readMap();
+        AuthService.getOrderv3()
+            .then(function (data) {
+                var userStore = AuthService.getUser();
+                $rootScope.ordersConfirmedv3 = data.confirmed;
+                $rootScope.ordersWaitv3 = data.wait;
+                $rootScope.ordersAcceptv3 = data.accept;
+                $rootScope.ordersRejectv3 = data.reject;
+                $scope.readMap();
+                $ionicLoading.hide();
+            });
     }
 
     $scope.clearItem = function () {
@@ -79,10 +88,10 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
 
                 if (!window.localStorage.point || window.localStorage.point === "") {
 
-                    $scope.locationOrdersWait = $rootScope.ordersWait;
-                    $scope.locationOrdersApt = $rootScope.ordersAccept;
-                    $scope.locationOrdersComf = $rootScope.ordersConfirmed;
-                    $scope.locationOrdersRej = $rootScope.ordersReject;
+                    $scope.locationOrdersWait = $rootScope.ordersWaitv3;
+                    $scope.locationOrdersApt = $rootScope.ordersAcceptv3;
+                    $scope.locationOrdersComf = $rootScope.ordersConfirmedv3;
+                    $scope.locationOrdersRej = $rootScope.ordersRejectv3;
                     // alert(JSON.stringify($scope.locationOrdersComf));
                     // alert(JSON.stringify($scope.locationOrdersRej));
 
@@ -317,7 +326,7 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
     }
 
     $scope.openDetailWait = function (dataId) {
-        $scope.dataOrdersWait = $rootScope.ordersWait;
+        $scope.dataOrdersWait = $rootScope.ordersWaitv3;
         $scope.dataOrdersWait.forEach(function (data) {
             if (data._id === dataId) {
                 $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
@@ -326,7 +335,7 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
     };
 
     $scope.openDetailComf = function (dataId) {
-        $scope.locationOrdersComf = $rootScope.ordersConfirmed;
+        $scope.locationOrdersComf = $rootScope.ordersConfirmedv3;
         $scope.locationOrdersComf.forEach(function (data) {
             if (data._id === dataId) {
                 $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
@@ -335,7 +344,7 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
     };
 
     $scope.openDetailRej = function (dataId) {
-        $scope.locationOrdersRej = $rootScope.ordersReject;
+        $scope.locationOrdersRej = $rootScope.ordersRejectv3;
         $scope.locationOrdersRej.forEach(function (data) {
             if (data._id === dataId) {
                 $state.go('app.tab.newdetailformmap', { data: JSON.stringify(data) });
@@ -344,7 +353,7 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
     };
 
     $scope.openDetailAccept = function (dataId) {
-        $scope.dataOrdersAccept = $rootScope.ordersAccept;
+        $scope.dataOrdersAccept = $rootScope.ordersAcceptv3;
         $scope.dataOrdersAccept.forEach(function (data) {
             if (data._id === dataId) {
                 $state.go('app.tab.me-detailformmap', { data: JSON.stringify(data) });

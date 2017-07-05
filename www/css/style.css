@@ -315,3 +315,9 @@ span1 {
 .margin-top-30 {
     margin-top: 10px !important;
 }
+.option-icon {
+    text-align: right;
+    }
+    .larger {
+    font-size: 30px;
+}

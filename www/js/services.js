@@ -96,6 +96,15 @@ angular.module('starter.services', [])
       return dfd.promise;
     };
 
+    this.getOrderv3 = function () {
+      var dfd = $q.defer();
+      $http.get(apiURL + '/listorder/v3').success(function (orders) {
+        //console.log(orders);
+        dfd.resolve(orders);
+      });
+      return dfd.promise;
+    };
+
     this.updateOrder = function (orderId, order) {
       console.log(orderId);
       console.log(order);

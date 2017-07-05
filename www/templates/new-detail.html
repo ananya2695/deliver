@@ -22,6 +22,12 @@
                     <p>{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
                 </div>
             </div>
+            <!--remark order-->
+            <div class="row" ng-if="data.remark">
+                <div class="col">
+                    <p>หมายเหตุ : {{data.remark}}</p>
+                </div>
+            </div>
             <div class="row text-center">
                 <!--<div class="col">
                     <a class="item item-icon-left tapbuttonNone" ng-click="gotoChat(data.user)">
@@ -34,11 +40,23 @@
                     </a>
                 </div>
                 <div class="col">
-                     <a class="item item-icon-left tapbuttonNone" ng-click="openMap({{data}})">
+                    <a class="item item-icon-left tapbuttonNone" ng-click="openMap({{data}})">
                         <i class="icon ion-ios-location"></i> นำทาง
                     </a>
                 </div>
             </div>
+            <!--Remark Reject-->
+            <label class="item item-input" ng-click="modal.show()">
+            <div class="row" >
+                <div class="col col-75">
+                   <i class="icon ion-alert-circled color-wait" ng-if="data.deliverystatus === 'reject'"></i> <label>คลิกดูประวัติการทำรายการ</label>
+
+                </div>
+                <div class="col col-25 option-icon">
+                    <i class="icon ion-chevron-right"></i>
+                </div>
+            </div>
+            </label>
             <div class="row" ng-if="data.deliverystatus !== 'wait deliver'">
                 <div class="col col-100">
                     <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
@@ -64,7 +82,7 @@
                 <p style="margin-right: 20%">จำนวน {{item.qty}} ถุง</p>
                 <p style="margin-right: 20%">ราคารวม {{item.amount}} บาท</p>
             </div>
-            
+
             <label class="item item-input">
                 <span class="input-label">ราคารวม : </span>
                 <input ng-value="data.amount +' บาท'" type="text" style="background-color: white" readonly>
@@ -88,5 +106,64 @@
 
     </ion-content>
 
+    <script id="templates/modal.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar align-title="center" class="bar-positive">
+                <div class="buttons">
+                    <!--<button class="button button-clear button-primary" ng-click="modal.hide()">ยกเลิก</button>-->
+                </div>
+                <h1 class="title">ประวัติการทำรายการ</h1>
+                <div class="buttons">
+                    <button class="button button-clear" ng-click="modal.hide()">ปิด</button>
+                </div>
+            </ion-header-bar>
+
+            <ion-content class="padding">
+                <div class="row">
+                    <div class="col list card">
+                        <div class="list" ng-repeat="history in data.historystatus">
+
+                            <div class="row" ng-if="history.status === 'confirmed'">
+                                <div class="col-20">
+                                    <i class="icon ion-ios-cart-outline larger"></i>
+                                </div>
+                                <div class="col-80">
+                                    <p>สั่งซื้อ {{history.datestatus | date:'dd-MM-yyyy'}}</p>
+                                </div>
+
+                            </div>
+                            <div class="row" ng-if="history.status === 'wait deliver'">
+                                <div class="col-20">
+                                    <i class="icon ion-clock larger"></i>
+                                </div>
+                                <div class="col-80">
+                                    <p>รอรับงาน {{history.datestatus | date:'dd-MM-yyyy'}}</p>
+                                </div>
+
+                            </div>
+                            <div class="row" ng-if="history.status === 'accept'">
+                                <div class="col-20">
+                                    <i class="icon ion-ios-checkmark-outline larger"></i>
+                                </div>
+                                <div class="col-80">
+                                    <p>รับงาน {{history.datestatus | date:'dd-MM-yyyy'}}</p>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="history.status === 'reject'">
+                                <div class="col-20">
+                                    <i class="icon ion-android-hand larger"></i>
+                                </div>
+                                <div class="col-80">
+                                    <p>{{history.delivername}} ปฏิเสธ {{history.datestatus | date:'dd-MM-yyyy'}}</p>
+                                    <p>เหตุผล : {{history.remark }}</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-modal-view>
+    </script>
 
 </ion-view>

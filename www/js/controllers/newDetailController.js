@@ -1,4 +1,4 @@
-deliverApp.controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, $rootScope, $ionicLoading) {
+deliverApp.controller('NewDetailCtrl', function ($scope, $state, $stateParams, AuthService, $ionicSideMenuDelegate, $rootScope, $ionicLoading, $ionicModal) {
   $scope.$on('$ionicView.enter', function () {
     $ionicSideMenuDelegate.canDragContent(true);
   });
@@ -134,6 +134,16 @@ deliverApp.controller('NewDetailCtrl', function ($scope, $state, $stateParams, A
     }
 
   };
+
+  $scope.gotohistory= function(){
+    alert('ok');
+  };
+
+  $ionicModal.fromTemplateUrl('templates/modal.html', {
+    scope: $scope
+  }).then(function (modal) {
+    $scope.modal = modal;
+  });
 
   $scope.btnGoDetail = function (data) {
     console.log(data);

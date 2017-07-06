@@ -96,9 +96,9 @@ angular.module('starter.services', [])
       return dfd.promise;
     };
 
-    this.getOrderv3 = function () {
+    this.getOrderv3 = function (lat, lng) {
       var dfd = $q.defer();
-      $http.get(apiURL + '/listorder/v3').success(function (orders) {
+      $http.get(apiURL + '/listorder/v3/' + lat + '/' + lng).success(function (orders) {
         //console.log(orders);
         dfd.resolve(orders);
       });

@@ -20,6 +20,7 @@
                     <h4>ชื่อ : {{data.user.displayName}}</h4>
                     <p>ที่อยู่ : {{data.shipping.address}} {{data.shipping.subdistrict}}</p>
                     <p>{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
+                    <p>เบอร์โทร : {{data.shipping.tel}}</p>
                 </div>
             </div>
             <div class="row text-center">
@@ -34,7 +35,7 @@
                     </a>
                 </div>
                 <div class="col">
-                     <a class="item item-icon-left tapbuttonNone" ng-click="openMap({{data}})">
+                    <a class="item item-icon-left tapbuttonNone" ng-click="openMap({{data}})">
                         <i class="icon ion-ios-location"></i> นำทาง
                     </a>
                 </div>
@@ -79,5 +80,6 @@
                 <input ng-value="data.totalamount + ' ' + 'บาท'" type="text" style="background-color: white" readonly>
             </label>
         </div>
-    </div></ion-content>
+        </div>
+    </ion-content>
 </ion-view>

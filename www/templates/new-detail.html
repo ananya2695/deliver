@@ -20,6 +20,7 @@
                     <h4>ชื่อ : {{data.user.displayName}}</h4>
                     <p>ที่อยู่ : {{data.shipping.address}} {{data.shipping.subdistrict}}</p>
                     <p>{{data.shipping.district}} {{data.shipping.province}} {{data.shipping.postcode}}</p>
+                    <p>เบอร์โทร : {{data.shipping.tel}}</p>
                 </div>
             </div>
             <!--remark order-->
@@ -51,54 +52,54 @@
                 <div class="col col-75">
                    <i class="icon ion-alert-circled color-wait" ng-if="data.deliverystatus === 'reject'"></i> <label>คลิกดูประวัติการทำรายการ</label>
 
-                </div>
-                <div class="col col-25 option-icon">
-                    <i class="icon ion-chevron-right"></i>
-                </div>
-            </div>
-            </label>
-            <div class="row" ng-if="data.deliverystatus !== 'wait deliver'">
-                <div class="col col-100">
-                    <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
+        </div>
+        <div class="col col-25 option-icon">
+            <i class="icon ion-chevron-right"></i>
+        </div>
+        </div>
+        </label>
+        <div class="row" ng-if="data.deliverystatus !== 'wait deliver'">
+            <div class="col col-100">
+                <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
                         ยอมรับ
                     </button>
-                </div>
             </div>
-            <div class="row" ng-if="data.deliverystatus === 'wait deliver'">
-                <div class="col col-50">
-                    <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
+        </div>
+        <div class="row" ng-if="data.deliverystatus === 'wait deliver'">
+            <div class="col col-50">
+                <button class="button button-block button-positive" ng-click="acceptDeliver(data)">
                         ยอมรับ
                     </button>
-                </div>
-                <div class="col col-50">
-                    <button class="button button-block button-assertive" ng-click="rejectDeliver(data)">
+            </div>
+            <div class="col col-50">
+                <button class="button button-block button-assertive" ng-click="rejectDeliver(data)">
                         ปฏิเสธ
                     </button>
-                </div>
             </div>
-            <div class="item item-avatar-left item-icon-right item-text-wrap" ng-repeat="item in data.items">
-                <img src="{{item.product.images}}">
-                <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
-                <p style="margin-right: 20%">จำนวน {{item.qty}} ถุง</p>
-                <p style="margin-right: 20%">ราคารวม {{item.amount}} บาท</p>
-            </div>
+        </div>
+        <div class="item item-avatar-left item-icon-right item-text-wrap" ng-repeat="item in data.items">
+            <img src="{{item.product.images}}">
+            <h2>{{item.product.name}} ({{item.product.price}} บาท)</h2>
+            <p style="margin-right: 20%">จำนวน {{item.qty}} ถุง</p>
+            <p style="margin-right: 20%">ราคารวม {{item.amount}} บาท</p>
+        </div>
 
-            <label class="item item-input">
+        <label class="item item-input">
                 <span class="input-label">ราคารวม : </span>
                 <input ng-value="data.amount +' บาท'" type="text" style="background-color: white" readonly>
             </label>
 
-            <label class="item item-input">
+        <label class="item item-input">
                 <span class="input-label">ค่าจัดส่ง : </span>
                 <input ng-value="data.deliveryamount +' บาท'" type="text" style="background-color: white" readonly>
             </label>
 
-            <label class="item item-input">
+        <label class="item item-input">
                 <span class="input-label">ส่วนลด : </span>
                 <input ng-value="data.discountpromotion + ' ' + 'บาท'" type="text" style="background-color: white" readonly>
             </label>
 
-            <label class="item item-input">
+        <label class="item item-input">
                 <span class="input-label">ราคาสุทธิ : </span>
                 <input ng-value="data.totalamount + ' ' + 'บาท'" type="text" style="background-color: white" readonly>
             </label>

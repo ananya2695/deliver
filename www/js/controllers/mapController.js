@@ -85,7 +85,6 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
                         $rootScope.ordersAcceptv3 = data.accept;
                         $rootScope.ordersRejectv3 = data.reject;
                         $scope.readMap();
-                        $ionicLoading.hide();
                         if (!window.localStorage.point || window.localStorage.point === "") {
 
                             $scope.locationOrdersWait = $rootScope.ordersWaitv3;
@@ -286,6 +285,7 @@ deliverApp.controller('MapCtrl', function ($scope, $rootScope, $http, $state, Au
                             }
                             $scope.calcRoute(pointStart);
                         }
+                        $ionicLoading.hide();
                     });
 
 

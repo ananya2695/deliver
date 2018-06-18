@@ -1,0 +1,49 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-console": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "ionic-plugin-keyboard": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "onesignal-cordova-plugin": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    },
+    "cordova-plugin-image-picker": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.thamturakit.deliver"
+    }
+  }
+}

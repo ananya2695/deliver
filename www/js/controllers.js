@@ -1,41 +1,29 @@
 angular.module('starter.controllers', [])
 
   .controller('LogInCtrl', function ($scope, $state, AuthService, $ionicPopup, $rootScope, $ionicLoading) {
-    var push = new Ionic.Push({
-      "debug": true,
-      "onNotification": function (notification) {
-        console.log(notification);
-        $rootScope.$broadcast('onNotification');
-        if (notification._raw.additionalData.foreground) {
-          //   //alert(notification.message);
-
-          $rootScope.$broadcast('onNotification');
-        }
-      }
-    });
-
-    push.register(function (token) {
-      console.log("My Device token:", token.token);
-      // prompt('copy token', token.token);
-      window.localStorage.token = JSON.stringify(token.token);
-      push.saveToken(token);  // persist the token in the Ionic Platform
-    });
 
     $scope.userStore = AuthService.getUser();
     if ($scope.userStore) {
-      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
-      var push_usr = {
-        user_id: $scope.userStore._id,
-        user_name: $scope.userStore.username,
-        role: 'deliver',
-        device_token: JSON.parse(window.localStorage.token || null)
-      };
-      AuthService.saveUserPushNoti(push_usr)
-        .then(function (res) {
-          $ionicLoading.hide();
-          $state.go('app.tab.new');
+      $ionicLoading.show({
+        template: 'กรุณารอสักครู่'
+      });
+      if (window.OneSignal) {
+        window.plugins.OneSignal.getIds(function (ids) {
+          var push_usr = {
+            user_id: $scope.userStore._id,
+            user_name: $scope.userStore.username,
+            role: 'deliver',
+            device_token: ids.userId
+          };
+          // alert(ids.userId);
+          AuthService.saveUserPushNoti(push_usr)
+            .then(function (res) {
+              $ionicLoading.hide();
+              $state.go('app.tab.new');
 
+            });
         });
+      }
     }
     $scope.credentials = {}
 
@@ -103,7 +91,9 @@ angular.module('starter.controllers', [])
         username: credentials.username,
         password: credentials.password
       }
-      $ionicLoading.show({ template: 'กรุณารอสักครู่' });
+      $ionicLoading.show({
+        template: 'กรุณารอสักครู่'
+      });
       AuthService.loginUser(login);
       //   .then(function (response) {
       //   console.log(response);
@@ -153,27 +143,3 @@ angular.module('starter.controllers', [])
 
     };
   })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

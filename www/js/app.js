@@ -7,8 +7,8 @@
 // 'starter.controllers' is found in controllers.js
 var deliverApp = angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angularMoment', 'satellizer'])
 deliverApp.constant('config', {
-  apiUrl: 'https://thamapp.herokuapp.com/',
-  apiServiceUrl: 'https://thamapp.herokuapp.com/api',
+  apiUrl: 'https://thamapptest.herokuapp.com/',
+  apiServiceUrl: 'https://thamapptest.herokuapp.com/api',
   redirectUri: 'http://localhost:8100/', // oauth callback url of ionic app example http://localhost:8100/
   facebook: {
     clientId: '414384685598077' // your client id from facebook console example 
@@ -36,6 +36,15 @@ deliverApp.run(function ($ionicPlatform, AuthService) {
     if (window.localStorage.credential) {
       var user = JSON.parse(window.localStorage.credential);
       AuthService.loginUser(user);
+    }
+    if (window.OneSignal) {
+      window.plugins.OneSignal
+        .startInit("e63a6bd1-b40a-471f-a7d9-ecf0e2a96fe7")
+        .handleNotificationOpened(function (data) {
+          // alert("Notification opened:\n" + JSON.stringify(jsonData));
+          // console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+        })
+        .endInit();
     }
   });
   $ionicPlatform.on("resume", function (event) {
